@@ -43,7 +43,6 @@ const Header = () => {
 const NavButton = styled.div`
     margin: 0px 50px 0px 0px;
     font-weight: bold;
-    
 `
 
 export default Header;

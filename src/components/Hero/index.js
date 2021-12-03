@@ -2,15 +2,15 @@ import React from "react";
 
 const Hero = ({children}) => {
     return (
-        <div style={{ height: "100vh" }}>
-            <div
-                style={{
-                    position: "relative",
-                    placeItems: "center",
-                }}
-            >
-                {children}
-            </div>
+        <div 
+            style={{ 
+                height: "100vh",
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                justifyContent: "center",             
+            }}>
+            {children}
         </div>
     )
 }
