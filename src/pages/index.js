@@ -3,10 +3,16 @@ import { StaticImage } from "gatsby-plugin-image"
 import styled from "styled-components";
 
 import Hero from "../components/Hero"
+import Section from "../components/Section"
 
 const headingStyles = {
   marginTop: 0,
   fontSize: "6rem",
+}
+
+const subHeadingStyles = {
+  marginTop: 0,
+  fontSize: "2rem",
 }
 
 const IndexPage = () => {
@@ -19,6 +25,9 @@ const IndexPage = () => {
           <StaticImage src="../images/01836.png" width="300" height="300" /> 
         </Frame>
       </Hero>
+      <Section>
+        <h2 style={subHeadingStyles}>learn more</h2>
+      </Section>
     </main>
   )
 }

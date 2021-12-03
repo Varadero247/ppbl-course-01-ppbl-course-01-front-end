@@ -1,6 +1,6 @@
 import React from "react";
 
-const Hero = ({children}) => {
+const Section = ({children}) => {
     return (
         <div 
             style={{ 
@@ -8,12 +8,11 @@ const Hero = ({children}) => {
                 display: "flex",
                 flexDirection: "column",
                 alignItems: "center",
-                justifyContent: "center",
-                backgroundColor: "#162da1",             
+                justifyContent: "center",             
             }}>
             {children}
         </div>
     )
 }
 
-export default Hero;
+export default Section;
