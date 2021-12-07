@@ -1,4 +1,5 @@
 import * as React from "react"
+import data from "../../data/dummy-unsigs.json"
 
 // styles
 const pageStyles = {
@@ -133,6 +134,9 @@ const ExplorePage = () => {
       <h1 style={headingStyles}>
         Explore the Collection
       </h1>
+      {data.map((meta : { title: num }) => (
+        <p>{i.value.title}</p>
+      ))}
     </main>
   )
 }
