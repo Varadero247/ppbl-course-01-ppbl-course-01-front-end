@@ -1,47 +1,49 @@
-[
-    {    
-        "unsig25157": {
-            "files":[
-                {"src":"ipfs://QmTsYYXVxSZSFg3cYpeNbBMhNSHiJxZQDidDhcveZFqrXK","mediatype":"image/png"}
-            ],
-                "image":"ipfs://QmULuA3uQeCrWgzSf5rSExUgCkAMyyRf34Z1b7wK8GJW1a",
-                "title":"unsig_25157",
-                "series":"unsigned_algorithms",
-                "unsigs": {
-                    "index":25157,
-                    "num_props":5,
-                    "properties": {
-                        "colors":["Red","Red","Blue","Blue","Green"],
-                        "rotations":["0","90","180","270","180"],
-                        "multipliers":["1","2","2","2","4"],
-                        "distributions":["CDF","CDF","CDF","CDF","CDF"]
+{
+    "unsigs": [
+        {    
+            "unsig25157": {
+                "files":[
+                    {"src":"ipfs://QmTsYYXVxSZSFg3cYpeNbBMhNSHiJxZQDidDhcveZFqrXK","mediatype":"image/png"}
+                ],
+                    "image":"QmULuA3uQeCrWgzSf5rSExUgCkAMyyRf34Z1b7wK8GJW1a",
+                    "title":"unsig_25157",
+                    "series":"unsigned_algorithms",
+                    "unsigs": {
+                        "index":25157,
+                        "num_props":5,
+                        "properties": {
+                            "colors":["Red","Red","Blue","Blue","Green"],
+                            "rotations":["0","90","180","270","180"],
+                            "multipliers":["1","2","2","2","4"],
+                            "distributions":["CDF","CDF","CDF","CDF","CDF"]
+                        }
                     }
-                }
-        }
-    },
+            }
+        },
 
-    {"unsig28034":{"files":[{"src":"ipfs://QmQbrwiLpQsAoamiYz9ovMn79AMX1dsGFLAXnx5pDRFi7a","mediatype":"image/png"}],"image":"ipfs://QmerfHPF7WoFQ9Ns9a7uvCETs988r8sApzzhjGaWGqtL3X","title":"unsig_28034","series":"unsigned_algorithms","unsigs":{"index":28034,"num_props":6,"properties":{"colors":["Red","Green","Green","Red","Blue","Blue"],"rotations":["0","0","270","90","180","90"],"multipliers":["1","1","1","2","2","4"],"distributions":["CDF","CDF","CDF","CDF","CDF","CDF"]}}}},
+        {"unsig28034":{"files":[{"src":"ipfs://QmQbrwiLpQsAoamiYz9ovMn79AMX1dsGFLAXnx5pDRFi7a","mediatype":"image/png"}],"image":"QmerfHPF7WoFQ9Ns9a7uvCETs988r8sApzzhjGaWGqtL3X","title":"unsig_28034","series":"unsigned_algorithms","unsigs":{"index":28034,"num_props":6,"properties":{"colors":["Red","Green","Green","Red","Blue","Blue"],"rotations":["0","0","270","90","180","90"],"multipliers":["1","1","1","2","2","4"],"distributions":["CDF","CDF","CDF","CDF","CDF","CDF"]}}}},
 
-    {"unsig00645":{"files":[{"src":"ipfs://QmYrXXZ5u3W1CsqmBxhHpnpS3b4vko4HtoymNipHcwVovB","mediatype":"image/png"}],"image":"ipfs://QmdrpKmyhNKYpa1D4KRwSJftErLYTPoMZESXNvHYqszVtx","title":"unsig_00645","series":"unsigned_algorithms","unsigs":{"index":645,"num_props":3,"properties":{"colors":["Green","Blue","Blue"],"rotations":["0","90","180"],"multipliers":["0.5","1","4"],"distributions":["CDF","CDF","CDF"]}}}},
+        {"unsig00645":{"files":[{"src":"ipfs://QmYrXXZ5u3W1CsqmBxhHpnpS3b4vko4HtoymNipHcwVovB","mediatype":"image/png"}],"image":"QmdrpKmyhNKYpa1D4KRwSJftErLYTPoMZESXNvHYqszVtx","title":"unsig_00645","series":"unsigned_algorithms","unsigs":{"index":645,"num_props":3,"properties":{"colors":["Green","Blue","Blue"],"rotations":["0","90","180"],"multipliers":["0.5","1","4"],"distributions":["CDF","CDF","CDF"]}}}},
 
-    {"unsig00952":{"files":[{"src":"ipfs://QmRXms4HhTyMeMvQgWM6LYSh4DhZNfTjRE7ChsXHSdMcCQ","mediatype":"image/png"}],"image":"ipfs://QmPLd9NDaEyED7XkLjfyfbVTANL63x2LQAexqVmNtpadja","title":"unsig_00952","series":"unsigned_algorithms","unsigs":{"index":952,"num_props":3,"properties":{"colors":["Green","Blue","Blue"],"rotations":["0","180","90"],"multipliers":["0.5","2","4"],"distributions":["Normal","CDF","CDF"]}}}},
+        {"unsig00952":{"files":[{"src":"ipfs://QmRXms4HhTyMeMvQgWM6LYSh4DhZNfTjRE7ChsXHSdMcCQ","mediatype":"image/png"}],"image":"QmPLd9NDaEyED7XkLjfyfbVTANL63x2LQAexqVmNtpadja","title":"unsig_00952","series":"unsigned_algorithms","unsigs":{"index":952,"num_props":3,"properties":{"colors":["Green","Blue","Blue"],"rotations":["0","180","90"],"multipliers":["0.5","2","4"],"distributions":["Normal","CDF","CDF"]}}}},
 
-    {"unsig04480":{"files":[{"src":"ipfs://QmTkKMwvAFnSBv6UyLwpzTANL3A9MZ7zYY5aHXuVJCapBa","mediatype":"image/png"}],"image":"ipfs://QmUSdjAsV7s4hS9z7aLnsDxCscV8Zoeg5gZ9o8W7WDDEGW","title":"unsig_04480","series":"unsigned_algorithms","unsigs":{"index":4480,"num_props":4,"properties":{"colors":["Green","Red","Blue","Blue"],"rotations":["0","90","0","270"],"multipliers":["0.5","2","2","4"],"distributions":["CDF","CDF","CDF","CDF"]}}}},
+        {"unsig04480":{"files":[{"src":"ipfs://QmTkKMwvAFnSBv6UyLwpzTANL3A9MZ7zYY5aHXuVJCapBa","mediatype":"image/png"}],"image":"QmUSdjAsV7s4hS9z7aLnsDxCscV8Zoeg5gZ9o8W7WDDEGW","title":"unsig_04480","series":"unsigned_algorithms","unsigs":{"index":4480,"num_props":4,"properties":{"colors":["Green","Red","Blue","Blue"],"rotations":["0","90","0","270"],"multipliers":["0.5","2","2","4"],"distributions":["CDF","CDF","CDF","CDF"]}}}},
 
-    {"unsig05634":{"files":[{"src":"ipfs://QmSLKNbNrjhE7baA9nf6eF8p9TJziradqvKfCggHJeKiGH","mediatype":"image/png"}],"image":"ipfs://QmbYqUqF4BoPjhnHL2pRNfxBvkarmErVoHXynnLa3jQ6Lg","title":"unsig_05634","series":"unsigned_algorithms","unsigs":{"index":5634,"num_props":4,"properties":{"colors":["Green","Blue","Blue","Red"],"rotations":["90","0","90","90"],"multipliers":["0.5","1","1","4"],"distributions":["Normal","CDF","CDF","CDF"]}}}},
+        {"unsig05634":{"files":[{"src":"ipfs://QmSLKNbNrjhE7baA9nf6eF8p9TJziradqvKfCggHJeKiGH","mediatype":"image/png"}],"image":"QmbYqUqF4BoPjhnHL2pRNfxBvkarmErVoHXynnLa3jQ6Lg","title":"unsig_05634","series":"unsigned_algorithms","unsigs":{"index":5634,"num_props":4,"properties":{"colors":["Green","Blue","Blue","Red"],"rotations":["90","0","90","90"],"multipliers":["0.5","1","1","4"],"distributions":["Normal","CDF","CDF","CDF"]}}}},
 
-    {"unsig06282":{"files":[{"src":"ipfs://QmQtwMCG7bNiMFRspdZ9jucfAVp48iWY8imvCcDU3kSrFQ","mediatype":"image/png"}],"image":"ipfs://QmUmLYAGwroUZuJaNhfEa8gYRegp9pJEwLWkUVjr5xjSVD","title":"unsig_06282","series":"unsigned_algorithms","unsigs":{"index":6282,"num_props":4,"properties":{"colors":["Red","Green","Blue","Green"],"rotations":["0","90","0","180"],"multipliers":["0.5","1","1","2"],"distributions":["CDF","CDF","CDF","CDF"]}}}},
+        {"unsig06282":{"files":[{"src":"ipfs://QmQtwMCG7bNiMFRspdZ9jucfAVp48iWY8imvCcDU3kSrFQ","mediatype":"image/png"}],"image":"QmUmLYAGwroUZuJaNhfEa8gYRegp9pJEwLWkUVjr5xjSVD","title":"unsig_06282","series":"unsigned_algorithms","unsigs":{"index":6282,"num_props":4,"properties":{"colors":["Red","Green","Blue","Green"],"rotations":["0","90","0","180"],"multipliers":["0.5","1","1","2"],"distributions":["CDF","CDF","CDF","CDF"]}}}},
 
-    {"unsig08103":{"files":[{"src":"ipfs://QmZydY8ddA4iuKaQePLDAA9uUZmFH7YsufqnD4d7JYdhN7","mediatype":"image/png"}],"image":"ipfs://QmYu5zmC7hqEx4KQerC9AvrsypPQFdsaCUU37L2kA7T2k8","title":"unsig_08103","series":"unsigned_algorithms","unsigs":{"index":8103,"num_props":4,"properties":{"colors":["Red","Blue","Blue","Green"],"rotations":["90","0","270","0"],"multipliers":["0.5","2","2","4"],"distributions":["Normal","CDF","CDF","CDF"]}}}},
+        {"unsig08103":{"files":[{"src":"ipfs://QmZydY8ddA4iuKaQePLDAA9uUZmFH7YsufqnD4d7JYdhN7","mediatype":"image/png"}],"image":"QmYu5zmC7hqEx4KQerC9AvrsypPQFdsaCUU37L2kA7T2k8","title":"unsig_08103","series":"unsigned_algorithms","unsigs":{"index":8103,"num_props":4,"properties":{"colors":["Red","Blue","Blue","Green"],"rotations":["90","0","270","0"],"multipliers":["0.5","2","2","4"],"distributions":["Normal","CDF","CDF","CDF"]}}}},
 
-    {"unsig10237":{"files":[{"src":"ipfs://QmR5g4x6ibLWuCZTKsn4WWg5xoJSr4akENYcmaERvMUCC3","mediatype":"image/png"}],"image":"ipfs://QmUXKrSehGoqucABvgqeyA8kM1Tc81ceuJJJFNq7KhTfZC","title":"unsig_10237","series":"unsigned_algorithms","unsigs":{"index":10237,"num_props":4,"properties":{"colors":["Red","Green","Green","Red"],"rotations":["0","0","270","90"],"multipliers":["1","1","1","4"],"distributions":["CDF","CDF","CDF","CDF"]}}}},
+        {"unsig10237":{"files":[{"src":"ipfs://QmR5g4x6ibLWuCZTKsn4WWg5xoJSr4akENYcmaERvMUCC3","mediatype":"image/png"}],"image":"QmUXKrSehGoqucABvgqeyA8kM1Tc81ceuJJJFNq7KhTfZC","title":"unsig_10237","series":"unsigned_algorithms","unsigs":{"index":10237,"num_props":4,"properties":{"colors":["Red","Green","Green","Red"],"rotations":["0","0","270","90"],"multipliers":["1","1","1","4"],"distributions":["CDF","CDF","CDF","CDF"]}}}},
 
-    {"unsig10249":{"files":[{"src":"ipfs://QmPxMgBwy7ydrUFXLt971v2b3sbuUZrLX6oRm5JCpG1FQq","mediatype":"image/png"}],"image":"ipfs://QmZi35nirxGaaCMYDLoT9m56PhJ6npqcp34twRV8XsdeLi","title":"unsig_10249","series":"unsigned_algorithms","unsigs":{"index":10249,"num_props":4,"properties":{"colors":["Red","Green","Blue","Blue"],"rotations":["0","0","180","270"],"multipliers":["1","1","2","2"],"distributions":["CDF","CDF","CDF","CDF"]}}}},
+        {"unsig10249":{"files":[{"src":"ipfs://QmPxMgBwy7ydrUFXLt971v2b3sbuUZrLX6oRm5JCpG1FQq","mediatype":"image/png"}],"image":"QmZi35nirxGaaCMYDLoT9m56PhJ6npqcp34twRV8XsdeLi","title":"unsig_10249","series":"unsigned_algorithms","unsigs":{"index":10249,"num_props":4,"properties":{"colors":["Red","Green","Blue","Blue"],"rotations":["0","0","180","270"],"multipliers":["1","1","2","2"],"distributions":["CDF","CDF","CDF","CDF"]}}}},
 
-    {"unsig10617":{"files":[{"src":"ipfs://QmQ4YBrftwdbYmFsiV214wKndoQbZ3g6uvvLyMbGn7bzun","mediatype":"image/png"}],"image":"ipfs://QmYJ48Ri9VKqdFqaMnzWcBDKoDi4rZBgiU1hHWcjmXMmbA","title":"unsig_10617","series":"unsigned_algorithms","unsigs":{"index":10617,"num_props":4,"properties":{"colors":["Red","Green","Red","Blue"],"rotations":["0","270","90","0"],"multipliers":["1","1","2","4"],"distributions":["CDF","CDF","CDF","CDF"]}}}},
+        {"unsig10617":{"files":[{"src":"ipfs://QmQ4YBrftwdbYmFsiV214wKndoQbZ3g6uvvLyMbGn7bzun","mediatype":"image/png"}],"image":"QmYJ48Ri9VKqdFqaMnzWcBDKoDi4rZBgiU1hHWcjmXMmbA","title":"unsig_10617","series":"unsigned_algorithms","unsigs":{"index":10617,"num_props":4,"properties":{"colors":["Red","Green","Red","Blue"],"rotations":["0","270","90","0"],"multipliers":["1","1","2","4"],"distributions":["CDF","CDF","CDF","CDF"]}}}},
 
-    {"unsig12492":{"files":[{"src":"ipfs://QmPD9YjcxzfEBC5SnBTVkGbohg8om9uX8TW4WLN2yNRGYZ","mediatype":"image/png"}],"image":"ipfs://QmUwu8jpUbUjkh4sotc2gniVVKTZVakdzLhH4aiXuWhKvj","title":"unsig_12492","series":"unsigned_algorithms","unsigs":{"index":12492,"num_props":5,"properties":{"colors":["Blue","Red","Green","Red","Green"],"rotations":["0","90","270","180","180"],"multipliers":["0.5","1","2","4","4"],"distributions":["CDF","CDF","CDF","CDF","CDF"]}}}},
+        {"unsig12492":{"files":[{"src":"ipfs://QmPD9YjcxzfEBC5SnBTVkGbohg8om9uX8TW4WLN2yNRGYZ","mediatype":"image/png"}],"image":"QmUwu8jpUbUjkh4sotc2gniVVKTZVakdzLhH4aiXuWhKvj","title":"unsig_12492","series":"unsigned_algorithms","unsigs":{"index":12492,"num_props":5,"properties":{"colors":["Blue","Red","Green","Red","Green"],"rotations":["0","90","270","180","180"],"multipliers":["0.5","1","2","4","4"],"distributions":["CDF","CDF","CDF","CDF","CDF"]}}}},
 
-    {"unsig14508":{"files":[{"src":"ipfs://QmVWABRAxe1xjPk5Fe3xdQjZHRRdNtb6S6tVN9oBaEdmBd","mediatype":"image/png"}],"image":"ipfs://QmTSHLVHPNdjycqezCmj9588RRYsZhf3TtMJFsfJMM6PsU","title":"unsig_14508","series":"unsigned_algorithms","unsigs":{"index":14508,"num_props":5,"properties":{"colors":["Green","Blue","Red","Red","Blue"],"rotations":["0","180","0","90","90"],"multipliers":["0.5","1","2","2","2"],"distributions":["CDF","CDF","CDF","CDF","CDF"]}}}}
+        {"unsig14508":{"files":[{"src":"ipfs://QmVWABRAxe1xjPk5Fe3xdQjZHRRdNtb6S6tVN9oBaEdmBd","mediatype":"image/png"}],"image":"QmTSHLVHPNdjycqezCmj9588RRYsZhf3TtMJFsfJMM6PsU","title":"unsig_14508","series":"unsigned_algorithms","unsigs":{"index":14508,"num_props":5,"properties":{"colors":["Green","Blue","Red","Red","Blue"],"rotations":["0","180","0","90","90"],"multipliers":["0.5","1","2","2","2"],"distributions":["CDF","CDF","CDF","CDF","CDF"]}}}}
 
-]
+    ]
+}
