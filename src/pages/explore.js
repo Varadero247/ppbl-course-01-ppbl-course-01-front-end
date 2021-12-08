@@ -2,6 +2,7 @@ import * as React from "react"
 import { StaticImage } from "gatsby-plugin-image"
 import data from "../../data/dummy-unsigs.json"
 import styled from "styled-components"
+import Cardano from "../cardano/serialization-lib"
 
 // styles
 const pageStyles = {
@@ -15,13 +16,22 @@ const headingStyles = {
   maxWidth: 320,
 }
 
+const load = async () => {
+  await Cardano.load();
+  console.log("woohoo!");
+}
+
 const ExplorePage = ({unsigs}) => {
+
   return (
     <main style={pageStyles}>
       <title>Explore</title>
       <h1 style={headingStyles}>
         Explore the Collection
       </h1>
+      <button onClick={load}>
+        CLICK ME
+      </button>
       <Collection>
         {data.unsigs.map((i) => (
           <Unsig>
