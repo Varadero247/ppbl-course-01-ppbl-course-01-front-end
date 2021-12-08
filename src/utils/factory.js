@@ -1,29 +1,12 @@
 import Cardano from "../cardano/serialization-lib";
 import { toHex, toLovelace } from "./converter";
 
-export const createDatum = (
-  tokenName,
-  currencySymbol,
-  sellerAddress,
-  royaltiesAddress,
-  royaltiesPercentage,
-  price
-) => {
-  if (
-    tokenName &&
-    currencySymbol &&
-    sellerAddress &&
-    royaltiesAddress &&
-    royaltiesPercentage !== undefined &&
-    price
-  ) {
+export const createOfferDatum = (tradeOwner, requestedAmount, unsigId) => {
+  if (tradeOwner && requestedAmount && unsigId) {
     return {
-      tn: tokenName,
-      cs: currencySymbol,
-      sa: getAddressKeyHash(sellerAddress),
-      ra: getAddressKeyHash(royaltiesAddress),
-      rp: royaltiesPercentage ? royaltiesPercentage : 0,
-      price: toLovelace(price),
+      tradeOwner: getAddressKeyHash(tradeOwner),
+      requestedAmount,
+      unsigId,
     };
   }
 };

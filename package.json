@@ -17,6 +17,7 @@
   "dependencies": {
     "@chakra-ui/gatsby-plugin": "^2.0.2",
     "@chakra-ui/icons": "^1.1.1",
+    "@emurgo/cardano-serialization-lib-browser": "file:./src/cardano/serialization-lib/@emurgo/cardano-serialization-lib-browser",
     "@fontsource/poppins": "^4.5.0",
     "babel-plugin-styled-components": "^2.0.2",
     "buffer": "^6.0.3",

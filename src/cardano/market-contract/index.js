@@ -1,6 +1,6 @@
 import Cardano from "../serialization-lib";
 import Errors from "./errors";
-import { serializeSale, deserializeSale } from "./datums";
+import { serializeOffer, deserializeOffer } from "./datums";
 import { BUY, CANCEL, UPDATE } from "./redeemers";
 import { contractAddress, contractScripts } from "./validator";
 import {
