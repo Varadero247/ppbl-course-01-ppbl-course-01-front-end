@@ -1,7 +1,7 @@
 import Cardano from "../serialization-lib";
 import Errors from "./errors";
 import { serializeOffer, deserializeOffer } from "./datums";
-import { BUY, CANCEL, UPDATE } from "./redeemers";
+import { BUY } from "./redeemers";
 import { contractAddress, contractScripts } from "./validator";
 import {
   assetsToValue,
@@ -11,7 +11,7 @@ import {
 } from "../transaction";
 import { fromHex, toHex } from "../../utils/converter";
 
-export const listAsset = async (
+export const offerAsset = async (
   datum,
   seller: { address: BaseAddress, utxos: [] }
 ) => {
@@ -21,25 +21,25 @@ export const listAsset = async (
       Cardano.Instance.TransactionUnspentOutput.from_bytes(fromHex(utxo))
     );
 
-    const lockAssetDatum = serializeSale(datum);
-    datums.add(lockAssetDatum);
+    const offerAssetDatum = serializeOffer(datum);
+    datums.add(offerAssetDatum);
 
     outputs.add(
       createTxOutput(
         contractAddress(),
         assetsToValue([
           {
-            unit: `${datum.cs}${datum.tn}`,
+            unit: datum.unsigId,
             quantity: "1",
           },
           { unit: "lovelace", quantity: "2000000" },
         ]),
-        { datum: lockAssetDatum }
+        { datum: offerAssetDatum }
       )
     );
 
     const datumHash = toHex(
-      Cardano.Instance.hash_plutus_data(lockAssetDatum).to_bytes()
+      Cardano.Instance.hash_plutus_data(offerAssetDatum).to_bytes()
     );
     const txHash = await finalizeTx({
       txBuilder,
@@ -47,111 +47,18 @@ export const listAsset = async (
       utxos,
       outputs,
       changeAddress: seller.address,
-      metadata: deserializeSale(lockAssetDatum),
+      metadata: deserializeOffer(lockAssetDatum),
     });
     return {
       datumHash,
       txHash,
     };
   } catch (error) {
-    handleError(error, "listAsset");
+    handleError(error, "offerAsset");
   }
 };
 
-export const updateListing = async (
-  currentDatum,
-  newDatum,
-  seller: { address: BaseAddress, utxos: [] },
-  assetUtxo
-) => {
-  try {
-    const { txBuilder, datums, outputs } = initializeTx();
-
-    const utxos = seller.utxos.map((utxo) =>
-      Cardano.Instance.TransactionUnspentOutput.from_bytes(fromHex(utxo))
-    );
-
-    const currentListingDatum = serializeSale(currentDatum);
-    datums.add(currentListingDatum);
-
-    const newListingDatum = serializeSale(newDatum);
-    datums.add(newListingDatum);
-
-    outputs.add(
-      createTxOutput(contractAddress(), assetUtxo.output().amount(), {
-        datum: newListingDatum,
-      })
-    );
-
-    const requiredSigners = Cardano.Instance.Ed25519KeyHashes.new();
-    requiredSigners.add(seller.address.payment_cred().to_keyhash());
-    txBuilder.set_required_signers(requiredSigners);
-
-    const datumHash = toHex(
-      Cardano.Instance.hash_plutus_data(newListingDatum).to_bytes()
-    );
-
-    const txHash = await finalizeTx({
-      txBuilder,
-      datums,
-      utxos,
-      outputs,
-      changeAddress: seller.address,
-      scriptUtxo: assetUtxo,
-      plutusScripts: contractScripts(),
-      action: UPDATE,
-    });
-
-    return {
-      datumHash,
-      txHash,
-    };
-  } catch (error) {
-    handleError(error, "updateListing");
-  }
-};
-
-export const cancelListing = async (
-  datum,
-  seller: { address: BaseAddress, utxos: [] },
-  assetUtxo
-) => {
-  try {
-    const { txBuilder, datums, outputs } = initializeTx();
-
-    const utxos = seller.utxos.map((utxo) =>
-      Cardano.Instance.TransactionUnspentOutput.from_bytes(fromHex(utxo))
-    );
-
-    const cancelListingDatum = serializeSale(datum);
-    datums.add(cancelListingDatum);
-
-    outputs.add(
-      createTxOutput(seller.address.to_address(), assetUtxo.output().amount())
-    );
-
-    const requiredSigners = Cardano.Instance.Ed25519KeyHashes.new();
-    requiredSigners.add(seller.address.payment_cred().to_keyhash());
-    txBuilder.set_required_signers(requiredSigners);
-
-    const txHash = await finalizeTx({
-      txBuilder,
-      datums,
-      utxos,
-      outputs,
-      changeAddress: seller.address,
-      scriptUtxo: assetUtxo,
-      plutusScripts: contractScripts(),
-      action: CANCEL,
-    });
-
-    return txHash;
-  } catch (error) {
-    handleError(error, "cancelListing");
-  }
-};
-
-export const purchaseAsset = async (
+export const buyAsset = async (
   datum,
   buyer: { address: BaseAddress, utxos: [] },
   beneficiaries: {
@@ -168,21 +75,14 @@ export const purchaseAsset = async (
       Cardano.Instance.TransactionUnspentOutput.from_bytes(fromHex(utxo))
     );
 
-    const purchaseAssetDatum = serializeSale(datum);
-    datums.add(purchaseAssetDatum);
+    const offerAssetDatum = serializeOffer(datum);
+    datums.add(offerAssetDatum);
 
     outputs.add(
       createTxOutput(buyer.address.to_address(), assetUtxo.output().amount())
     );
 
-    splitAmount(
-      beneficiaries,
-      {
-        price: datum.price,
-        royalties: datum.rp,
-      },
-      outputs
-    );
+    splitAmount(beneficiaries, datum.requestedAmount, outputs);
 
     const requiredSigners = Cardano.Instance.Ed25519KeyHashes.new();
     requiredSigners.add(buyer.address.payment_cred().to_keyhash());
@@ -227,37 +127,8 @@ const handleError = (error, source) => {
 
 const splitAmount = (
   { seller, artist, market },
-  { price, royalties },
+  price,
   outputs
 ) => {
-  const minimumAmount = 1000000;
-  const marketFeePercentage = 1 / 100;
-  const royaltyFeePercentage = royalties / 1000;
-
-  const royaltyFees = Math.max(royaltyFeePercentage * price, minimumAmount);
-  outputs.add(
-    createTxOutput(
-      artist.to_address(),
-      assetsToValue([{ unit: "lovelace", quantity: `${royaltyFees}` }])
-    )
-  );
-
-  const marketFees = Math.max(marketFeePercentage * price, minimumAmount);
-  outputs.add(
-    createTxOutput(
-      market.to_address(),
-      assetsToValue([{ unit: "lovelace", quantity: `${marketFees}` }])
-    )
-  );
-
-  const netPrice =
-    price - royaltyFeePercentage * price - marketFeePercentage * price;
-  outputs.add(
-    createTxOutput(
-      seller.to_address(),
-      assetsToValue([
-        { unit: "lovelace", quantity: `${Math.max(netPrice, minimumAmount)}` },
-      ])
-    )
-  );
+  // TODO: Fees Calculation.
 };

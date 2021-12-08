@@ -7,7 +7,7 @@ export const serializeOffer = ({ tradeOwner, requestedAmount, unsigId }) => {
 
   fieldsInner.add(Cardano.Instance.PlutusData.new_bytes(fromHex(tradeOwner)));
   fieldsInner.add(
-    Cardano.Instance.PlutusData.new_bytes(fromHex(toBytesNum(unsigId)))
+    Cardano.Instance.PlutusData.new_bytes(fromHex(unsigId))
   );
   fieldsInner.add(
     Cardano.Instance.PlutusData.new_integer(
