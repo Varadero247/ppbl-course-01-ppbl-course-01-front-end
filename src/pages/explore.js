@@ -3,6 +3,9 @@ import { StaticImage } from "gatsby-plugin-image"
 import data from "../../data/dummy-unsigs.json"
 import styled from "styled-components"
 import Cardano from "../cardano/serialization-lib"
+import { enableWallet, getBalance, getUtxos, getOwnedAssets } from "../cardano/wallet"
+import { serializeTxUnspentOutput, valueToAssets } from "../cardano/transaction"
+// import { fromHex } from "../utils/converter"
 
 // styles
 const pageStyles = {
@@ -18,7 +21,21 @@ const headingStyles = {
 
 const load = async () => {
   await Cardano.load();
-  console.log("woohoo!");
+}
+
+const connect = async () => {
+  await load();
+  const on = await enableWallet();
+  console.log("the wallet is on! ", on)
+  if(on) {
+    let encbal = await getUtxos()
+    encbal.forEach(element => {
+      console.log(element);
+      let bal = serializeTxUnspentOutput(element);
+      let assets = valueToAssets(bal.output().amount());
+      console.log(assets);
+    });
+  }
 }
 
 const ExplorePage = ({unsigs}) => {
@@ -29,7 +46,7 @@ const ExplorePage = ({unsigs}) => {
       <h1 style={headingStyles}>
         Explore the Collection
       </h1>
-      <button onClick={load}>
+      <button onClick={connect}>
         CLICK ME
       </button>
       <Collection>
