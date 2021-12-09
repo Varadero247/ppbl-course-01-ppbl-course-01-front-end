@@ -17,7 +17,7 @@ const Header = () => {
             }}
         >
             <div>
-                <StaticImage src="../../images/unsig.svg" width={300} />
+                <StaticImage src="../../images/unsig.svg" width={300} alt="logo" />
             </div>
             <div
                 style={{
@@ -30,10 +30,16 @@ const Header = () => {
                     <Link to="/explore/">Explore</Link> 
                 </NavButton>
                 <NavButton>
+                    <Link to="/marketplace/">Marketplace</Link> 
+                </NavButton>
+                <NavButton>
+                    <Link to="/collection/">My Collection</Link> 
+                </NavButton>
+                <NavButton>
                     <Link to="/explore/">Guide</Link>                
                 </NavButton>
                 <NavButton>
-                    <Link to="/explore/">More</Link>                 
+                    <Link to="/explore/">About</Link>                 
                 </NavButton>
             </div>
         </div>

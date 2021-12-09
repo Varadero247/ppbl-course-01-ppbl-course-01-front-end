@@ -32,7 +32,7 @@ export const offerAsset = async (
             unit: datum.unsigId,
             quantity: "1",
           },
-          { unit: "lovelace", quantity: "2000000" },
+          { unit: "lovelace", quantity: "2000000" }, // why don't we see this in SpaceBudz repo?
         ]),
         { datum: offerAssetDatum }
       )

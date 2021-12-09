@@ -7,72 +7,6 @@ import { enableWallet, getBalance, getUtxos, getOwnedAssets } from "../cardano/w
 import { serializeTxUnspentOutput, valueToAssets } from "../cardano/transaction"
 import { fromHex, toString } from "../utils/converter"
 
-// Unsig PolicyID
-const unsigID = "0e14267a8020229adc0184dd25fa3174c3f7d6caadcb4425c70e7c04";
-
-// styles
-const pageStyles = {
-  color: "#232129",
-  padding: 96,
-  fontFamily: "-apple-system, Roboto, sans-serif, serif",
-}
-const headingStyles = {
-  marginTop: 0,
-  marginBottom: 64,
-  maxWidth: 320,
-}
-
-const buttonStyle = {
-  backgroundColor: "purple",
-  padding: "1rem",
-  color: "white"
-}
-
-const load = async () => {
-  await Cardano.load();
-}
-
-
-// Playing with Nami Wallet
-const connect = async () => {
-  await load();
-  const on = await enableWallet();
-  console.log("the wallet is on! ", on)
-  if(on) {
-    let assetList = await getOwnedAssets()
-    assetList.forEach(element => {
-      if (element.startsWith(unsigID))
-      {
-        let output = fromHex(element.substring(56))
-        console.log(toString(output))
-      }
-      
-    });
-    //let encbal = await getUtxos()
-    // encbal.forEach(element => {
-    //   console.log(element);
-    //   let bal = serializeTxUnspentOutput(element);
-    //   let assets = valueToAssets(bal.output().amount());
-    //   console.log(assets);
-    // });
-  }
-}
-
-// User Journey for /explore
-// 1. User can go to /explore and view all Unsigs
-// - user can filter by "offer" / "not-offered" (!MVP)
-// - user can sort by price, latest/newest offers, or by unsigID (!MVP)
-// - user can filter by number props (MVP)
-
-// User Journey for /offer
-// 1. User can go to /offer and view all offers (separate from explore page)
-// 2. User can click on offers and see the details for an asset
-// - unsig nft properties
-// - offer details
-// User Journey for /offer/{unsig}
-// 3. When a user is viewing asset details, the user can buy the asset
-// - if connected wallet, buy button is active
-
 // User Journey for /collection
 // 1. User can view the Unsigs in their connected wallet
 // 2. User can see Offer status
@@ -81,16 +15,66 @@ const connect = async () => {
 // 1. User can list an Unsig
 // - This means that the owner of an Unsig can create an offer for that Unsig
 
+// Unsig PolicyID
+const unsigID = "0e14267a8020229adc0184dd25fa3174c3f7d6caadcb4425c70e7c04";
+
+// styles
+const pageStyles = {
+  color: "#232129",  
+  padding: 96,
+  fontFamily: "-apple-system, Roboto, sans-serif, serif",
+}  
+const headingStyles = {
+  marginTop: 0,  
+  marginBottom: 64,
+  maxWidth: 320,
+}  
+
+const buttonStyle = {
+  backgroundColor: "purple",  
+  padding: "1rem",
+  color: "white"
+}  
+
+const load = async () => {
+  await Cardano.load();  
+}  
+
+
+// Playing with Nami Wallet
+const connect = async () => {
+  await load();  
+  const on = await enableWallet();
+  console.log("the wallet is on! ", on)
+  if(on) {
+    let assetList = await getOwnedAssets()  
+    assetList.forEach(element => {
+      if (element.startsWith(unsigID))  
+      {
+        let output = fromHex(element.substring(56))  
+        console.log(toString(output))
+      }  
+      
+    });  
+    //let encbal = await getUtxos()
+    // encbal.forEach(element => {
+    //   console.log(element);    
+    //   let bal = serializeTxUnspentOutput(element);
+    //   let assets = valueToAssets(bal.output().amount());
+    //   console.log(assets);
+    // });
+  }  
+}  
 
 
 
-const ExplorePage = ({unsigs}) => {
+const CollectionPage = ({unsigs}) => {
 
   return (
     <main style={pageStyles}>
-      <title>Explore</title>
+      <title>MY COLLECTION</title>
       <h1 style={headingStyles}>
-        Explore the Collection
+        User Collection of Unsigs
       </h1>
       <button style={buttonStyle} onClick={connect}>
         Use this button to test Nami integration
@@ -110,7 +94,7 @@ const ExplorePage = ({unsigs}) => {
   )
 }
 
-export default ExplorePage
+export default CollectionPage
 
 const Unsig = styled.div`
   background: #2037d9;

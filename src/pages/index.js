@@ -22,7 +22,7 @@ const IndexPage = () => {
       <Hero>
         <h1 style={headingStyles}>Unsigs Marketplace</h1>
         <Frame>
-          <StaticImage src="../images/01836.png" width="300" height="300" /> 
+          <StaticImage src="../images/01836.png" width="300" height="300" alt="unsig" /> 
         </Frame>
       </Hero>
       <Section>
