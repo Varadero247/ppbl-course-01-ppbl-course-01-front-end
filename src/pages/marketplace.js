@@ -6,6 +6,7 @@ import Cardano from "../cardano/serialization-lib"
 import { enableWallet, getBalance, getUtxos, getOwnedAssets } from "../cardano/wallet"
 import { serializeTxUnspentOutput, valueToAssets } from "../cardano/transaction"
 import { fromHex, toString } from "../utils/converter"
+import { useStoreState } from "easy-peasy";
 
 // User Journey for /offer
 // 1. User can go to /offer and view all offers (separate from explore page)
@@ -16,70 +17,22 @@ import { fromHex, toString } from "../utils/converter"
 // 3. When a user is viewing asset details, the user can buy the asset
 // - if connected wallet, buy button is active
 
-
-// Unsig PolicyID
-const unsigID = "0e14267a8020229adc0184dd25fa3174c3f7d6caadcb4425c70e7c04";
-
 // styles
 const pageStyles = {
   color: "#232129",
   padding: 96,
-  fontFamily: "-apple-system, Roboto, sans-serif, serif",
 }  
-const headingStyles = {
-  marginTop: 0,
-  marginBottom: 64,
-  maxWidth: 320,
-}  
-
-const buttonStyle = {
-  backgroundColor: "purple",
-  padding: "1rem",
-  color: "white"
-}  
-
-const load = async () => {
-  await Cardano.load();
-}  
-
-
-// Playing with Nami Wallet
-const connect = async () => {
-  await load();
-  const on = await enableWallet();
-  console.log("the wallet is on! ", on)
-  if(on) {
-    let assetList = await getOwnedAssets()
-    assetList.forEach(element => {
-      if (element.startsWith(unsigID))
-      {
-        let output = fromHex(element.substring(56))
-        console.log(toString(output))
-      }  
-      
-    });  
-    //let encbal = await getUtxos()
-    // encbal.forEach(element => {
-    //   console.log(element);  
-    //   let bal = serializeTxUnspentOutput(element);
-    //   let assets = valueToAssets(bal.output().amount());
-    //   console.log(assets);
-    // });
-  }  
-}  
-
 
 const MarketplacePage = ({unsigs}) => {
+  const connected = useStoreState((state) => state.connection.connected);
 
   return (
     <main style={pageStyles}>
       <title>FOR SALE</title>
-      <h1 style={headingStyles}>
+      <h1>
         THE MARKETPLACE
       </h1>
-      <button style={buttonStyle} onClick={connect}>
-        Use this button to test Nami integration
-      </button>
+      <p>{connected}</p>
       <Collection>
         {data.unsigs.map((i) => (
           <Unsig key={Object.keys(i)}>

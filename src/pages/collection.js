@@ -1,4 +1,4 @@
-import * as React from "react"
+import React from "react"
 import { StaticImage } from "gatsby-plugin-image"
 import data from "../../data/dummy-unsigs.json"
 import styled from "styled-components"
@@ -6,6 +6,13 @@ import Cardano from "../cardano/serialization-lib"
 import { enableWallet, getBalance, getUtxos, getOwnedAssets } from "../cardano/wallet"
 import { serializeTxUnspentOutput, valueToAssets } from "../cardano/transaction"
 import { fromHex, toString } from "../utils/converter"
+import { useStoreState } from "easy-peasy";
+
+// styles
+const pageStyles = {
+  color: "#232129",
+  padding: 96
+}
 
 // User Journey for /collection
 // 1. User can view the Unsigs in their connected wallet
@@ -18,78 +25,73 @@ import { fromHex, toString } from "../utils/converter"
 // Unsig PolicyID
 const unsigID = "0e14267a8020229adc0184dd25fa3174c3f7d6caadcb4425c70e7c04";
 
-// styles
-const pageStyles = {
-  color: "#232129",  
-  padding: 96,
-  fontFamily: "-apple-system, Roboto, sans-serif, serif",
-}  
-const headingStyles = {
-  marginTop: 0,  
-  marginBottom: 64,
-  maxWidth: 320,
-}  
+async function getMyUnsigs() {
+  let assetList = await getOwnedAssets();
+  let myNFTS = await assetList;
 
-const buttonStyle = {
-  backgroundColor: "purple",  
-  padding: "1rem",
-  color: "white"
-}  
-
-const load = async () => {
-  await Cardano.load();  
-}  
+  myNFTS.forEach(nft => {
+    console.log(nft);
+  })
+}
 
 
-// Playing with Nami Wallet
-const connect = async () => {
-  await load();  
-  const on = await enableWallet();
-  console.log("the wallet is on! ", on)
-  if(on) {
-    let assetList = await getOwnedAssets()  
-    assetList.forEach(element => {
-      if (element.startsWith(unsigID))  
-      {
-        let output = fromHex(element.substring(56))  
-        console.log(toString(output))
-      }  
-      
-    });  
-    //let encbal = await getUtxos()
-    // encbal.forEach(element => {
-    //   console.log(element);    
-    //   let bal = serializeTxUnspentOutput(element);
-    //   let assets = valueToAssets(bal.output().amount());
-    //   console.log(assets);
-    // });
-  }  
-}  
+// const playWithWallet = async () => {
+//   const on = await enableWallet();
+//   let myWord = ""
+//   let myNFTS = []
+//   let myOutput = []
+//   console.log("the wallet is on! ", on)
+//   if(on) {
+//     .then(
+//       assetList.forEach(element => {
+//         if (element.startsWith(unsigID))
+//         {
+//           let output = fromHex(element.substring(56))
+//           myWord = toString(output)
+//           console.log(myWord)
+//           myNFTS.push(myWord)
+//         }  
+//       })
+//     ).then(myNFTS)
+//   }
+  
+// }
 
-
-
-const CollectionPage = ({unsigs}) => {
+const CollectionPage = ({ unsigs }) => {
+  const connected = useStoreState((state) => state.connection.connected);
+  getMyUnsigs();
 
   return (
     <main style={pageStyles}>
       <title>MY COLLECTION</title>
-      <h1 style={headingStyles}>
-        User Collection of Unsigs
-      </h1>
-      <button style={buttonStyle} onClick={connect}>
-        Use this button to test Nami integration
-      </button>
-      <Collection>
-        {data.unsigs.map((i) => (
-          <Unsig key={Object.keys(i)}>
-            <UnsigName>{Object.keys(i)}</UnsigName>
-            <p>{Object.values(i)[0].title}</p>
-            <p>Properties: {Object.values(i)[0].unsigs.num_props}</p>
-            <p>{Object.values(i)[0].image}</p>
-            <img src={`https://infura-ipfs.io/ipfs/${Object.values(i)[0].image}`} alt="unsig" />
-          </Unsig>
-        ))}
-      </Collection>
+      <div>
+        <h1>
+          User Collection of Unsigs
+        </h1>
+
+        {connected ? (
+          <div>
+            <p>
+              If wallet is connected, show the unsigs in connected wallet
+            </p>
+            <p>
+              Wallet connected at address: {connected} has
+            </p>
+            <ul>
+              <li>one</li>
+            </ul>
+          </div>
+        ) : (
+          <div>
+            <p>
+              If no wallet is connected, then prompt user to connect Nami wallet.
+            </p>
+          </div>
+        )}
+        <Collection>
+        </Collection>
+      </div>
+
     </main>
   )
 }
@@ -112,3 +114,30 @@ const Collection = styled.div`
   flex-direction: row;
   flex-wrap: wrap;
 `
+
+// Playing with Nami Wallet
+
+
+
+//   const on = await enableWallet();
+//   console.log("the wallet is on! ", on)
+//   if(on) {
+//     let assetList = await getOwnedAssets()
+//     assetList.forEach(element => {
+//       if (element.startsWith(unsigID))
+//       {
+//         let output = fromHex(element.substring(56))
+//         console.log(toString(output))
+//       }  
+
+//     });  
+//     let encbal = await getUtxos()
+//     encbal.forEach(element => {
+//       console.log(element);  
+//       let bal = serializeTxUnspentOutput(element);
+//       let assets = valueToAssets(bal.output().amount());
+//       console.log(assets);
+//     });
+
+// }  
+// } 

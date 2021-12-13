@@ -1,32 +1,25 @@
 import * as React from "react";
 import { StaticImage } from "gatsby-plugin-image"
 import styled from "styled-components";
+import { useStoreState } from "easy-peasy";
 
 import Hero from "../components/Hero"
 import Section from "../components/Section"
 
-const headingStyles = {
-  marginTop: 0,
-  fontSize: "6rem",
-}
-
-const subHeadingStyles = {
-  marginTop: 0,
-  fontSize: "2rem",
-}
-
 const IndexPage = () => {
+  const connected = useStoreState((state) => state.connection.connected);
+
   return (
     <main>
       <title>Home Page</title>
       <Hero>
-        <h1 style={headingStyles}>Unsigs Marketplace</h1>
+        <h1>Unsigs Marketplace</h1>
         <Frame>
           <StaticImage src="../images/01836.png" width="300" height="300" alt="unsig" /> 
         </Frame>
       </Hero>
       <Section>
-        <h2 style={subHeadingStyles}>learn more</h2>
+        <h2>learn more, {connected}</h2>
       </Section>
     </main>
   )

@@ -3,6 +3,8 @@ import { Link } from "gatsby"
 import { StaticImage } from "gatsby-plugin-image";
 import styled from "styled-components";
 
+import WalletButton from "../WalletButton/WalletButton";
+
 const Header = () => {
     return(
         <div id="header"
@@ -38,9 +40,7 @@ const Header = () => {
                 <NavButton>
                     <Link to="/explore/">Guide</Link>                
                 </NavButton>
-                <NavButton>
-                    <Link to="/explore/">About</Link>                 
-                </NavButton>
+                <WalletButton />
             </div>
         </div>
     )
