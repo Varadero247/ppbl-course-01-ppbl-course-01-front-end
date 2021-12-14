@@ -7,6 +7,8 @@ import { enableWallet, getBalance, getUtxos, getOwnedAssets } from "../cardano/w
 import { serializeTxUnspentOutput, valueToAssets } from "../cardano/transaction"
 import { fromHex, toString } from "../utils/converter"
 
+import { Unsig } from "../components/Unsig"
+
 import { useStoreState } from "easy-peasy";
 // Unsig PolicyID
 const unsigID = "0e14267a8020229adc0184dd25fa3174c3f7d6caadcb4425c70e7c04";
@@ -51,13 +53,12 @@ const ExplorePage = ({unsigs}) => {
       <p>Even though we know you have wallet {connected}</p>
       <Collection>
         {data.unsigs.map((i) => (
-          <Unsig key={Object.keys(i)}>
-            <UnsigName>{Object.keys(i)}</UnsigName>
-            <p>{Object.values(i)[0].title}</p>
-            <p>Properties: {Object.values(i)[0].unsigs.num_props}</p>
-            <p>{Object.values(i)[0].image}</p>
-            <img src={`https://infura-ipfs.io/ipfs/${Object.values(i)[0].image}`} alt="unsig" />
-          </Unsig>
+          <Unsig 
+            key={Object.keys(i)} 
+            number={Object.values(i)[0].unsigs.index} 
+            properties={Object.values(i)[0].unsigs.num_props}
+            unsigImg={`https://infura-ipfs.io/ipfs/${Object.values(i)[0].image}`} 
+          />
         ))}
       </Collection>
     </main>
@@ -66,16 +67,10 @@ const ExplorePage = ({unsigs}) => {
 
 export default ExplorePage
 
-const Unsig = styled.div`
-  background: #2037d9;
-  color: white;
-  margin: 10px;
-  padding: 10px;
-  width: 20rem;
-`
+
 
 const UnsigName = styled.h2`
-  font-size: 3rem;
+  font-size: 1rem;
 `
 const Collection = styled.div`
   display: flex;
