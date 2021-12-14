@@ -44,6 +44,9 @@ const pageStyles = {
 
 const ExplorePage = ({unsigs}) => {
   const connected = useStoreState((state) => state.connection.connected);
+
+  // still using local dummy data
+
   return (
     <main style={pageStyles}>
       <title>Explore</title>
@@ -54,10 +57,8 @@ const ExplorePage = ({unsigs}) => {
       <Collection>
         {data.unsigs.map((i) => (
           <Unsig 
-            key={Object.keys(i)} 
+            key={i} 
             number={Object.values(i)[0].unsigs.index} 
-            properties={Object.values(i)[0].unsigs.num_props}
-            unsigImg={`https://infura-ipfs.io/ipfs/${Object.values(i)[0].image}`} 
           />
         ))}
       </Collection>

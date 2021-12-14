@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { motion } from "framer-motion"
+import { motion } from "framer-motion" // for hover, if time
 
 const unsigStyle = {
     display: "flex",
@@ -11,34 +11,83 @@ const unsigStyle = {
     width: "20rem",
 }
 
-const unsigOverlayStyle = {
-    position: "absolute",
-    width: "100%",
-    height: "100%",
-    zIndex: 20,
-    color: "white",
-    padding: "0.5rem",
-    margin: "0.5rem",
-    fontSize: "3rem",
+// play with hover if time
+// const unsigOverlayStyle = {
+//     zIndex: 20,
+//     padding: "1rem",
+//     margin: "1rem",
+//     fontSize: "1rem",
+// }
+
+function getImageURL (unsigID, resolution) {
+// unsigID [0...31118]
+// resolution [128, 256, 512, 1024, 2048]
+    const unsigNumber = unsigID;
+    const res = resolution;
+    const imageURL = "https://s3-ap-northeast-1.amazonaws.com/unsigs.com/images/" + res + "/" + unsigNumber + ".png";
+    console.log(imageURL);
+    return imageURL;
 }
 
-// mouse over to see details would be really cool 
-// use framer motion to acheive this?
+function pad(num, size) {
+    num = num.toString();
+    while (num.length < size) num = "0" + num;
+    return num;
+}
+
+
 
 const Unsig = (props) => {
+// props.number 
+// props.isOffered
+    
+    // File under why I wish I knew TypeScript
+    const emptyUnsig = {
+        "unsigId": "",
+        "details": {
+            "index": 0,
+            "num_props": 0,
+            "properties": {
+                "multipliers": [],
+                "colors": [],
+                "distributions": [],
+                "rotations": []
+            }
+        }
+    }
+
+    const number = props.number
+    const numString = pad(number,5)
+    const iURL = getImageURL (numString, "1024")
+
+    const [unsigDetails, setUnsigDetails] = useState(emptyUnsig);
+
+    useEffect(() => {
+        fetch(`http://localhost:8088/api/v1/unsigs/unsig${numString}`)
+            .then(response => response.json())
+            .then(resultData => {setUnsigDetails(resultData)})
+    }, []);
+
     return(
         <div>
-            <div style={unsigStyle}>    
-                <img src={props.unsigImg} alt="unsig" />
+            <div style={unsigStyle}>
+                {/* not sure why Gatsby's StaticImage doesn't work here, this is ok for now */}
+                <img src={iURL} alt="unsig" width={500} />
+                <div>
+                    <p>
+                        {unsigDetails.details.index}
+                    </p>
+                    <p>
+                        {unsigDetails.details.num_props} properties
+                    </p>
+                    <p>
+                        {(props.isOffered) ? ("for sale") : ("not for sale")}
+                    </p>
+                    <div>{unsigDetails.unsigId}</div>
+                    <div>{unsigDetails.details.properties.colors}</div>
+                    <div>{unsigDetails.details.properties.rotations}</div>
+                </div>
             </div>
-            <motion.div style={unsigOverlayStyle} initial={{ opacity: 0 }} whileHover={{ opacity: 100 }} transition={{ duration: 1 }} onHoverStart={e => {}} onHoverEnd={e => {}}>
-                <p>
-                    {props.number}
-                </p>
-                <p>
-                    {props.properties} properties
-                </p>
-            </motion.div>
         </div>
     );
 }

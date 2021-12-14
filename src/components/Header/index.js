@@ -19,7 +19,9 @@ const Header = () => {
             }}
         >
             <div>
-                <StaticImage src="../../images/unsig.svg" width={300} alt="logo" />
+                <Link to="/">
+                    <StaticImage src="../../images/unsig.svg" width={300} alt="logo" />
+                </Link>
             </div>
             <div
                 style={{

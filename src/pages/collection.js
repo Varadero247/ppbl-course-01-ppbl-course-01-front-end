@@ -1,4 +1,4 @@
-import React from "react"
+import React, { useState, useEffect } from "react"
 import { StaticImage } from "gatsby-plugin-image"
 import data from "../../data/dummy-unsigs.json"
 import styled from "styled-components"
@@ -7,6 +7,8 @@ import { enableWallet, getBalance, getUtxos, getOwnedAssets } from "../cardano/w
 import { serializeTxUnspentOutput, valueToAssets } from "../cardano/transaction"
 import { fromHex, toString } from "../utils/converter"
 import { useStoreState } from "easy-peasy";
+
+import { Unsig } from "../components/Unsig"
 
 // styles
 const pageStyles = {
@@ -27,39 +29,47 @@ const unsigID = "0e14267a8020229adc0184dd25fa3174c3f7d6caadcb4425c70e7c04";
 
 async function getMyUnsigs() {
   let assetList = await getOwnedAssets();
-  let myNFTS = await assetList;
+  let myNFTS = [];
 
-  myNFTS.forEach(nft => {
-    console.log(nft);
-  })
+  assetList.forEach(nft => {
+    if (nft.startsWith(unsigID)) {
+      console.log(nft);
+      let output = fromHex(nft.substring(56))
+      let myWord = toString(output)
+      let myNumber = myWord.substring(5)
+      console.log(myNumber)
+      myNFTS.push(myNumber)
+    }
+  });
+
+  console.log(myNFTS);
+  return myNFTS;
 }
 
+async function getAllMyAssets() {
+  let assetList = await getOwnedAssets();
+  let myNFTS = [];
 
-// const playWithWallet = async () => {
-//   const on = await enableWallet();
-//   let myWord = ""
-//   let myNFTS = []
-//   let myOutput = []
-//   console.log("the wallet is on! ", on)
-//   if(on) {
-//     .then(
-//       assetList.forEach(element => {
-//         if (element.startsWith(unsigID))
-//         {
-//           let output = fromHex(element.substring(56))
-//           myWord = toString(output)
-//           console.log(myWord)
-//           myNFTS.push(myWord)
-//         }  
-//       })
-//     ).then(myNFTS)
-//   }
-  
-// }
+  assetList.forEach(nft => {
+    console.log(nft);
+    let output = fromHex(nft.substring(56))
+    let myWord = toString(output)
+    console.log(myWord)
+    myNFTS.push(myWord)
+  });
+
+  console.log(myNFTS);
+  return myNFTS;
+}
 
 const CollectionPage = ({ unsigs }) => {
   const connected = useStoreState((state) => state.connection.connected);
-  getMyUnsigs();
+  const [collection, setCollection] = useState([])
+  
+  useEffect(async () => {
+    const result = await getMyUnsigs();
+    setCollection(result);
+  }, []);
 
   return (
     <main style={pageStyles}>
@@ -77,9 +87,11 @@ const CollectionPage = ({ unsigs }) => {
             <p>
               Wallet connected at address: {connected} has
             </p>
-            <ul>
-              <li>one</li>
-            </ul>
+            <Collection>
+              
+              {collection.map((i) => <Unsig number={i} />)}
+              
+            </Collection>
           </div>
         ) : (
           <div>
@@ -98,17 +110,6 @@ const CollectionPage = ({ unsigs }) => {
 
 export default CollectionPage
 
-const Unsig = styled.div`
-  background: #2037d9;
-  color: white;
-  margin: 10px;
-  padding: 10px;
-  width: 20rem;
-`
-
-const UnsigName = styled.h2`
-  font-size: 3rem;
-`
 const Collection = styled.div`
   display: flex;
   flex-direction: row;

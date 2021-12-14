@@ -66,8 +66,8 @@ const WalletButton = (props) => {
                     return;
                 }
                 if (await window.cardano.enable().catch((e) => {})) {
-                    // const address = await addressToBech32();
-                    const address = "abcd"
+                    const address = await addressToBech32();
+                    // const address = "abcd"
                     setConnected(address);
                     localStorage.setItem("session", Date.now().toString());
                 }
