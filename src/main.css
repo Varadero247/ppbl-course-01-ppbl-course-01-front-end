@@ -6,6 +6,10 @@ body {
 
 
 h1 {
+    font-family: "Poppins";
     font-size: 3rem;
 }
 
+p {
+    font-family: "Poppins";
+}

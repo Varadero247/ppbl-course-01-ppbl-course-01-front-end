@@ -5,6 +5,7 @@ import Header from "../components/Header";
 import Footer from "../components/Footer";
 
 import "@fontsource/poppins";
+import { flexbox } from "@chakra-ui/styled-system";
 
 const Layout = (props) => {
     return (

@@ -12,6 +12,7 @@ const Header = () => {
                 height: "2%",
                 padding: "2%",
                 display: "flex",
+                width: "100%",
                 alignItems: "center",
                 justifyContent: "space-between",
                 backgroundColor: "#162da1",

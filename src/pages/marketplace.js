@@ -1,12 +1,12 @@
 import * as React from "react"
-import { StaticImage } from "gatsby-plugin-image"
-import data from "../../data/dummy-unsigs.json"
 import styled from "styled-components"
 import Cardano from "../cardano/serialization-lib"
 import { enableWallet, getBalance, getUtxos, getOwnedAssets } from "../cardano/wallet"
 import { serializeTxUnspentOutput, valueToAssets } from "../cardano/transaction"
 import { fromHex, toString } from "../utils/converter"
 import { useStoreState } from "easy-peasy";
+import { Unsig } from "../components/Unsig"
+import { UnsigRandomScrollList } from "../components/UnsigRandomScrollList"
 
 // User Journey for /offer
 // 1. User can go to /offer and view all offers (separate from explore page)
@@ -20,49 +20,39 @@ import { useStoreState } from "easy-peasy";
 // styles
 const pageStyles = {
   color: "#232129",
-  padding: 96,
-}  
+  paddingTop: 40,
+  paddingLeft: 96,
+} 
+
+const headingStyle = {
+  fontSize: "3rem"
+}
+
+// make hooks for list and loading here too.
+
+// then add search.
+
+// if search, show that one
+// otherwise, show random list of NUMBER
 
 const MarketplacePage = ({unsigs}) => {
+  // Build conditional rendering for when an owned unsig is on the page (how / where to check?)
   const connected = useStoreState((state) => state.connection.connected);
+
+  // We can manipulate this list according to user input - the paginated link still plays a role
 
   return (
     <main style={pageStyles}>
       <title>FOR SALE</title>
-      <h1>
-        THE MARKETPLACE
+      <h1 style={headingStyle}>
+        The Unsig Marketplace
       </h1>
-      <p>{connected}</p>
-      <Collection>
-        {data.unsigs.map((i) => (
-          <Unsig key={Object.keys(i)}>
-            <UnsigName>{Object.keys(i)}</UnsigName>
-            <p>{Object.values(i)[0].title}</p>
-            <p>Properties: {Object.values(i)[0].unsigs.num_props}</p>
-            <p>{Object.values(i)[0].image}</p>
-            <img src={`https://infura-ipfs.io/ipfs/${Object.values(i)[0].image}`} alt="unsig" />
-          </Unsig>
-        ))}
-      </Collection>
+      <UnsigRandomScrollList />
+
     </main>
   )
 }
 
 export default MarketplacePage
 
-const Unsig = styled.div`
-  background: #2037d9;
-  color: white;
-  margin: 10px;
-  padding: 10px;
-  width: 20rem;
-`
 
-const UnsigName = styled.h2`
-  font-size: 3rem;
-`
-const Collection = styled.div`
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-`

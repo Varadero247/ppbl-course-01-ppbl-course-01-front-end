@@ -4,11 +4,28 @@ import { motion } from "framer-motion" // for hover, if time
 const unsigStyle = {
     display: "flex",
     flexDirection: "column",
-    background: "#2037d9",
+    background: "#2e2e41",
     color: "white",
     margin: "1rem",
     padding: "1rem",
-    width: "20rem",
+    boxShadow: "2px 2px 2px gray",
+}
+
+const imageStyle = {
+    borderRadius: "2%",
+    marginBottom: "1rem"
+}
+
+const detailRow = {
+    display: "flex",
+    flexDirection: "row",
+    color: "white",
+    margin: "1rem",
+    padding: "1rem"
+}
+
+const numberStyle = {
+    fontSize: "2rem"
 }
 
 // play with hover if time
@@ -25,7 +42,6 @@ function getImageURL (unsigID, resolution) {
     const unsigNumber = unsigID;
     const res = resolution;
     const imageURL = "https://s3-ap-northeast-1.amazonaws.com/unsigs.com/images/" + res + "/" + unsigNumber + ".png";
-    console.log(imageURL);
     return imageURL;
 }
 
@@ -41,6 +57,9 @@ const Unsig = (props) => {
 // props.number 
 // props.isOffered
     
+// Todo: loading behavior
+
+
     // File under why I wish I knew TypeScript
     const emptyUnsig = {
         "unsigId": "",
@@ -69,26 +88,41 @@ const Unsig = (props) => {
     }, []);
 
     return(
-        <div>
+        <motion.div 
+            initial={{ opacity: 0, y: 50}} 
+            whileInView={{ opacity: 1, y: 0}} 
+            viewport={{ once: false }} 
+            exit={{ opacity: 0, y: 50}}
+        >
             <div style={unsigStyle}>
-                {/* not sure why Gatsby's StaticImage doesn't work here, this is ok for now */}
-                <img src={iURL} alt="unsig" width={500} />
                 <div>
-                    <p>
-                        {unsigDetails.details.index}
+                    {/* not sure why Gatsby's StaticImage doesn't work here, this is ok for now */}
+                    <motion.div initial={{ opacity: 0}} animate={{ opacity: 1 }} transition={{ duration: 3 }}>
+                        <img src={iURL} alt="unsig" width={256} height={256} style={imageStyle} />
+                    </motion.div>
+                    <p style={numberStyle}>
+                        # {unsigDetails.details.index}
                     </p>
-                    <p>
-                        {unsigDetails.details.num_props} properties
-                    </p>
+                </div>
+
+                <div>
                     <p>
                         {(props.isOffered) ? ("for sale") : ("not for sale")}
                     </p>
-                    <div>{unsigDetails.unsigId}</div>
-                    <div>{unsigDetails.details.properties.colors}</div>
-                    <div>{unsigDetails.details.properties.rotations}</div>
                 </div>
+                <div>
+                    <p style={numberStyle}>
+                        {unsigDetails.details.num_props}
+                    </p>
+                </div>
+                <div>
+                    <p style={{fontSize: "0.8rem"}}>
+                        PROPERTIES
+                    </p>
+                </div>
+
             </div>
-        </div>
+        </motion.div>
     );
 }
 

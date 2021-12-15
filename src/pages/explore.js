@@ -1,4 +1,4 @@
-import * as React from "react"
+import React, {useState, useEffect} from "react"
 import { StaticImage } from "gatsby-plugin-image"
 import data from "../../data/dummy-unsigs.json"
 import styled from "styled-components"
@@ -10,6 +10,8 @@ import { fromHex, toString } from "../utils/converter"
 import { Unsig } from "../components/Unsig"
 
 import { useStoreState } from "easy-peasy";
+import UnsigOrderedScrollList from "../components/UnsigOrderedScrollList/UnsigOrderedScrollList"
+
 // Unsig PolicyID
 const unsigID = "0e14267a8020229adc0184dd25fa3174c3f7d6caadcb4425c70e7c04";
 
@@ -51,16 +53,17 @@ const ExplorePage = ({unsigs}) => {
     <main style={pageStyles}>
       <title>Explore</title>
       <h1>
-        Explore the Collection
+        Explore the Collection (ordered)
       </h1>
-      <p>Even though we know you have wallet {connected}</p>
       <Collection>
-        {data.unsigs.map((i) => (
+        <UnsigOrderedScrollList start={100} />
+        
+        {/* {data.unsigs.map((i) => (
           <Unsig 
             key={i} 
             number={Object.values(i)[0].unsigs.index} 
           />
-        ))}
+        ))} */}
       </Collection>
     </main>
   )
