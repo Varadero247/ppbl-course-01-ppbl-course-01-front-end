@@ -1,6 +1,11 @@
 import React, { useState, useEffect } from "react";
+import { Button, Box, Center, FormControl, FormLabel, FormErrorMessage, FormHelperText, Input } from "@chakra-ui/react";
+import { Formik, useFormik } from 'formik';
+import styled from "styled-components";
+
 
 import Unsig from "../Unsig/Unsig";
+import { valueToAssets } from "../../cardano/transaction";
 
 // Build the inefficient version first, then refactor
 
@@ -17,7 +22,7 @@ const UnsigOrderedScrollList = (props) => {
     let firstPage = 0;
     if (props.start) firstPage = props.start
 
-    let pageSize = 10;
+    let pageSize = 12;
     if (props.size) pageSize = props.size
 
     const [loading, setLoading] = useState(false);
@@ -34,6 +39,11 @@ const UnsigOrderedScrollList = (props) => {
     // keep track of our latest query
 
     // How to control scroll behavior? Animation?
+    const formik = useFormik({
+        initialValues: {
+            searching: 0,
+        },
+    })
 
     useEffect(() => {
         if (loading) {
@@ -41,6 +51,12 @@ const UnsigOrderedScrollList = (props) => {
             setLoading(false)    
         }
     }, [loading]);
+
+    useEffect(() => {
+        const n = formik.values.searching;
+        setLoadedUnsigs([]);
+        setUnsigUrl(`http://localhost:8088/api/v1/unsigs?pageNo=${n}&pageSize=${pageSize}`)
+    }, [formik.values.searching])
 
     useEffect(() => {
         setUnsigUrl(`http://localhost:8088/api/v1/unsigs?pageNo=${currentPage}&pageSize=${pageSize}`)
@@ -56,12 +72,32 @@ const UnsigOrderedScrollList = (props) => {
             })
     }, [unsigUrl]);
 
+
     return(
         <>
-            {loadedUnsigs.map((i) => (<Unsig key={i.details.index} number={i.details.index} />))}
-            <button onClick={handleLoadMore}>LOAD MORE</button>
+            <Center h='100px' w='50%'>    
+                <form>
+                    <label>Search:</label>
+                    <input name="searching" onChange={formik.handleChange} value={formik.values.searching} />
+                </form>
+                <h1>
+                    {formik.values.searching}
+                </h1>
+            </Center>
+            <Collection>
+                {loadedUnsigs.map((i) => (<Unsig key={i.details.index} number={i.details.index} />))}
+            </Collection>
+            <Center display='flex' w='100%'>
+                <Button onClick={handleLoadMore}>LOAD MORE</Button>
+            </Center>
         </>
     )
 };
 
 export default UnsigOrderedScrollList;
+
+const Collection = styled.div`
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+`

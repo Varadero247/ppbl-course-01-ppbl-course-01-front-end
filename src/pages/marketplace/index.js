@@ -1,12 +1,12 @@
 import * as React from "react"
 import styled from "styled-components"
-import Cardano from "../cardano/serialization-lib"
-import { enableWallet, getBalance, getUtxos, getOwnedAssets } from "../cardano/wallet"
-import { serializeTxUnspentOutput, valueToAssets } from "../cardano/transaction"
-import { fromHex, toString } from "../utils/converter"
+import Cardano from "../../cardano/serialization-lib"
+import { enableWallet, getBalance, getUtxos, getOwnedAssets } from "../../cardano/wallet"
+import { serializeTxUnspentOutput, valueToAssets } from "../../cardano/transaction"
+import { fromHex, toString } from "../../utils/converter"
 import { useStoreState } from "easy-peasy";
-import { Unsig } from "../components/Unsig"
-import { UnsigRandomScrollList } from "../components/UnsigRandomScrollList"
+import { Unsig } from "../../components/Unsig"
+import { UnsigRandomScrollList } from "../../components/UnsigRandomScrollList"
 
 // User Journey for /offer
 // 1. User can go to /offer and view all offers (separate from explore page)

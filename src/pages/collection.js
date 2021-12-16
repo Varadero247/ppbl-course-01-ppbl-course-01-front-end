@@ -6,7 +6,7 @@ import Cardano from "../cardano/serialization-lib"
 import { enableWallet, getBalance, getUtxos, getOwnedAssets } from "../cardano/wallet"
 import { serializeTxUnspentOutput, valueToAssets } from "../cardano/transaction"
 import { fromHex, toString } from "../utils/converter"
-import { useStoreState } from "easy-peasy";
+import { useStoreActions, useStoreState } from "easy-peasy";
 
 import { Unsig } from "../components/Unsig"
 
@@ -25,7 +25,10 @@ const pageStyles = {
 // - This means that the owner of an Unsig can create an offer for that Unsig
 
 // Unsig PolicyID
-const unsigID = "0e14267a8020229adc0184dd25fa3174c3f7d6caadcb4425c70e7c04";
+// const unsigID = "0e14267a8020229adc0184dd25fa3174c3f7d6caadcb4425c70e7c04";
+
+// Testnet Unsig Policy ID:
+const unsigID = "1e82bbd44f7bd555a8bcc829bd4f27056e86412fbb549efdbf78f42d"
 
 async function getMyUnsigs() {
   let assetList = await getOwnedAssets();
@@ -64,12 +67,18 @@ async function getAllMyAssets() {
 
 const CollectionPage = ({ unsigs }) => {
   const connected = useStoreState((state) => state.connection.connected);
-  const [collection, setCollection] = useState([])
+  const [collection, setCollection] = useState([]);
+  const ownedUnsigs = useStoreState((state) => state.ownedUnsigs.unsigIds);
+  const setOwnedUnsigs = useStoreActions((actions) => actions.ownedUnsigs.add);
   
   useEffect(async () => {
     const result = await getMyUnsigs();
     setCollection(result);
   }, []);
+
+  useEffect(() => {
+    setOwnedUnsigs(collection);
+  }, [collection])
 
   return (
     <main style={pageStyles}>
@@ -78,6 +87,9 @@ const CollectionPage = ({ unsigs }) => {
         <h1>
           User Collection of Unsigs
         </h1>
+        <ol>
+          {ownedUnsigs.map((i) => <li>{i}</li>)}
+        </ol>
 
         {connected ? (
           <div>

@@ -1,8 +1,6 @@
-<h1 align="center">
-  Unsigs Marketplace Frontend
-</h1>
+#  Unsigs Marketplace Frontend
 
-## 🚀 Quick start
+## Quick start
 
 1. Grab this repo
 
@@ -16,7 +14,21 @@
     ```
     Your site is now running at http://localhost:8000!
 
-2.  **Learn more**
+2. In order to really use the site, you'll see to get the backend running as well:
+
+  - See https://github.com/ganeshnithyanandam/unsigs-be and follow the docs
+
+2. Use with testnet or mainnet
+  - in `/src/components/WalletButton/WalletButton.jsx`, look for
+  
+  ```
+  if ((await window.cardano.getNetworkId()) === 0) return true;
+  ```
+  - If you're ready for mainnet, change the `0` to `1`
+
+  - Also make sure to comment in/out the appropriate policy ID in `/src/pages/collection.js` (lines 27-31 or so)
+
+3.  **Learn more**
 
     - [Documentation](https://www.gatsbyjs.com/docs/?utm_source=starter&utm_medium=readme&utm_campaign=minimal-starter)
 

@@ -15,7 +15,8 @@ const Header = () => {
                 width: "100%",
                 alignItems: "center",
                 justifyContent: "space-between",
-                backgroundColor: "#162da1",
+                // backgroundColor: "#162da1",
+                backgroundColor: "#181818",
                 color: "#FFF",
             }}
         >

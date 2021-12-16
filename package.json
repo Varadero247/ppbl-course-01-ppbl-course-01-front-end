@@ -23,6 +23,7 @@
     "babel-plugin-styled-components": "^2.0.2",
     "buffer": "^6.0.3",
     "easy-peasy": "^5.0.4",
+    "formik": "^2.2.9",
     "framer-motion": "^5.4.5",
     "gatsby": "^4.2.0",
     "gatsby-background-image": "^1.5.3",

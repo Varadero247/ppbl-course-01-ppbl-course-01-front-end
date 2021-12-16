@@ -8,7 +8,7 @@ import Section from "../components/Section"
 
 const IndexPage = () => {
   const connected = useStoreState((state) => state.connection.connected);
-
+  const ownedUnsigs = useStoreState((state) => state.ownedUnsigs.unsigIds);
   return (
     <main>
       <title>Home Page</title>
@@ -20,6 +20,7 @@ const IndexPage = () => {
       </Hero>
       <Section>
         <h2>learn more, {connected}</h2>
+        <p>You own {ownedUnsigs.join()}</p>
       </Section>
     </main>
   )

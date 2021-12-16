@@ -55,29 +55,9 @@ const ExplorePage = ({unsigs}) => {
       <h1>
         Explore the Collection (ordered)
       </h1>
-      <Collection>
-        <UnsigOrderedScrollList start={100} />
-        
-        {/* {data.unsigs.map((i) => (
-          <Unsig 
-            key={i} 
-            number={Object.values(i)[0].unsigs.index} 
-          />
-        ))} */}
-      </Collection>
+      <UnsigOrderedScrollList start={0} />        
     </main>
   )
 }
 
 export default ExplorePage
-
-
-
-const UnsigName = styled.h2`
-  font-size: 1rem;
-`
-const Collection = styled.div`
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-`

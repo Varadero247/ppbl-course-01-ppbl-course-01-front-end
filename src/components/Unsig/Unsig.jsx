@@ -1,18 +1,18 @@
 import React, { useState, useEffect } from "react";
-import { motion } from "framer-motion" // for hover, if time
+import { motion } from "framer-motion"; // for hover, if time
+import { Link } from "gatsby"; 
+import { useStoreState } from "easy-peasy";
 
 const unsigStyle = {
     display: "flex",
     flexDirection: "column",
-    background: "#2e2e41",
+    background: "#181818",
     color: "white",
     margin: "1rem",
     padding: "1rem",
-    boxShadow: "2px 2px 2px gray",
 }
 
 const imageStyle = {
-    borderRadius: "2%",
     marginBottom: "1rem"
 }
 
@@ -56,9 +56,6 @@ function pad(num, size) {
 const Unsig = (props) => {
 // props.number 
 // props.isOffered
-    
-// Todo: loading behavior
-
 
     // File under why I wish I knew TypeScript
     const emptyUnsig = {
@@ -74,12 +71,15 @@ const Unsig = (props) => {
             }
         }
     }
+    const ownedUnsigs = useStoreState((state) => state.ownedUnsigs.unsigIds);
 
     const number = props.number
     const numString = pad(number,5)
     const iURL = getImageURL (numString, "1024")
 
     const [unsigDetails, setUnsigDetails] = useState(emptyUnsig);
+    const isOwned = ownedUnsigs.includes(numString)
+
 
     useEffect(() => {
         fetch(`http://localhost:8088/api/v1/unsigs/unsig${numString}`)
@@ -94,34 +94,39 @@ const Unsig = (props) => {
             viewport={{ once: false }} 
             exit={{ opacity: 0, y: 50}}
         >
-            <div style={unsigStyle}>
-                <div>
-                    {/* not sure why Gatsby's StaticImage doesn't work here, this is ok for now */}
-                    <motion.div initial={{ opacity: 0}} animate={{ opacity: 1 }} transition={{ duration: 3 }}>
-                        <img src={iURL} alt="unsig" width={256} height={256} style={imageStyle} />
-                    </motion.div>
-                    <p style={numberStyle}>
-                        # {unsigDetails.details.index}
-                    </p>
-                </div>
+            <Link to={`/marketplace/${number}`}>
+                <div style={unsigStyle}>
+                    <div>
+                        {/* not sure why Gatsby's StaticImage doesn't work here, this is ok for now */}
+                        <motion.div initial={{ opacity: 0}} animate={{ opacity: 1 }} transition={{ duration: 3 }}>
+                            <img src={iURL} alt="unsig" width={256} height={256} style={imageStyle} />
+                        </motion.div>
+                        <p style={numberStyle}>
+                            # {unsigDetails.details.index}
+                        </p>
+                    </div>
 
-                <div>
-                    <p>
-                        {(props.isOffered) ? ("for sale") : ("not for sale")}
-                    </p>
-                </div>
-                <div>
-                    <p style={numberStyle}>
-                        {unsigDetails.details.num_props}
-                    </p>
-                </div>
-                <div>
-                    <p style={{fontSize: "0.8rem"}}>
-                        PROPERTIES
-                    </p>
-                </div>
+                    <div>
+                        <p>
+                            {(props.isOffered) ? ("for sale") : ("not for sale")}
+                        </p>
+                    </div>
+                    <div>
+                        <p style={numberStyle}>
+                            {unsigDetails.details.num_props}
+                        </p>
+                    </div>
+                    <div>
+                        <p style={{fontSize: "0.8rem"}}>
+                            PROPERTIES
+                        </p>
+                    </div>
+                    <div>
+                        {isOwned ? "you own this" : "you do not own this"}
+                    </div>
 
-            </div>
+                </div>
+            </Link>
         </motion.div>
     );
 }

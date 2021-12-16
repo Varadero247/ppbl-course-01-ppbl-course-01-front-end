@@ -1,5 +1,6 @@
 import { motion } from "framer-motion";
 import React, { useState, useEffect } from "react";
+import { Button, Center, useToast } from "@chakra-ui/react";
 import styled from "styled-components";
 
 import Unsig from "../Unsig/Unsig";
@@ -29,7 +30,7 @@ const collectionStyles = {
 }
 
 const UnsigRandomScrollList = (props) => {
-    const unsigList = makeNumberList([], 100);
+    const unsigList = makeNumberList([], 12);
     const [loading, setLoading] = useState(false);
     const [loadedUnsigs, setLoadedUnsigs] = useState(unsigList)
 
@@ -39,17 +40,21 @@ const UnsigRandomScrollList = (props) => {
 
     useEffect(() => {
         if (loading) {
-            let newList = makeNumberList(loadedUnsigs, 100);
+            let newList = makeNumberList(loadedUnsigs, 12);
             setLoadedUnsigs(newList)
             setLoading(false);
         }
     }, [loading]);
 
     return(
-        <motion.div style={collectionStyles}>
-            {loadedUnsigs.map((i) => (<Unsig key={i} number={i} />))}
-            <button onClick={handleLoadMore}>LOAD MORE</button>
-        </motion.div>
+        <>
+            <motion.div style={collectionStyles}>
+                {loadedUnsigs.map((i) => (<Unsig key={i} number={i} />))}
+            </motion.div>
+            <Center display='flex' w='100%'>
+                <Button onClick={handleLoadMore}>LOAD MORE</Button>
+            </Center>
+        </>
     )
 };
 

@@ -7,6 +7,12 @@ const store = createStore({
             state.connected = payload;
         }),
     },
+    ownedUnsigs : {
+        unsigIds: [],
+        add: action((state, payload) => {
+            state.unsigIds = payload;
+        }),
+    },
 });
 
 export default store;
