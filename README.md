@@ -18,7 +18,7 @@
 
   - See https://github.com/ganeshnithyanandam/unsigs-be and follow the docs
 
-2. Use with testnet or mainnet
+3. Use with testnet or mainnet
   - in `/src/components/WalletButton/WalletButton.jsx`, look for
   
   ```
@@ -28,7 +28,7 @@
 
   - Also make sure to comment in/out the appropriate policy ID in `/src/pages/collection.js` (lines 27-31 or so)
 
-3.  **Learn more**
+4.  **Learn more**
 
     - [Documentation](https://www.gatsbyjs.com/docs/?utm_source=starter&utm_medium=readme&utm_campaign=minimal-starter)
 
