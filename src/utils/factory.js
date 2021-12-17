@@ -2,6 +2,10 @@ import Cardano from "../cardano/serialization-lib";
 import { toHex, toLovelace } from "./converter";
 
 export const createOfferDatum = (tradeOwner, requestedAmount, unsigId) => {
+  // tradeOwner = Bech32Address
+  // amount = lovelace
+  // unsigId = "#####"
+
   if (tradeOwner && requestedAmount && unsigId) {
     return {
       tradeOwner: getAddressKeyHash(tradeOwner),
@@ -50,3 +54,5 @@ const getAddressKeyHash = (address) => {
       .to_bytes()
   );
 };
+
+

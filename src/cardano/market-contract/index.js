@@ -13,16 +13,23 @@ import { fromHex, toHex } from "../../utils/converter";
 
 
 // Unsig PolicyId
-const unsigPolicyId = "0e14267a8020229adc0184dd25fa3174c3f7d6caadcb4425c70e7c04";
+// const unsigPolicyId = "0e14267a8020229adc0184dd25fa3174c3f7d6caadcb4425c70e7c04";
+
+// Test Unsig PolicyId
+const unsigPolicyId = "1e82bbd44f7bd555a8bcc829bd4f27056e86412fbb549efdbf78f42d";
 
 export const offerAsset = async (
   datum,
-  seller: { address: BaseAddress, utxos: [] }
+  { address, utxosParam }
 ) => {
   try {
+    console.log(address, utxosParam)
     const { txBuilder, datums, outputs } = initializeTx();
-    const utxos = seller.utxos.map((utxo) =>
-      Cardano.Instance.TransactionUnspentOutput.from_bytes(fromHex(utxo))
+    const utxos = utxosParam.map((utxo) =>
+      {
+        console.log(utxo)
+        Cardano.Instance.TransactionUnspentOutput.from_bytes(fromHex(utxo))
+      }
     );
 
     const offerAssetDatum = serializeOffer(datum);
@@ -33,7 +40,7 @@ export const offerAsset = async (
         contractAddress(),
         assetsToValue([
           {
-            unit: `${unsigPolicyId}${datum.unsigId}`,
+            unit: `${unsigPolicyId}.unsig${datum.unsigId}`,
             quantity: "1",
           },
           { unit: "lovelace", quantity: "2000000" }, // why don't we see this in SpaceBudz repo?
@@ -50,8 +57,8 @@ export const offerAsset = async (
       datums,
       utxos,
       outputs,
-      changeAddress: seller.address,
-      metadata: deserializeOffer(lockAssetDatum),
+      changeAddress: address,
+      metadata: deserializeOffer(offerAssetDatum),
     });
     return {
       datumHash,
@@ -62,94 +69,90 @@ export const offerAsset = async (
   }
 };
 
-export const cancelOffer = async () => {
-  export const cancelListing = async (
-    datum,
-    seller: { address: BaseAddress, utxos: [] },
-    assetUtxo
-  ) => {
-    try {
-      const { txBuilder, datums, outputs } = initializeTx();
-  
-      const utxos = seller.utxos.map((utxo) =>
-        Cardano.Instance.TransactionUnspentOutput.from_bytes(fromHex(utxo))
-      );
-  
-      const cancelListingDatum = serializeSale(datum);
-      datums.add(cancelListingDatum);
-  
-      outputs.add(
-        createTxOutput(seller.address.to_address(), assetUtxo.output().amount())
-      );
-  
-      const requiredSigners = Cardano.Instance.Ed25519KeyHashes.new();
-      requiredSigners.add(seller.address.payment_cred().to_keyhash());
-      txBuilder.set_required_signers(requiredSigners);
-  
-      const txHash = await finalizeTx({
-        txBuilder,
-        datums,
-        utxos,
-        outputs,
-        changeAddress: seller.address,
-        scriptUtxo: assetUtxo,
-        plutusScripts: contractScripts(),
-        action: CANCEL,
-      });
-  
-      return txHash;
-    } catch (error) {
-      handleError(error, "cancelOffer");
-    }
-  };
-};
+export const cancelOffer = async (datum, { address, utxos }, assetUtxo) => {
 
-export const buyAsset = async (
-  datum,
-  buyer: { address: BaseAddress, utxos: [] },
-  beneficiaries: {
-    seller: BaseAddress,
-    artist: BaseAddress,
-    market: BaseAddress,
-  },
-  assetUtxo
-) => {
   try {
     const { txBuilder, datums, outputs } = initializeTx();
 
-    const utxos = buyer.utxos.map((utxo) =>
+    const utxos = utxos.map((utxo) =>
       Cardano.Instance.TransactionUnspentOutput.from_bytes(fromHex(utxo))
     );
 
-    const offerAssetDatum = serializeOffer(datum);
-    datums.add(offerAssetDatum);
+    const cancelListingDatum = serializeOffer(datum);
+    datums.add(cancelListingDatum);
 
     outputs.add(
-      createTxOutput(buyer.address.to_address(), assetUtxo.output().amount())
+      createTxOutput(address.to_address(), assetUtxo.output().amount())
     );
 
-    splitAmount(beneficiaries, datum.requestedAmount, outputs);
-
     const requiredSigners = Cardano.Instance.Ed25519KeyHashes.new();
-    requiredSigners.add(buyer.address.payment_cred().to_keyhash());
+    requiredSigners.add(address.payment_cred().to_keyhash());
     txBuilder.set_required_signers(requiredSigners);
 
     const txHash = await finalizeTx({
       txBuilder,
+      datums,
       utxos,
       outputs,
-      datums,
-      changeAddress: buyer.address,
+      changeAddress: address,
       scriptUtxo: assetUtxo,
       plutusScripts: contractScripts(),
-      action: BUY,
+      action: CANCEL,
     });
 
     return txHash;
   } catch (error) {
-    handleError(error, "buyAsset");
+    handleError(error, "cancelOffer");
   }
 };
+
+
+// export const buyAsset = async (
+//   datum,
+//   buyer: { address: BaseAddress, utxos: [] },
+//   beneficiaries: {
+//     seller: BaseAddress,
+//     artist: BaseAddress,
+//     market: BaseAddress,
+//   },
+//   assetUtxo
+// ) => {
+//   try {
+//     const { txBuilder, datums, outputs } = initializeTx();
+
+//     const utxos = buyer.utxos.map((utxo) =>
+//       Cardano.Instance.TransactionUnspentOutput.from_bytes(fromHex(utxo))
+//     );
+
+//     const offerAssetDatum = serializeOffer(datum);
+//     datums.add(offerAssetDatum);
+
+//     outputs.add(
+//       createTxOutput(buyer.address.to_address(), assetUtxo.output().amount())
+//     );
+
+//     splitAmount(beneficiaries, datum.requestedAmount, outputs);
+
+//     const requiredSigners = Cardano.Instance.Ed25519KeyHashes.new();
+//     requiredSigners.add(buyer.address.payment_cred().to_keyhash());
+//     txBuilder.set_required_signers(requiredSigners);
+
+//     const txHash = await finalizeTx({
+//       txBuilder,
+//       utxos,
+//       outputs,
+//       datums,
+//       changeAddress: buyer.address,
+//       scriptUtxo: assetUtxo,
+//       plutusScripts: contractScripts(),
+//       action: BUY,
+//     });
+
+//     return txHash;
+//   } catch (error) {
+//     handleError(error, "buyAsset");
+//   }
+// };
 
 const handleError = (error, source) => {
   console.error(`Unexpected error in ${source}. [Message: ${error.message}]`);

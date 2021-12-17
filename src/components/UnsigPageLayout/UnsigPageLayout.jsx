@@ -2,6 +2,10 @@ import React, { useState, useEffect } from "react";
 import { Button, Center, Stack } from "@chakra-ui/react";
 import { motion } from "framer-motion"; // for hover, if time
 import { Link } from "gatsby"; 
+import { useStoreState } from "easy-peasy";
+import { Formik, useFormik } from 'formik';
+import { offerAsset } from "../../cardano/market-contract";
+import { createOfferDatum } from "../../utils/factory"
 
 const unsigStyle = {
     display: "flex",
@@ -72,8 +76,6 @@ function pad(num, size) {
     return num;
 }
 
-
-
 const UnsigPageLayout = (props) => {
 // props.number 
 // props.isOffered
@@ -102,11 +104,44 @@ const UnsigPageLayout = (props) => {
 
     const [unsigDetails, setUnsigDetails] = useState(emptyUnsig);
 
+    const ownedUnsigs = useStoreState((state) => state.ownedUnsigs.unsigIds);
+    const isOwned = ownedUnsigs.includes(numString);
+
     useEffect(() => {
         fetch(`http://localhost:8088/api/v1/unsigs/unsig${numString}`)
             .then(response => response.json())
             .then(resultData => {setUnsigDetails(resultData)})
     }, []);
+    
+    const formik = useFormik({
+        initialValues: {
+            unsigOfferPriceAda: 100,
+        },
+    })
+    
+    const [currentOffer, setCurrentOffer] = useState(formik.unsigOfferPriceAda)
+
+    useEffect(() => {
+        const n = formik.values.unsigOfferPriceAda;
+        setCurrentOffer(n);
+    }, [formik.values.unsigOfferPriceAda])
+
+    // need useEffect to update ownership
+    
+    const owner = useStoreState((state) => state.connection.connected)
+    const utxos = useStoreState((state) => state.ownedUtxos.utxos)
+
+    const handleList = async () => {
+        try {
+            const datum = createOfferDatum(owner, currentOffer, numString)
+            console.log(utxos)
+            const seller = {"address": owner, "utxosParam": utxos} // add current wallet utxos to state
+            const listResult = await offerAsset(datum, seller)
+            console.log("Success", listResult)
+        } catch (error) {
+            console.log(error)
+        }
+    }
 
     return(
         <motion.div 
@@ -123,10 +158,20 @@ const UnsigPageLayout = (props) => {
                         </motion.div>
                         <Center h='100px'> 
                             <Stack direction='row' spacing={10}>
-                                <Button colorScheme='teal'>Buy this Unsig</Button>
-                                <Button colorScheme='teal'>List this Unsig</Button>
+                                <Button colorScheme='teal'>If listed: Buy this Unsig</Button>
+                                <Button colorScheme='teal' onClick={handleList}>If owned: List this Unsig</Button>
+                                <Button colorScheme='teal'>If owned and listed: Cancel</Button>
                             </Stack>
                         </Center>            
+                        <div style={{ backgroundColor: "red", color: "black"}}>
+                            <form>
+                                <label>Sale Price:</label>
+                                <input name="unsigOfferPriceAda" onChange={formik.handleChange} value={formik.values.unsigOfferPriceAda} />
+                            </form>
+                            <div>
+                                {currentOffer}
+                            </div> 
+                        </div>
 
                     </div>
 
@@ -135,8 +180,8 @@ const UnsigPageLayout = (props) => {
                             # {unsigDetails.details.index}
                         </p>
                         <p>
-                            {(props.isOffered) ? ("for sale") : ("not for sale")} {" | "}
-                            {(props.isOwner) ? ("You own this!") : ("not your unsig")}
+                            {(props.isOffered) ? ("Offer price=") : ("not for sale")} {" | "}
+                            {(isOwned) ? ("You own this!") : ("not your unsig")}
                         </p>
                         <p style={numberStyle}>
                             {unsigDetails.details.num_props}

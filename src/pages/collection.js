@@ -72,13 +72,17 @@ const CollectionPage = ({ unsigs }) => {
   const setOwnedUnsigs = useStoreActions((actions) => actions.ownedUnsigs.add);
   
   useEffect(async () => {
-    const result = await getMyUnsigs();
-    setCollection(result);
+    if(connected){
+      const unsigs = await getMyUnsigs();
+      setCollection(unsigs);
+    }
   }, []);
 
   useEffect(() => {
-    setOwnedUnsigs(collection);
-  }, [collection])
+    if(connected) {
+      setOwnedUnsigs(collection);
+    }
+  }, [collection]);
 
   return (
     <main style={pageStyles}>

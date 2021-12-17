@@ -3,6 +3,7 @@ import Errors from "./errors";
 import { fromHex, toHex, fromStr } from "../../utils/converter";
 
 export const serializeOffer = ({ tradeOwner, requestedAmount, unsigId }) => {
+  // unsigId is "unsig#####"
   const fields = Cardano.Instance.PlutusList.new();
 
   fields.add(Cardano.Instance.PlutusData.new_bytes(fromHex(tradeOwner)));

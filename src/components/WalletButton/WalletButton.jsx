@@ -6,6 +6,7 @@ import Cardano from "../../cardano/serialization-lib"
 import { useStoreActions, useStoreState } from "easy-peasy";
 import { Button, Box, useToast } from "@chakra-ui/react";
 import { ChevronRightIcon, InfoIcon } from "@chakra-ui/icons";
+import { getUtxos } from "../../cardano/wallet";
 
 // loader - see line 16 in SpaceBudz/StartButton.jsx
 const addressToBech32 = async () => {
@@ -21,7 +22,14 @@ const WalletButton = (props) => {
     const [flag, setFlag] = useState(false);
     const connected = useStoreState((state) => state.connection.connected);
     const setConnected = useStoreActions((actions) => actions.connection.setConnected);
+    const walletUtxos = useStoreState((state) => state.ownedUtxos.utxos)
+    const setWalletUtxos = useStoreActions((actions) => actions.ownedUtxos.add)
     const toast = useToast();
+
+    useEffect(async () => {
+      const utxos = await getUtxos();
+      setWalletUtxos(utxos);
+    }, []);
 
     useEffect(() => {
         if (connected && !flag)
@@ -32,6 +40,8 @@ const WalletButton = (props) => {
                 setFlag(true);
             });
     }, [connected]);
+
+
 
     const checkConnection = async () => {
         if (window.cardano && (await window.cardano.isEnabled())) {

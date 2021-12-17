@@ -13,6 +13,12 @@ const store = createStore({
             state.unsigIds = payload;
         }),
     },
+    ownedUtxos : {
+        utxos: [],
+        add: action((state, payload) => {
+            state.utxos = payload;
+        }),
+    },
 });
 
 export default store;

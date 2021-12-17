@@ -2,10 +2,13 @@ import React from "react";
 import { Link } from "gatsby"
 import { StaticImage } from "gatsby-plugin-image";
 import styled from "styled-components";
+import { useStoreState } from "easy-peasy";
 
 import WalletButton from "../WalletButton/WalletButton";
 
 const Header = () => {
+    const connected = useStoreState((state) => state.connection.connected);
+
     return(
         <div id="header"
             style={{
@@ -38,9 +41,12 @@ const Header = () => {
                 <NavButton>
                     <Link to="/marketplace/">Marketplace</Link> 
                 </NavButton>
-                <NavButton>
-                    <Link to="/collection/">My Collection</Link> 
-                </NavButton>
+                {connected ? (
+                    <NavButton>
+                        <Link to="/collection/">My Collection</Link> 
+                    </NavButton>
+                ) : ""}
+                
                 <NavButton>
                     <Link to="/explore/">Guide</Link>                
                 </NavButton>

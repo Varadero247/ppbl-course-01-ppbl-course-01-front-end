@@ -131,6 +131,9 @@ export const finalizeTx = async ({
 
   let aux_data;
 
+  // trade off -- let's keep the conversation (argument!) going about how much tx metadata to post
+  // let's bring these conversations to Unsig community and beyond
+
   if (metadata) {
     aux_data = Cardano.Instance.AuxiliaryData.new();
     const generalMetadata = Cardano.Instance.GeneralTransactionMetadata.new();
