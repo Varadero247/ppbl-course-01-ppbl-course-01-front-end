@@ -1,7 +1,7 @@
 import Cardano from "../serialization-lib";
 import Errors from "./errors";
 import { serializeOffer, deserializeOffer } from "./datums";
-import { BUY } from "./redeemers";
+import { CANCEL, BUY } from "./redeemers";
 import { contractAddress, contractScripts } from "./validator";
 import {
   assetsToValue,
@@ -10,6 +10,10 @@ import {
   initializeTx,
 } from "../transaction";
 import { fromHex, toHex } from "../../utils/converter";
+
+
+// Unsig PolicyId
+const unsigPolicyId = "0e14267a8020229adc0184dd25fa3174c3f7d6caadcb4425c70e7c04";
 
 export const offerAsset = async (
   datum,
@@ -29,7 +33,7 @@ export const offerAsset = async (
         contractAddress(),
         assetsToValue([
           {
-            unit: datum.unsigId,
+            unit: `${unsigPolicyId}${datum.unsigId}`,
             quantity: "1",
           },
           { unit: "lovelace", quantity: "2000000" }, // why don't we see this in SpaceBudz repo?
@@ -56,6 +60,48 @@ export const offerAsset = async (
   } catch (error) {
     handleError(error, "offerAsset");
   }
+};
+
+export const cancelOffer = async () => {
+  export const cancelListing = async (
+    datum,
+    seller: { address: BaseAddress, utxos: [] },
+    assetUtxo
+  ) => {
+    try {
+      const { txBuilder, datums, outputs } = initializeTx();
+  
+      const utxos = seller.utxos.map((utxo) =>
+        Cardano.Instance.TransactionUnspentOutput.from_bytes(fromHex(utxo))
+      );
+  
+      const cancelListingDatum = serializeSale(datum);
+      datums.add(cancelListingDatum);
+  
+      outputs.add(
+        createTxOutput(seller.address.to_address(), assetUtxo.output().amount())
+      );
+  
+      const requiredSigners = Cardano.Instance.Ed25519KeyHashes.new();
+      requiredSigners.add(seller.address.payment_cred().to_keyhash());
+      txBuilder.set_required_signers(requiredSigners);
+  
+      const txHash = await finalizeTx({
+        txBuilder,
+        datums,
+        utxos,
+        outputs,
+        changeAddress: seller.address,
+        scriptUtxo: assetUtxo,
+        plutusScripts: contractScripts(),
+        action: CANCEL,
+      });
+  
+      return txHash;
+    } catch (error) {
+      handleError(error, "cancelOffer");
+    }
+  };
 };
 
 export const buyAsset = async (
@@ -101,7 +147,7 @@ export const buyAsset = async (
 
     return txHash;
   } catch (error) {
-    handleError(error, "purchaseAsset");
+    handleError(error, "buyAsset");
   }
 };
 
