@@ -1,7 +1,5 @@
 import Cardano from "../cardano/serialization-lib";
 
-export const fromAscii = (hex) => Buffer.from(hex).toString("hex");
-
 export const fromBech32 = (bech32) =>
   Cardano.Instance.BaseAddress.from_address(
     Cardano.Instance.Address.from_bech32(bech32)
@@ -15,4 +13,6 @@ export const fromLovelace = (lovelace) => lovelace / 1000000;
 
 export const toLovelace = (ada) => ada * 1000000;
 
-export const toString = (bytes) => String.fromCharCode.apply(String, bytes);
+export const fromStr = (str) => Buffer.from(str, "utf-8");
+
+export const toStr = (bytes) => String.fromCharCode.apply(String, bytes);

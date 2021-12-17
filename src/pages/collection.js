@@ -5,7 +5,7 @@ import styled from "styled-components"
 import Cardano from "../cardano/serialization-lib"
 import { enableWallet, getBalance, getUtxos, getOwnedAssets } from "../cardano/wallet"
 import { serializeTxUnspentOutput, valueToAssets } from "../cardano/transaction"
-import { fromHex, toString } from "../utils/converter"
+import { fromHex, toStr } from "../utils/converter"
 import { useStoreActions, useStoreState } from "easy-peasy";
 
 import { Unsig } from "../components/Unsig"
@@ -38,7 +38,7 @@ async function getMyUnsigs() {
     if (nft.startsWith(unsigID)) {
       console.log(nft);
       let output = fromHex(nft.substring(56))
-      let myWord = toString(output)
+      let myWord = toStr(output)
       let myNumber = myWord.substring(5)
       console.log(myNumber)
       myNFTS.push(myNumber)
@@ -56,7 +56,7 @@ async function getAllMyAssets() {
   assetList.forEach(nft => {
     console.log(nft);
     let output = fromHex(nft.substring(56))
-    let myWord = toString(output)
+    let myWord = toStr(output)
     console.log(myWord)
     myNFTS.push(myWord)
   });
@@ -140,7 +140,7 @@ const Collection = styled.div`
 //       if (element.startsWith(unsigID))
 //       {
 //         let output = fromHex(element.substring(56))
-//         console.log(toString(output))
+//         console.log(toStr(output))
 //       }  
 
 //     });  

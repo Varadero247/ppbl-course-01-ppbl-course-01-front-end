@@ -3,7 +3,6 @@ import styled from "styled-components"
 import Cardano from "../../cardano/serialization-lib"
 import { enableWallet, getBalance, getUtxos, getOwnedAssets } from "../../cardano/wallet"
 import { serializeTxUnspentOutput, valueToAssets } from "../../cardano/transaction"
-import { fromHex, toString } from "../../utils/converter"
 import { useStoreState } from "easy-peasy";
 import { Unsig } from "../../components/Unsig"
 import { UnsigRandomScrollList } from "../../components/UnsigRandomScrollList"
