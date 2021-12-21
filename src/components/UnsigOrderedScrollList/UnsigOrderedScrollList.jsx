@@ -54,13 +54,14 @@ const UnsigOrderedScrollList = (props) => {
 
     useEffect(() => {
         const n = formik.values.searching;
-        const requestBody = {
+        const requestOptions = {
             method: 'POST',
             headers: {},
             body: JSON.stringify(["unsig12345"])
         }
-        setLoadedUnsigs([]);
-        setUnsigUrl(`http://localhost:8088/api/v1/unsigs?pageNo=${n}&pageSize=${pageSize}`)
+        fetch('http://localhost:8088/api/v1/unsigs/find', requestOptions)
+            .then(reponse => response.json())
+            .then(setLoadedUnsigs(response))
     }, [formik.values.searching])
 
     useEffect(() => {
@@ -90,7 +91,7 @@ const UnsigOrderedScrollList = (props) => {
                 </h1>
             </Center>
             <Collection>
-                {loadedUnsigs.map((i) => (<Unsig key={i.details.index} number={i.details.index} />))}
+                {loadedUnsigs.map((i) => (<UnsigCard number={i.details.index} numProps={i.details.index} isOwned="true" isOffered="false" />))}
             </Collection>
             <Center display='flex' w='100%'>
                 <Button onClick={handleLoadMore}>LOAD MORE</Button>
