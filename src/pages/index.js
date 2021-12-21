@@ -16,19 +16,19 @@ const IndexPage = () => {
 
   useEffect(async () => {
     if (connected) {
-      const amt = await getBalance(); 
+      const amt = await getBalance();
       setWalletFunds(amt);
       console.log(amt)
     }
   }, [])
-  
+
   return (
     <main>
       <title>Home Page</title>
       <Hero>
         <h1>Unsigs Marketplace</h1>
         <Frame>
-          <StaticImage src="../images/01836.png" width="300" height="300" alt="unsig" /> 
+          <StaticImage src="../images/01836.png" width="300" height="300" alt="unsig" />
         </Frame>
       </Hero>
       <Section>
@@ -44,6 +44,6 @@ const IndexPage = () => {
 export default IndexPage;
 
 const Frame = styled.div`
-  background-color: #2037d9;
+  background-color: #232129;
   padding: 10px;
 `;

@@ -16,7 +16,8 @@ const unsigID = "0e14267a8020229adc0184dd25fa3174c3f7d6caadcb4425c70e7c04";
 
 // styles
 const pageStyles = {
-  color: "#232129",
+  backgroundColor: "#232129",
+  color: "white",
   padding: 96,
 }
 
@@ -52,9 +53,9 @@ const ExplorePage = ({unsigs}) => {
     <main style={pageStyles}>
       <title>Explore</title>
       <h1>
-        Explore the Collection (ordered)
+        Explore Unsigs
       </h1>
-      <UnsigOrderedScrollList start={0} />        
+      <UnsigOrderedScrollList start={0} />
     </main>
   )
 }

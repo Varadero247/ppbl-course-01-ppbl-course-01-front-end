@@ -18,13 +18,9 @@ import { UnsigRandomScrollList } from "../../components/UnsigRandomScrollList"
 
 // styles
 const pageStyles = {
-  color: "#232129",
+  backgroundColor: "#232129",
   paddingTop: 40,
   paddingLeft: 96,
-} 
-
-const headingStyle = {
-  fontSize: "3rem"
 }
 
 // make hooks for list and loading here too.
@@ -43,7 +39,7 @@ const MarketplacePage = ({unsigs}) => {
   return (
     <main style={pageStyles}>
       <title>FOR SALE</title>
-      <h1 style={headingStyle}>
+      <h1>
         The Unsig Marketplace
       </h1>
       <UnsigRandomScrollList />
@@ -53,5 +49,3 @@ const MarketplacePage = ({unsigs}) => {
 }
 
 export default MarketplacePage
-
-

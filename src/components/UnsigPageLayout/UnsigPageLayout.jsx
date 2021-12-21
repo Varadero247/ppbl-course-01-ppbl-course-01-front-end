@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Button, Center, Stack } from "@chakra-ui/react";
 import { motion } from "framer-motion"; // for hover, if time
-import { Link } from "gatsby"; 
+import { Link } from "gatsby";
 import { useStoreState } from "easy-peasy";
 import { Formik, useFormik } from 'formik';
 import { offerAsset } from "../../cardano/market-contract";
@@ -10,14 +10,14 @@ import { createOfferDatum } from "../../utils/factory"
 const unsigStyle = {
     display: "flex",
     flexDirection: "row",
-    background: "#181818",
+    background: "#232129",
     color: "white",
     marginTop: "2rem",
     padding: "2rem",
 }
 
 const imageStyle = {
-    
+
 }
 
 const detailRow = {
@@ -77,9 +77,9 @@ function pad(num, size) {
 }
 
 const UnsigPageLayout = (props) => {
-// props.number 
+// props.number
 // props.isOffered
-    
+
 // Todo: loading behavior
 
 
@@ -112,13 +112,13 @@ const UnsigPageLayout = (props) => {
             .then(response => response.json())
             .then(resultData => {setUnsigDetails(resultData)})
     }, []);
-    
+
     const formik = useFormik({
         initialValues: {
             unsigOfferPriceAda: 100,
         },
     })
-    
+
     const [currentOffer, setCurrentOffer] = useState(formik.unsigOfferPriceAda)
 
     useEffect(() => {
@@ -127,7 +127,7 @@ const UnsigPageLayout = (props) => {
     }, [formik.values.unsigOfferPriceAda])
 
     // need useEffect to update ownership
-    
+
     const owner = useStoreState((state) => state.connection.connected)
     const utxos = useStoreState((state) => state.ownedUtxos.utxos)
 
@@ -144,10 +144,10 @@ const UnsigPageLayout = (props) => {
     }
 
     return(
-        <motion.div 
-            initial={{ opacity: 0, x: -1200}} 
+        <motion.div
+            initial={{ opacity: 0, x: -1200}}
             animate={{ opacity: 1, x: 0}}
-            transition={{ duration: 0.5 }} 
+            transition={{ duration: 0.5 }}
         >
             <Link to={`/marketplace/${number}`}>
                 <div style={unsigStyle}>
@@ -156,13 +156,13 @@ const UnsigPageLayout = (props) => {
                         <motion.div initial={{ opacity: 0}} animate={{ opacity: 1 }} transition={{ duration: 1 }}>
                             <img src={iURL} alt="unsig" width={800} height={800} style={imageStyle} />
                         </motion.div>
-                        <Center h='100px'> 
+                        <Center h='100px'>
                             <Stack direction='row' spacing={10}>
                                 <Button colorScheme='teal'>If listed: Buy this Unsig</Button>
                                 <Button colorScheme='teal' onClick={handleList}>If owned: List this Unsig</Button>
                                 <Button colorScheme='teal'>If owned and listed: Cancel</Button>
                             </Stack>
-                        </Center>            
+                        </Center>
                         <div style={{ backgroundColor: "red", color: "black"}}>
                             <form>
                                 <label>Sale Price:</label>
@@ -170,7 +170,7 @@ const UnsigPageLayout = (props) => {
                             </form>
                             <div>
                                 {currentOffer}
-                            </div> 
+                            </div>
                         </div>
 
                     </div>

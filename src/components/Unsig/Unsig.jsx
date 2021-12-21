@@ -1,7 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion"; // for hover, if time
-import { Link } from "gatsby"; 
+import { Link } from "gatsby";
 import { useStoreState } from "easy-peasy";
+import { Center } from "@chakra-ui/layout";
+import { Box, Button, Flex, Spacer } from "@chakra-ui/react"
+import { ViewIcon } from "@chakra-ui/icons"
 
 const unsigStyle = {
     display: "flex",
@@ -16,29 +19,9 @@ const imageStyle = {
     marginBottom: "1rem"
 }
 
-const detailRow = {
-    display: "flex",
-    flexDirection: "row",
-    color: "white",
-    margin: "1rem",
-    padding: "1rem"
-}
-
-const numberStyle = {
-    fontSize: "2rem"
-}
-
-// play with hover if time
-// const unsigOverlayStyle = {
-//     zIndex: 20,
-//     padding: "1rem",
-//     margin: "1rem",
-//     fontSize: "1rem",
-// }
-
-function getImageURL (unsigID, resolution) {
-// unsigID [0...31118]
-// resolution [128, 256, 512, 1024, 2048]
+function getImageURL(unsigID, resolution) {
+    // unsigID [0...31118]
+    // resolution [128, 256, 512, 1024, 2048]
     const unsigNumber = unsigID;
     const res = resolution;
     const imageURL = "https://s3-ap-northeast-1.amazonaws.com/unsigs.com/images/" + res + "/" + unsigNumber + ".png";
@@ -51,11 +34,43 @@ function pad(num, size) {
     return num;
 }
 
+const UnsigProps = (props) => {
+    return (
+        <Center p='1'>
+            <p style={{ fontSize: "1.2rem", fontWeight: "700" }}>
+                {props.number} <span style={{ fontSize: "0.9rem", fontWeight: "200" }}>PROPS</span>
+            </p>
+        </Center>
+    )
+}
 
+const Owned = (props) => {
+    if (props.owner) {
+        return (
+            <Center backgroundColor='#448844' p='1'>
+                owner
+            </Center>
+        )
+    } else {
+        return (
+            <Center p='1'>
+                <ViewIcon />
+            </Center>
+        )
+    }
+}
+
+const ForSale = () => {
+    return (
+        <Center p='1'>
+            Listed
+        </Center>
+    )
+}
 
 const Unsig = (props) => {
-// props.number 
-// props.isOffered
+    // props.number
+    // props.isOffered
 
     // File under why I wish I knew TypeScript
     const emptyUnsig = {
@@ -74,8 +89,8 @@ const Unsig = (props) => {
     const ownedUnsigs = useStoreState((state) => state.ownedUnsigs.unsigIds);
 
     const number = props.number
-    const numString = pad(number,5)
-    const iURL = getImageURL (numString, "1024")
+    const numString = pad(number, 5)
+    const iURL = getImageURL(numString, "1024")
 
     const [unsigDetails, setUnsigDetails] = useState(emptyUnsig);
     const isOwned = ownedUnsigs.includes(numString)
@@ -84,46 +99,35 @@ const Unsig = (props) => {
     useEffect(() => {
         fetch(`http://localhost:8088/api/v1/unsigs/unsig${numString}`)
             .then(response => response.json())
-            .then(resultData => {setUnsigDetails(resultData)})
+            .then(resultData => { setUnsigDetails(resultData) })
     }, []);
 
-    return(
-        <motion.div 
-            initial={{ opacity: 0, y: 50}} 
-            whileInView={{ opacity: 1, y: 0}} 
-            viewport={{ once: false }} 
-            exit={{ opacity: 0, y: 50}}
+    return (
+        <motion.div
+            initial={{ opacity: 0, y: 50 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: false }}
+            exit={{ opacity: 0, y: 50 }}
         >
             <Link to={`/marketplace/${number}`}>
                 <div style={unsigStyle}>
-                    <div>
+                    <Box>
                         {/* not sure why Gatsby's StaticImage doesn't work here, this is ok for now */}
-                        <motion.div initial={{ opacity: 0}} animate={{ opacity: 1 }} transition={{ duration: 3 }}>
+                        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 3 }}>
                             <img src={iURL} alt="unsig" width={256} height={256} style={imageStyle} />
                         </motion.div>
-                        <p style={numberStyle}>
+                        <h3>
                             # {unsigDetails.details.index}
-                        </p>
-                    </div>
+                        </h3>
+                    </Box>
+                    <Flex flexDirection='row'>
+                        <UnsigProps number={unsigDetails.details.num_props} />
+                        <Spacer />
+                        {props.isOffered ? <ForSale /> : ""}
+                        <Spacer />
+                        <Owned owner={isOwned} />
+                    </Flex>
 
-                    <div>
-                        <p>
-                            {(props.isOffered) ? ("for sale") : ("not for sale")}
-                        </p>
-                    </div>
-                    <div>
-                        <p style={numberStyle}>
-                            {unsigDetails.details.num_props}
-                        </p>
-                    </div>
-                    <div>
-                        <p style={{fontSize: "0.8rem"}}>
-                            PROPERTIES
-                        </p>
-                    </div>
-                    <div>
-                        {isOwned ? "you own this" : "you do not own this"}
-                    </div>
 
                 </div>
             </Link>

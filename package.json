@@ -19,6 +19,7 @@
     "@chakra-ui/icons": "^1.1.1",
     "@chakra-ui/react": "^1.7.3",
     "@emurgo/cardano-serialization-lib-browser": "file:./src/cardano/serialization-lib/@emurgo/cardano-serialization-lib-browser",
+    "@fontsource/jetbrains-mono": "^4.5.0",
     "@fontsource/poppins": "^4.5.0",
     "babel-plugin-styled-components": "^2.0.2",
     "buffer": "^6.0.3",

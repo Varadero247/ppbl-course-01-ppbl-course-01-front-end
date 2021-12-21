@@ -9,7 +9,7 @@ import WalletButton from "../WalletButton/WalletButton";
 const Header = () => {
     const connected = useStoreState((state) => state.connection.connected);
 
-    return(
+    return (
         <div id="header"
             style={{
                 height: "2%",
@@ -19,7 +19,7 @@ const Header = () => {
                 alignItems: "center",
                 justifyContent: "space-between",
                 // backgroundColor: "#162da1",
-                backgroundColor: "#181818",
+                backgroundColor: "#232129",
                 color: "#FFF",
             }}
         >
@@ -36,19 +36,19 @@ const Header = () => {
                 }}
             >
                 <NavButton>
-                    <Link to="/explore/">Explore</Link> 
+                    <Link to="/explore/">Explore</Link>
                 </NavButton>
                 <NavButton>
-                    <Link to="/marketplace/">Marketplace</Link> 
+                    <Link to="/marketplace/">Marketplace</Link>
                 </NavButton>
                 {connected ? (
                     <NavButton>
-                        <Link to="/collection/">My Collection</Link> 
+                        <Link to="/collection/">My Collection</Link>
                     </NavButton>
                 ) : ""}
-                
+
                 <NavButton>
-                    <Link to="/explore/">Guide</Link>                
+                    <Link to="/explore/">Guide</Link>
                 </NavButton>
                 <WalletButton />
             </div>
@@ -59,6 +59,7 @@ const Header = () => {
 const NavButton = styled.div`
     margin: 0px 50px 0px 0px;
     font-weight: bold;
+    font-family: 'JetBrains Mono';
 `
 
 export default Header;

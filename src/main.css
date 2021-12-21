@@ -6,8 +6,14 @@ body {
 
 
 h1 {
-    font-family: "Poppins";
-    font-size: 3rem;
+    font-family: "JetBrains Mono";
+    font-size: 5rem;
+    color: white;
+}
+
+h3 {
+    font-family: "JetBrains Mono";
+    font-size: 2rem;
 }
 
 p, ul, li {
