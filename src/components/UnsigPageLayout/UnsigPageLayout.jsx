@@ -194,6 +194,8 @@ const UnsigPageLayout = (props) => {
 
             const assetUTxO = createTxUnspentOutput(contractAddress(), bfUTxO)
             console.log(assetUTxO)
+
+            // NEXT STEP: Make cancelResult work
             const cancelResult = await cancelOffer(datum, seller, assetUTxO)
             console.log(cancelResult)
         } catch (error) {
