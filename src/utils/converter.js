@@ -2,7 +2,7 @@ import Cardano from "../cardano/serialization-lib";
 
 export const fromBech32 = (bech32) =>
   Cardano.Instance.BaseAddress.from_address(
-    Cardano.Instance.Address.from_bech32(bech32)
+    Cardano.Instance.Address.from_bech32(bech32) // returns an address object
   );
 
 export const fromHex = (hex) => Buffer.from(hex, "hex");

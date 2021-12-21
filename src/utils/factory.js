@@ -10,6 +10,8 @@ export const createOfferDatum = (tradeOwner, requestedAmount, unsigId) => {
     return {
       tradeOwner: getAddressKeyHash(tradeOwner),
       requestedAmount,
+      // !!! change after unlocking #00016
+      // requestedAmount: toLovelace(requestedAmount),
       unsigId,
     };
   }
@@ -54,5 +56,3 @@ const getAddressKeyHash = (address) => {
       .to_bytes()
   );
 };
-
-

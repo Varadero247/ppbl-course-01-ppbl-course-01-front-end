@@ -86,12 +86,15 @@ export const finalizeTx = async ({
     Parameters.maxTxSize.toString()
   );
 
+  console.log(utxos, outputs)
+
   let { input, change } = CoinSelection.randomImprove(
     utxos,
     outputs,
     8,
     scriptUtxo ? [scriptUtxo] : []
   );
+
 
   input.forEach((utxo) => {
     txBuilder.add_input(

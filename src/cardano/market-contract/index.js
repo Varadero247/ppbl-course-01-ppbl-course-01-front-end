@@ -9,7 +9,7 @@ import {
   finalizeTx,
   initializeTx,
 } from "../transaction";
-import { fromHex, toHex } from "../../utils/converter";
+import { fromHex, fromStr, toHex } from "../../utils/converter";
 
 
 // Unsig PolicyId
@@ -17,30 +17,32 @@ import { fromHex, toHex } from "../../utils/converter";
 
 // Test Unsig PolicyId
 const unsigPolicyId = "1e82bbd44f7bd555a8bcc829bd4f27056e86412fbb549efdbf78f42d";
+                    // 1e82bbd44f7bd555a8bcc829bd4f27056e86412fbb549efdbf78f42d
 
 export const offerAsset = async (
   datum,
   { address, utxosParam }
 ) => {
   try {
-    console.log(address, utxosParam)
     const { txBuilder, datums, outputs } = initializeTx();
     const utxos = utxosParam.map((utxo) =>
-      {
-        console.log(utxo)
-        Cardano.Instance.TransactionUnspentOutput.from_bytes(fromHex(utxo))
-      }
+
+      Cardano.Instance.TransactionUnspentOutput.from_bytes(fromHex(utxo))
+
     );
 
     const offerAssetDatum = serializeOffer(datum);
     datums.add(offerAssetDatum);
+
+    const assetName = toHex(fromStr(`unsig${datum.unsigId}`));
+    console.log("asset name", assetName)
 
     outputs.add(
       createTxOutput(
         contractAddress(),
         assetsToValue([
           {
-            unit: `${unsigPolicyId}.unsig${datum.unsigId}`,
+            unit: `${unsigPolicyId}${assetName}`,
             quantity: "1",
           },
           { unit: "lovelace", quantity: "2000000" }, // why don't we see this in SpaceBudz repo?
@@ -52,6 +54,9 @@ export const offerAsset = async (
     const datumHash = toHex(
       Cardano.Instance.hash_plutus_data(offerAssetDatum).to_bytes()
     );
+
+    console.log("before", utxos, outputs)
+
     const txHash = await finalizeTx({
       txBuilder,
       datums,
@@ -69,12 +74,12 @@ export const offerAsset = async (
   }
 };
 
-export const cancelOffer = async (datum, { address, utxos }, assetUtxo) => {
+export const cancelOffer = async (datum, { address, utxosParam }, assetUtxo) => {
 
   try {
     const { txBuilder, datums, outputs } = initializeTx();
 
-    const utxos = utxos.map((utxo) =>
+    const utxos = utxosParam.map((utxo) =>
       Cardano.Instance.TransactionUnspentOutput.from_bytes(fromHex(utxo))
     );
 

@@ -2,10 +2,14 @@ import React, { useState, useEffect } from "react";
 import { Button, Center, Stack } from "@chakra-ui/react";
 import { motion } from "framer-motion"; // for hover, if time
 import { Link } from "gatsby";
-import { useStoreState } from "easy-peasy";
+import { useStoreState, useStoreActions } from "easy-peasy";
 import { Formik, useFormik } from 'formik';
-import { offerAsset } from "../../cardano/market-contract";
+import { cancelOffer, offerAsset } from "../../cardano/market-contract";
 import { createOfferDatum } from "../../utils/factory"
+import { fromBech32 } from "../../utils/converter";
+import { getUtxos } from "../../cardano/wallet";
+import { createTxUnspentOutput } from "../../cardano/transaction";
+import { contractAddress } from "../../cardano/market-contract/validator";
 
 const unsigStyle = {
     display: "flex",
@@ -128,16 +132,70 @@ const UnsigPageLayout = (props) => {
 
     // need useEffect to update ownership
 
+
     const owner = useStoreState((state) => state.connection.connected)
     const utxos = useStoreState((state) => state.ownedUtxos.utxos)
+    const setWalletUtxos = useStoreActions((actions) => actions.ownedUtxos.add)
+
+    // need useEffect to update utxos after (1) creating offer and (2) success of that tx
+    // what events does Nami provide that we can subscribe to?
+    useEffect(async () => {
+        const utxos = await getUtxos();
+        setWalletUtxos(utxos);
+    }, []);
 
     const handleList = async () => {
         try {
             const datum = createOfferDatum(owner, currentOffer, numString)
-            console.log(utxos)
-            const seller = {"address": owner, "utxosParam": utxos} // add current wallet utxos to state
+            // console.log(utxos)
+            const seller = {"address": fromBech32(owner), "utxosParam": utxos} // add current wallet utxos to state
             const listResult = await offerAsset(datum, seller)
-            console.log("Success", listResult)
+            // console.log("Success", listResult)
+            // returns datumHash and txHash --> show txHash to user; store it in backend as receipt?
+            // we need the datumHash -- good idea to check that datumHash is right before we build a "buy asset" tx
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+    const handleCancel = async () => {
+        try {
+            // TODO: get details from backend
+            const datum = createOfferDatum(owner, currentOffer, numString)
+            const seller = {"address": fromBech32(owner), "utxosParam": utxos}
+            // we need an endpoint that takes two params: the contract address and the assetID
+
+            // when endpoint returns utxo, check utxo datum hash against datum we just created
+            // if there's a match, then we're confident that we're trying to consume the right utxo
+            // TODO: can we gather these params from backend?
+            // const bfUTxO = {tx_hash, output_index, amount, data_hash}
+
+            // Here is an example of what we'll expect from blockfrost endpoint
+            // Our backend should return this object to represent each OFFER
+            // backend db should update when it confirms that UTXO exists at CONTRACT Address
+            const bfUTxO = {
+                "tx_hash": "31e4fce591fdbb2a7c7a6ccc63944d80d335e9f78ed8cce7cc5dc393d20859bc",
+                "output_index": 0,
+                "amount": [
+                    {
+                        "unit": "lovelace",
+                        "quantity": "2000000"
+                    },
+                    {
+                        // "unit": "1e82bbd44f7bd555a8bcc829bd4f27056e86412fbb549efdbf78f42d.unsig00016",
+                        "unit": "1e82bbd44f7bd555a8bcc829bd4f27056e86412fbb549efdbf78f42d756e7369673030303136",
+                        "quantity": "1"
+                    }
+                ],
+                "data_hash": "4373087638c6a84749ecd5eee3f5697479dbf54a6a2b98953a7331396a42628b"
+            } // test
+
+            // and we can write a transaction with this utxo as input
+
+            const assetUTxO = createTxUnspentOutput(contractAddress(), bfUTxO)
+            console.log(assetUTxO)
+            const cancelResult = await cancelOffer(datum, seller, assetUTxO)
+            console.log(cancelResult)
         } catch (error) {
             console.log(error)
         }
@@ -159,8 +217,8 @@ const UnsigPageLayout = (props) => {
                         <Center h='100px'>
                             <Stack direction='row' spacing={10}>
                                 <Button colorScheme='teal'>If listed: Buy this Unsig</Button>
-                                <Button colorScheme='teal' onClick={handleList}>If owned: List this Unsig</Button>
-                                <Button colorScheme='teal'>If owned and listed: Cancel</Button>
+                                <Button colorScheme='orange' onClick={handleList}>If owned: List this Unsig</Button>
+                                <Button colorScheme='red' onClick={handleCancel}>If owned and listed: Cancel</Button>
                             </Stack>
                         </Center>
                         <div style={{ backgroundColor: "red", color: "black"}}>

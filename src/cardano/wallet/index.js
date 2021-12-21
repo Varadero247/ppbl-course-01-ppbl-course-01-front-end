@@ -19,6 +19,7 @@ export const getNetworkId = async () => {
 };
 
 export const getOwnedAssets = async () => {
+  console.log("nami", window.cardano)
   const usedAddress = await getUsedAddress();
   const utxos = await getUtxos();
 
