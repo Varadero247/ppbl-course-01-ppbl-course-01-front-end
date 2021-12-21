@@ -8,14 +8,14 @@ import Unsig from "../Unsig/Unsig";
 function getRandomInt(max) {
     return Math.floor(Math.random() * max)
 }
-  
+
 const makeNumberList = (incoming, count) => {
     let output = incoming
     let i = 0
-    while(i < count) {
+    while (i < count) {
         let next = getRandomInt(31119);
-        while (output.includes(next)){
-        next = getRandomInt(31119);
+        while (output.includes(next)) {
+            next = getRandomInt(31119);
         }
         output.push(getRandomInt(31119));
         i++;
@@ -46,7 +46,7 @@ const UnsigRandomScrollList = (props) => {
         }
     }, [loading]);
 
-    return(
+    return (
         <>
             <motion.div style={collectionStyles}>
                 {loadedUnsigs.map((i) => (<Unsig key={i} number={i} />))}

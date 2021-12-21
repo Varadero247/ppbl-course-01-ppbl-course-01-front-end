@@ -53,7 +53,7 @@ const ExplorePage = ({unsigs}) => {
     <main style={pageStyles}>
       <title>Explore</title>
       <h1>
-        Explore Unsigs
+        Search Unsigs
       </h1>
       <UnsigOrderedScrollList start={0} />
     </main>

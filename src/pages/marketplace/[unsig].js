@@ -4,7 +4,7 @@ import { UnsigPageLayout } from "../../components/UnsigPageLayout";
 const pageStyles = {
     color: "#232129",
     width: "100%",
-  } 
+  }
 
 function UnsigPage(props) {
   const unsig = props.params.unsig;
