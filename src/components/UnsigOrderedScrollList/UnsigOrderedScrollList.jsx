@@ -48,12 +48,17 @@ const UnsigOrderedScrollList = (props) => {
     useEffect(() => {
         if (loading) {
             setCurrentPage(currentPage+1)
-            setLoading(false)    
+            setLoading(false)
         }
     }, [loading]);
 
     useEffect(() => {
         const n = formik.values.searching;
+        const requestBody = {
+            method: 'POST',
+            headers: {},
+            body: JSON.stringify(["unsig12345"])
+        }
         setLoadedUnsigs([]);
         setUnsigUrl(`http://localhost:8088/api/v1/unsigs?pageNo=${n}&pageSize=${pageSize}`)
     }, [formik.values.searching])
@@ -75,7 +80,7 @@ const UnsigOrderedScrollList = (props) => {
 
     return(
         <>
-            <Center h='100px' w='50%'>    
+            <Center h='100px' w='50%'>
                 <form>
                     <label>Search:</label>
                     <input name="searching" onChange={formik.handleChange} value={formik.values.searching} />
