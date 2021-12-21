@@ -3,40 +3,19 @@ import { Button, Box, Center, FormControl, FormLabel, FormErrorMessage, FormHelp
 import { Formik, useFormik } from 'formik';
 import styled from "styled-components";
 
-
-import Unsig from "../Unsig/Unsig";
-import { valueToAssets } from "../../cardano/transaction";
-
-// Build the inefficient version first, then refactor
+import { UnsigCard } from "../UnsigCard"
 
 const UnsigOrderedScrollList = (props) => {
-    // use props.start for filtering?
-    // user input search / start -- "search" is also a boolean state
-    // use props.num in some way?
 
-    // pageSize arithmetic to get the first image - conditions?
-    // or load individual numbers up to page size?
-
-    // or should we be doing all of this with just index numbers?
-
-    let firstPage = 0;
-    if (props.start) firstPage = props.start
-
-    let pageSize = 12;
-    if (props.size) pageSize = props.size
+    const numPerPage = 20;
 
     const [loading, setLoading] = useState(false);
-    const [currentPage, setCurrentPage] = useState(firstPage);
-    const [unsigUrl, setUnsigUrl] = useState(`http://localhost:8088/api/v1/unsigs?pageNo=${currentPage}&pageSize=${pageSize}`)
-
-    // append newly loaded objects to array
-    const [loadedUnsigs, setLoadedUnsigs] = useState([])
+    const [listUnsigs, setListUnsigs] = useState(["unsig00000"]);
+    const [loadedUnsigData, setLoadedUnsigData] = useState(null);
 
     const handleLoadMore = () => {
         setLoading(true)
     };
-
-    // keep track of our latest query
 
     // How to control scroll behavior? Animation?
     const formik = useFormik({
@@ -47,52 +26,63 @@ const UnsigOrderedScrollList = (props) => {
 
     useEffect(() => {
         if (loading) {
-            setCurrentPage(currentPage+1)
             setLoading(false)
         }
     }, [loading]);
 
+    // convert number to 5-digit string with leading 0's if needed
+    function pad(num, size) {
+        num = num.toString();
+        while (num.length < size) num = "0" + num;
+        return num;
+    }
+
+    // create an array of stings of the form "unsig#####"
+    const buildArray = (start, quantity) => {
+        let result = [];
+        let iter = start;
+        while (result.length < quantity){
+            const numString = pad(iter, 5);
+            result.push("unsig"+numString)
+            iter++;
+        }
+        return result;
+    }
+
+    // when searching, adjust the list of Unsig IDs in array
     useEffect(() => {
+        const n = formik.values.searching;
+        setListUnsigs(buildArray(n, numPerPage));
+    }, [formik.values.searching])
+
+    // get the data
+    useEffect(async () => {
         const n = formik.values.searching;
         const requestOptions = {
             method: 'POST',
-            headers: {},
-            body: JSON.stringify(["unsig12345"])
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify(listUnsigs)
         }
-        fetch('http://localhost:8088/api/v1/unsigs/find', requestOptions)
-            .then(reponse => response.json())
-            .then(setLoadedUnsigs(response))
-    }, [formik.values.searching])
-
-    useEffect(() => {
-        setUnsigUrl(`http://localhost:8088/api/v1/unsigs?pageNo=${currentPage}&pageSize=${pageSize}`)
-    }, [currentPage])
-
-    // useEffect that is called every time unsigUrl changes
-    useEffect(() => {
-        const alreadyLoaded = loadedUnsigs;
-        fetch(unsigUrl)
-            .then(response => response.json())
-            .then(result => {
-                setLoadedUnsigs([...alreadyLoaded, ...result.resultList])
-            })
-    }, [unsigUrl]);
-
+        const response = await fetch('http://localhost:8088/api/v1/unsigs/find', requestOptions)
+        const data = await response.json();
+        setLoadedUnsigData(data.resultList)
+        console.log("loaded", loadedUnsigData)
+    }, [listUnsigs])
 
     return(
         <>
-            <Center h='100px' w='50%'>
+            <Box w='300px' ml='25px'>
                 <form>
-                    <label>Search:</label>
-                    <input name="searching" onChange={formik.handleChange} value={formik.values.searching} />
+                    <Input size='lg' placeholder='search for unsig' name="searching" onChange={formik.handleChange} value={formik.values.searching} />
                 </form>
-                <h1>
-                    {formik.values.searching}
-                </h1>
-            </Center>
-            <Collection>
-                {loadedUnsigs.map((i) => (<UnsigCard number={i.details.index} numProps={i.details.index} isOwned="true" isOffered="false" />))}
-            </Collection>
+            </Box>
+            {(!loadedUnsigData) ?
+                ("loading") : (
+                    <Collection>
+                        {loadedUnsigData.map((i) => (<UnsigCard number={i.details.index} numProps={i.details.num_props} />))}
+                    </Collection>
+                )
+            }
             <Center display='flex' w='100%'>
                 <Button onClick={handleLoadMore}>LOAD MORE</Button>
             </Center>

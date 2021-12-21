@@ -27,9 +27,6 @@ const IndexPage = () => {
       <title>Home Page</title>
       <Hero>
         <h1>Unsigs Marketplace</h1>
-        <Frame>
-          <StaticImage src="../images/01836.png" width="300" height="300" alt="unsig" />
-        </Frame>
       </Hero>
       <Section>
         <h2>learn more, {connected}</h2>
@@ -42,8 +39,3 @@ const IndexPage = () => {
 }
 
 export default IndexPage;
-
-const Frame = styled.div`
-  background-color: #232129;
-  padding: 10px;
-`;

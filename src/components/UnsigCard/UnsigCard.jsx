@@ -68,7 +68,7 @@ const ForSale = () => {
     )
 }
 
-const Unsig = (props) => {
+const UnsigCard = (props) => {
     // props.number
     // props.numProps
     // props.isOffered
@@ -101,7 +101,7 @@ const Unsig = (props) => {
                         <Spacer />
                         {props.isOffered ? <ForSale /> : ""}
                         <Spacer />
-                        <Owned owner={isOwned} />
+                        <Owned owner={props.isOwned} />
                     </Flex>
 
 
@@ -111,4 +111,4 @@ const Unsig = (props) => {
     );
 }
 
-export default Unsig
+export default UnsigCard
