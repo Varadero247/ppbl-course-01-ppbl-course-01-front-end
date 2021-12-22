@@ -36,11 +36,9 @@ async function getMyUnsigs() {
 
   assetList.forEach(nft => {
     if (nft.startsWith(unsigID)) {
-      console.log(nft);
       let output = fromHex(nft.substring(56))
       let myWord = toStr(output)
       let myNumber = myWord.substring(5)
-      console.log(myNumber)
       myNFTS.push(myNumber)
     }
   });
@@ -70,7 +68,7 @@ const CollectionPage = ({ unsigs }) => {
   const [collection, setCollection] = useState([]);
   const ownedUnsigs = useStoreState((state) => state.ownedUnsigs.unsigIds);
   const setOwnedUnsigs = useStoreActions((actions) => actions.ownedUnsigs.add);
-  
+
   useEffect(async () => {
     if(connected){
       const unsigs = await getMyUnsigs();
@@ -104,9 +102,9 @@ const CollectionPage = ({ unsigs }) => {
               Wallet connected at address: {connected} has
             </p>
             <Collection>
-              
+
               {collection.map((i) => <Unsig number={i} />)}
-              
+
             </Collection>
           </div>
         ) : (
@@ -145,16 +143,16 @@ const Collection = styled.div`
 //       {
 //         let output = fromHex(element.substring(56))
 //         console.log(toStr(output))
-//       }  
+//       }
 
-//     });  
+//     });
 //     let encbal = await getUtxos()
 //     encbal.forEach(element => {
-//       console.log(element);  
+//       console.log(element);
 //       let bal = serializeTxUnspentOutput(element);
 //       let assets = valueToAssets(bal.output().amount());
 //       console.log(assets);
 //     });
 
-// }  
-// } 
+// }
+// }

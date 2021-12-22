@@ -2,20 +2,17 @@ import React, { useState, useEffect } from "react";
 import { Button, Box, Center, FormControl, FormLabel, FormErrorMessage, FormHelperText, Input } from "@chakra-ui/react";
 import { Formik, useFormik } from 'formik';
 import styled from "styled-components";
+import { useStoreState } from "easy-peasy";
 
 import { UnsigCard } from "../UnsigCard"
 
 const UnsigOrderedScrollList = (props) => {
 
-    const numPerPage = 20;
+    const numPerPage = 25;
 
     const [loading, setLoading] = useState(false);
     const [listUnsigs, setListUnsigs] = useState(["unsig00000"]);
     const [loadedUnsigData, setLoadedUnsigData] = useState(null);
-
-    const handleLoadMore = () => {
-        setLoading(true)
-    };
 
     // How to control scroll behavior? Animation?
     const formik = useFormik({
@@ -23,12 +20,6 @@ const UnsigOrderedScrollList = (props) => {
             searching: 0,
         },
     })
-
-    useEffect(() => {
-        if (loading) {
-            setLoading(false)
-        }
-    }, [loading]);
 
     // convert number to 5-digit string with leading 0's if needed
     function pad(num, size) {
@@ -41,9 +32,9 @@ const UnsigOrderedScrollList = (props) => {
     const buildArray = (start, quantity) => {
         let result = [];
         let iter = start;
-        while (result.length < quantity){
+        while (result.length < quantity) {
             const numString = pad(iter, 5);
-            result.push("unsig"+numString)
+            result.push("unsig" + numString)
             iter++;
         }
         return result;
@@ -60,7 +51,7 @@ const UnsigOrderedScrollList = (props) => {
         const n = formik.values.searching;
         const requestOptions = {
             method: 'POST',
-            headers: {'Content-Type': 'application/json'},
+            headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(listUnsigs)
         }
         const response = await fetch('http://localhost:8088/api/v1/unsigs/find', requestOptions)
@@ -69,7 +60,9 @@ const UnsigOrderedScrollList = (props) => {
         console.log("loaded", loadedUnsigData)
     }, [listUnsigs])
 
-    return(
+    const ownedUnsigs = useStoreState((state) => state.ownedUnsigs.unsigIds);
+
+    return (
         <>
             <Box w='300px' ml='25px'>
                 <form>
@@ -79,13 +72,16 @@ const UnsigOrderedScrollList = (props) => {
             {(!loadedUnsigData) ?
                 ("loading") : (
                     <Collection>
-                        {loadedUnsigData.map((i) => (<UnsigCard number={i.details.index} numProps={i.details.num_props} />))}
+                        {loadedUnsigData.map((i) => (
+                            <UnsigCard
+                                number={i.details.index}
+                                numProps={i.details.num_props}
+                                isOwned={ownedUnsigs.includes(i.unsigId.substring(5))} // why doesn't easy peasy state reliably persist?
+                            />
+                        ))}
                     </Collection>
                 )
             }
-            <Center display='flex' w='100%'>
-                <Button onClick={handleLoadMore}>LOAD MORE</Button>
-            </Center>
         </>
     )
 };
