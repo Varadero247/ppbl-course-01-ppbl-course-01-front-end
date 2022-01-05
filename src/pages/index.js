@@ -5,7 +5,7 @@ import { useStoreState } from "easy-peasy";
 
 import Hero from "../components/Hero"
 import Section from "../components/Section"
-import { getBalance } from "../cardano/wallet";
+import Wallet from "../cardano/wallet";
 import { fromAscii, fromHex } from "../utils/converter";
 
 const IndexPage = () => {
@@ -16,7 +16,8 @@ const IndexPage = () => {
 
   useEffect(async () => {
     if (connected) {
-      const amt = await getBalance();
+      await Wallet.enable();
+      const amt = await Wallet.getBalance();
       setWalletFunds(amt);
       console.log(amt)
     }

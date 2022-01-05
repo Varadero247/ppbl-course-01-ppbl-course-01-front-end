@@ -3,7 +3,6 @@ import { StaticImage } from "gatsby-plugin-image"
 import data from "../../data/dummy-unsigs.json"
 import styled from "styled-components"
 import Cardano from "../cardano/serialization-lib"
-import { enableWallet, getBalance, getUtxos, getOwnedAssets } from "../cardano/wallet"
 import { serializeTxUnspentOutput, valueToAssets } from "../cardano/transaction"
 
 import { Unsig } from "../components/Unsig"

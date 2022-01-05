@@ -1,7 +1,6 @@
 import * as React from "react"
 import styled from "styled-components"
 import Cardano from "../../cardano/serialization-lib"
-import { enableWallet, getBalance, getUtxos, getOwnedAssets } from "../../cardano/wallet"
 import { serializeTxUnspentOutput, valueToAssets } from "../../cardano/transaction"
 import { useStoreState } from "easy-peasy";
 import { Unsig } from "../../components/Unsig"

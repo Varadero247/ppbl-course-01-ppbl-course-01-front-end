@@ -1,8 +1,8 @@
 import Cardano from "../serialization-lib";
 import CoinSelection from "./coinSelection";
 import ErrorTypes from "./error.types";
+import Wallet from "../wallet";
 import { languageViews } from "./languageViews";
-import { getCollateral, signTx, submitTx } from "../wallet";
 import { fromHex, toHex } from "../../utils/converter";
 
 export const assetsToValue = (assets) => {
@@ -48,7 +48,7 @@ export const initializeTx = () => {
       Cardano.Instance.BigNum.from_str(Parameters.linearFee.minFeeA),
       Cardano.Instance.BigNum.from_str(Parameters.linearFee.minFeeB)
     ),
-    Cardano.Instance.BigNum.from_str(Parameters.minUtxo),
+    Cardano.Instance.BigNum.from_str(Parameters.coinsPerUtxoWord),
     Cardano.Instance.BigNum.from_str(Parameters.poolDeposit),
     Cardano.Instance.BigNum.from_str(Parameters.keyDeposit),
     Parameters.maxValSize,
@@ -80,21 +80,19 @@ export const finalizeTx = async ({
   const transactionWitnessSet = Cardano.Instance.TransactionWitnessSet.new();
 
   CoinSelection.setProtocolParameters(
-    Parameters.minUtxo,
+    Parameters.coinsPerUtxoWord,
     Parameters.linearFee.minFeeA,
     Parameters.linearFee.minFeeB,
     Parameters.maxTxSize.toString()
   );
 
-  console.log(utxos, outputs)
+  let inputs = [...utxos];
 
-  let { input, change } = CoinSelection.randomImprove(
-    utxos,
-    outputs,
-    8,
-    scriptUtxo ? [scriptUtxo] : []
-  );
+  if (scriptUtxo) {
+    inputs.push(scriptUtxo);
+  }
 
+  let { input, change } = CoinSelection.randomImprove(inputs, outputs, 16);
 
   input.forEach((utxo) => {
     txBuilder.add_input(
@@ -108,7 +106,7 @@ export const finalizeTx = async ({
     txBuilder.add_output(outputs.get(i));
   }
 
-  if (scriptUtxo) {
+  if (plutusScripts) {
     const redeemers = Cardano.Instance.Redeemers.new();
     const redeemerIndex = txBuilder
       .index_of_input(scriptUtxo.input())
@@ -121,7 +119,7 @@ export const finalizeTx = async ({
       Cardano.Instance.PlutusList.from_bytes(datums.to_bytes())
     );
     txBuilder.set_plutus_scripts(plutusScripts);
-    const collateral = (await getCollateral()).map((utxo) =>
+    const collateral = (await Wallet.getCollateral()).map((utxo) =>
       Cardano.Instance.TransactionUnspentOutput.from_bytes(fromHex(utxo))
     );
 
@@ -193,7 +191,7 @@ export const finalizeTx = async ({
     partialChange.set_multiasset(partialMultiAssets);
     const minAda = Cardano.Instance.min_ada_required(
       partialChange,
-      Cardano.Instance.BigNum.from_str(Parameters.minUtxo)
+      Cardano.Instance.BigNum.from_str(Parameters.coinsPerUtxoWord)
     );
     partialChange.set_coin(minAda);
 
@@ -205,7 +203,11 @@ export const finalizeTx = async ({
     );
   }
 
+  try {
   txBuilder.add_change_if_needed(changeAddress.to_address());
+  } catch (error) {
+    throw new Error("INPUTS_EXHAUSTED");
+  }
 
   const txBody = txBuilder.build();
 
@@ -220,7 +222,7 @@ export const finalizeTx = async ({
   const size = tx.to_bytes().length * 2;
   if (size > Parameters.maxTxSize) throw new Error(ErrorTypes.MAX_SIZE_REACHED);
 
-  let txVkeyWitnesses = await signTx(toHex(tx.to_bytes()), true);
+  let txVkeyWitnesses = await Wallet.signTx(toHex(tx.to_bytes()), true);
   txVkeyWitnesses = Cardano.Instance.TransactionWitnessSet.from_bytes(
     fromHex(txVkeyWitnesses)
   );
@@ -233,7 +235,7 @@ export const finalizeTx = async ({
     tx.auxiliary_data()
   );
 
-  const txHash = await submitTx(toHex(signedTx.to_bytes()));
+  const txHash = await Wallet.submitTx(toHex(signedTx.to_bytes()));
 
   return txHash;
 };
@@ -241,7 +243,7 @@ export const finalizeTx = async ({
 export const createTxOutput = (address, value, { datum } = {}) => {
   const minAda = Cardano.Instance.min_ada_required(
     value,
-    Cardano.Instance.BigNum.from_str(getProtocolParameters().minUtxo),
+    Cardano.Instance.BigNum.from_str(getProtocolParameters().coinsPerUtxoWord),
     datum && Cardano.Instance.hash_plutus_data(datum)
   );
 
@@ -331,6 +333,7 @@ const getProtocolParameters = () => {
     maxTxSize: 16384,
     priceMem: 0.0577,
     priceStep: 0.0000721,
+    coinsPerUtxoWord: "1000000",
   };
 };
 
