@@ -130,6 +130,7 @@ export const finalizeTx = async ({
     transactionWitnessSet.set_plutus_scripts(plutusScripts);
     transactionWitnessSet.set_plutus_data(datums);
     transactionWitnessSet.set_redeemers(redeemers);
+    console.log("here!", plutusScripts, datums, redeemers)
   }
 
   let aux_data;

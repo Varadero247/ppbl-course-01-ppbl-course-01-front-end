@@ -161,7 +161,7 @@ const UnsigPageLayout = (props) => {
     const handleCancel = async () => {
         try {
             // TODO: get details from backend
-            const datum = createOfferDatum(owner, currentOffer, numString)
+            const datum = createOfferDatum(owner, 900, numString)
             const seller = {"address": fromBech32(owner), "utxosParam": utxos}
             // we need an endpoint that takes two params: the contract address and the assetID
 
@@ -174,7 +174,7 @@ const UnsigPageLayout = (props) => {
             // Our backend should return this object to represent each OFFER
             // backend db should update when it confirms that UTXO exists at CONTRACT Address
             const bfUTxO = {
-                "tx_hash": "31e4fce591fdbb2a7c7a6ccc63944d80d335e9f78ed8cce7cc5dc393d20859bc",
+                "tx_hash": "1333e457b3feaa600a57db9fbb698500bbda50b6a7ba3255a4d1521c384fa978",
                 "output_index": 0,
                 "amount": [
                     {
@@ -182,12 +182,12 @@ const UnsigPageLayout = (props) => {
                         "quantity": "2000000"
                     },
                     {
-                        // "unit": "1e82bbd44f7bd555a8bcc829bd4f27056e86412fbb549efdbf78f42d.unsig00016",
-                        "unit": "1e82bbd44f7bd555a8bcc829bd4f27056e86412fbb549efdbf78f42d756e7369673030303136",
+                        // "unit": "1e82bbd44f7bd555a8bcc829bd4f27056e86412fbb549efdbf78f42d.unsig00001",
+                        "unit": "1e82bbd44f7bd555a8bcc829bd4f27056e86412fbb549efdbf78f42d756e7369673030303031",
                         "quantity": "1"
                     }
                 ],
-                "data_hash": "4373087638c6a84749ecd5eee3f5697479dbf54a6a2b98953a7331396a42628b"
+                "data_hash": "1e305b7824e441540b61497609c5084bd53db4683673ba59083a633caa95857f"
             } // test
 
             // and we can write a transaction with this utxo as input

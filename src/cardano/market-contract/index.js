@@ -86,6 +86,12 @@ export const cancelOffer = async (datum, { address, utxosParam }, assetUtxo) => 
     const cancelListingDatum = serializeOffer(datum);
     datums.add(cancelListingDatum);
 
+    const datumHash = toHex(
+      Cardano.Instance.hash_plutus_data(cancelListingDatum).to_bytes()
+    );
+
+    console.log("datumHash", datumHash);
+
     outputs.add(
       createTxOutput(address.to_address(), assetUtxo.output().amount())
     );
