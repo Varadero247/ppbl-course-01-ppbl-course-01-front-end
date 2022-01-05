@@ -2,11 +2,11 @@ import React, { useState, useEffect } from "react";
 
 import { navigate } from "gatsby-link";
 import Cardano from "../../cardano/serialization-lib"
+import Wallet from "../../cardano/wallet";
 
 import { useStoreActions, useStoreState } from "easy-peasy";
 import { Button, Box, useToast } from "@chakra-ui/react";
 import { ChevronRightIcon, InfoIcon } from "@chakra-ui/icons";
-import { getUtxos } from "../../cardano/wallet";
 
 // loader - see line 16 in SpaceBudz/StartButton.jsx
 const addressToBech32 = async () => {
@@ -27,18 +27,20 @@ const WalletButton = (props) => {
     const toast = useToast();
 
     useEffect(async () => {
-      const utxos = await getUtxos();
+      const utxos = await window.cardano.getUtxos();
       setWalletUtxos(utxos);
     }, []);
 
     useEffect(() => {
-        if (connected && !flag)
-            window.cardano.onAccountChange(async () => {
-                const address = await addressToBech32();
-                // const address = "abcd"
-                setConnected(address);
-                setFlag(true);
-            });
+        if (connected && !flag) {
+          Wallet.enable().then((r)=> {});
+          window.cardano.onAccountChange(async () => {
+              const address = await addressToBech32();
+              // const address = "abcd"
+              setConnected(address);
+              setFlag(true);
+          });
+        }
     }, [connected]);
 
 
@@ -75,7 +77,7 @@ const WalletButton = (props) => {
                     setLoading(false);
                     return;
                 }
-                if (await window.cardano.enable().catch((e) => {})) {
+                if (await Wallet.enable("nami").catch((e) => {})) {
                     const address = await addressToBech32();
                     // const address = "abcd"
                     setConnected(address);
@@ -95,7 +97,7 @@ export default WalletButton;
 const checkStatus = async (toast, connected) => {
     return (
       NoNami(toast) &&
-      (await window.cardano.enable().catch((e) => {})) &&
+      (await Wallet.enable("nami").catch((e) => {})) &&
       (await WrongNetworkToast(toast))
     );
 };
@@ -137,7 +139,7 @@ const NoNami = (toast) => {
 
 const WrongNetworkToast = async (toast) => {
     // 0 for Testnet | 1 for Mainnet
-    if ((await window.cardano.getNetworkId()) === 0) return true;
+    if ((await Wallet.getNetworkId()) === 0) return true;
     toast({
       position: "bottom-right",
       duration: 5000,

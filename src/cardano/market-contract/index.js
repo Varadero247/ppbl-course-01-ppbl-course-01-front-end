@@ -11,31 +11,24 @@ import {
 } from "../transaction";
 import { fromHex, fromStr, toHex } from "../../utils/converter";
 
-
 // Unsig PolicyId
 // const unsigPolicyId = "0e14267a8020229adc0184dd25fa3174c3f7d6caadcb4425c70e7c04";
 
 // Test Unsig PolicyId
 const unsigPolicyId = "1e82bbd44f7bd555a8bcc829bd4f27056e86412fbb549efdbf78f42d";
-                    // 1e82bbd44f7bd555a8bcc829bd4f27056e86412fbb549efdbf78f42d
+// 1e82bbd44f7bd555a8bcc829bd4f27056e86412fbb549efdbf78f42d
 
-export const offerAsset = async (
-  datum,
-  { address, utxosParam }
-) => {
+export const offerAsset = async (datum, { address, utxosParam }) => {
   try {
     const { txBuilder, datums, outputs } = initializeTx();
     const utxos = utxosParam.map((utxo) =>
-
       Cardano.Instance.TransactionUnspentOutput.from_bytes(fromHex(utxo))
-
     );
 
     const offerAssetDatum = serializeOffer(datum);
     datums.add(offerAssetDatum);
 
     const assetName = toHex(fromStr(`unsig${datum.unsigId}`));
-    console.log("asset name", assetName)
 
     outputs.add(
       createTxOutput(
@@ -55,8 +48,6 @@ export const offerAsset = async (
       Cardano.Instance.hash_plutus_data(offerAssetDatum).to_bytes()
     );
 
-    console.log("before", utxos, outputs)
-
     const txHash = await finalizeTx({
       txBuilder,
       datums,
@@ -74,8 +65,11 @@ export const offerAsset = async (
   }
 };
 
-export const cancelOffer = async (datum, { address, utxosParam }, assetUtxo) => {
-
+export const cancelOffer = async (
+  datum,
+  { address, utxosParam },
+  assetUtxo
+) => {
   try {
     const { txBuilder, datums, outputs } = initializeTx();
 
@@ -116,7 +110,6 @@ export const cancelOffer = async (datum, { address, utxosParam }, assetUtxo) => 
     handleError(error, "cancelOffer");
   }
 };
-
 
 // export const buyAsset = async (
 //   datum,
@@ -178,17 +171,17 @@ const handleError = (error, source) => {
     case "MAX_SIZE_REACHED":
       throw new Error(Errors.TRANSACTION_FAILED_MAX_TX_SIZE_REACHED);
     default:
-      if (error.message.search("OutputTooSmallUTxO") !== -1) {
+      if (error.message.search("NonOutputSupplimentaryDatums") !== -1) {
+        throw new Error(Errors.TRANSACTION_FAILED_DATUMS_NOT_MATCHING);
+      } else if (error.message.search("MissingScriptWitnessesUTXOW") !== -1) {
+        throw new Error(Errors.TRANSACTION_FAILED_WRONG_SCRIPT_CONTRACT);
+      } else if (error.message.search("OutputTooSmallUTxO") !== -1) {
         throw new Error(Errors.TRANSACTION_FAILED_ASSET_NOT_SPENDABLE);
       }
       throw error;
   }
 };
 
-const splitAmount = (
-  { seller, artist, market },
-  price,
-  outputs
-) => {
+const splitAmount = ({ seller, artist, market }, price, outputs) => {
   // TODO: Fees Calculation.
 };

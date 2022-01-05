@@ -7,9 +7,9 @@ import { Formik, useFormik } from 'formik';
 import { cancelOffer, offerAsset } from "../../cardano/market-contract";
 import { createOfferDatum } from "../../utils/factory"
 import { fromBech32 } from "../../utils/converter";
-import { getUtxos } from "../../cardano/wallet";
 import { createTxUnspentOutput } from "../../cardano/transaction";
 import { contractAddress } from "../../cardano/market-contract/validator";
+import Wallet from "../../cardano/wallet";
 
 const unsigStyle = {
     display: "flex",
@@ -140,7 +140,7 @@ const UnsigPageLayout = (props) => {
     // need useEffect to update utxos after (1) creating offer and (2) success of that tx
     // what events does Nami provide that we can subscribe to?
     useEffect(async () => {
-        const utxos = await getUtxos();
+        const utxos = await Wallet.getUtxos();
         setWalletUtxos(utxos);
     }, []);
 

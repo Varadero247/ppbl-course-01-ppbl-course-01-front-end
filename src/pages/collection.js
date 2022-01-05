@@ -3,7 +3,7 @@ import { StaticImage } from "gatsby-plugin-image"
 import data from "../../data/dummy-unsigs.json"
 import styled from "styled-components"
 import Cardano from "../cardano/serialization-lib"
-import { enableWallet, getBalance, getUtxos, getOwnedAssets } from "../cardano/wallet"
+import Wallet from "../cardano/wallet";
 import { serializeTxUnspentOutput, valueToAssets } from "../cardano/transaction"
 import { fromHex, toStr } from "../utils/converter"
 import { useStoreActions, useStoreState } from "easy-peasy";
@@ -30,8 +30,24 @@ const pageStyles = {
 // Testnet Unsig Policy ID:
 const unsigID = "1e82bbd44f7bd555a8bcc829bd4f27056e86412fbb549efdbf78f42d"
 
+async function getWalletAssets() {
+  const utxos = await Wallet.getUtxos();
+
+  const nativeAssets = utxos
+    .map((utxo) => serializeTxUnspentOutput(utxo).output())
+    .filter((txOut) => txOut.amount().multiasset() !== undefined)
+    .map((txOut) => valueToAssets(txOut.amount()))
+    .flatMap((assets) =>
+      assets
+        .filter((asset) => asset.unit !== "lovelace")
+        .map((asset) => asset.unit)
+    );
+
+  return [...new Set(nativeAssets)];
+};
+
 async function getMyUnsigs() {
-  let assetList = await getOwnedAssets();
+  let assetList = await getWalletAssets();
   let myNFTS = [];
 
   assetList.forEach(nft => {
@@ -48,7 +64,7 @@ async function getMyUnsigs() {
 }
 
 async function getAllMyAssets() {
-  let assetList = await getOwnedAssets();
+  let assetList = await getWalletAssets();
   let myNFTS = [];
 
   assetList.forEach(nft => {
