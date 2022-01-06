@@ -144,6 +144,30 @@ const UnsigPageLayout = (props) => {
         setWalletUtxos(utxos);
     }, []);
 
+    const handleBuy = async () => {
+        // get offer details from backend
+        // (see handleCancel)
+
+        // query blockfrost to get the txhash+txid (etc...) of the utxo holding the unsig i want to buy
+        // Q: can this query include a filter on the datum hash?
+
+        // get buyer details from wallet
+        // const buyer = {"address": fromBech32(owner), "utxosParam": utxos}
+
+        // get seller details from backend
+
+        // recreate datum by
+        // a) pulling offer price and seller address from backend
+        // b) get the unsig id from the url param
+
+        // get the hash of the datum we just recreated, and compare it to the datum has pulled from bf query
+
+        // Q: what should we be checking to make sure this is working?
+
+        //
+
+    }
+
     const handleList = async () => {
         try {
             const datum = createOfferDatum(owner, currentOffer, numString)
@@ -160,7 +184,7 @@ const UnsigPageLayout = (props) => {
 
     const handleCancel = async () => {
         try {
-            // TODO: get details from backend
+            // TODO: get offer details from backend
             const datum = createOfferDatum(owner, 900, numString)
             const seller = {"address": fromBech32(owner), "utxosParam": utxos}
             // we need an endpoint that takes two params: the contract address and the assetID
@@ -182,7 +206,7 @@ const UnsigPageLayout = (props) => {
                         "quantity": "2000000"
                     },
                     {
-                        // "unit": "1e82bbd44f7bd555a8bcc829bd4f27056e86412fbb549efdbf78f42d.unsig00001",
+                        // "unit": "1e82bbd44f7bd555a8bcc829bd4f27056e86412fbb549efdbf78f42d.unsig00001", // we're pretty sure this doesn't work, double check
                         "unit": "1e82bbd44f7bd555a8bcc829bd4f27056e86412fbb549efdbf78f42d756e7369673030303031",
                         "quantity": "1"
                     }
