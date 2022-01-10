@@ -1,19 +1,12 @@
-import * as React from "react"
-import styled from "styled-components"
+import React, { useState, useEFfect } from 'react'
 import Cardano from "../../cardano/serialization-lib"
 import { serializeTxUnspentOutput, valueToAssets } from "../../cardano/transaction"
 import { useStoreState } from "easy-peasy";
 import { Unsig } from "../../components/Unsig"
 import { UnsigRandomScrollList } from "../../components/UnsigRandomScrollList"
+import { UnsigOrderedScrollList} from "../../components/UnsigOrderedScrollList"
 
-// User Journey for /offer
-// 1. User can go to /offer and view all offers (separate from explore page)
-// 2. User can click on offers and see the details for an asset
-// - unsig nft properties
-// - offer details
-// User Journey for /offer/{unsig}
-// 3. When a user is viewing asset details, the user can buy the asset
-// - if connected wallet, buy button is active
+import { Center, Box, FormControl, FormLabel, Switch, Spacer } from '@chakra-ui/react';
 
 // styles
 const pageStyles = {
@@ -22,18 +15,21 @@ const pageStyles = {
   paddingLeft: 96,
 }
 
-// make hooks for list and loading here too.
-
-// then add search.
-
-// if search, show that one
-// otherwise, show random list of NUMBER
-
 const MarketplacePage = ({unsigs}) => {
-  // Build conditional rendering for when an owned unsig is on the page (how / where to check?)
   const connected = useStoreState((state) => state.connection.connected);
+  // TODO
+  // User can toggle between random view and search
+  // Use state to hold:
+  // a) Random vs search
+  // b) List offers vs list for sale
+  // c) current search?
+  // User can toggle between seeing all unsigs and only those for sale
 
-  // We can manipulate this list according to user input - the paginated link still plays a role
+  const [search, setSearch] = useState(false)
+
+  const handleSearchChange = () => {
+    setSearch(!search)
+  }
 
   return (
     <main style={pageStyles}>
@@ -41,7 +37,25 @@ const MarketplacePage = ({unsigs}) => {
       <h1>
         The Unsig Marketplace
       </h1>
-      <UnsigRandomScrollList />
+      <Center w='25%' h='70px' ml='20px' bg='#444' color='white'>
+
+        <FormControl padding='4'>
+          <FormLabel>
+            Search Unsigs
+          </FormLabel>
+          <Switch id='set-search' onChange={handleSearchChange} />
+
+        </FormControl>
+        <FormControl padding='4'>
+
+          <FormLabel>
+            View Offers Only
+          </FormLabel>
+          <Switch id='set-view-offers' />
+        </FormControl>
+      </Center>
+        {search ? <UnsigOrderedScrollList /> : <UnsigRandomScrollList />}
+
 
     </main>
   )

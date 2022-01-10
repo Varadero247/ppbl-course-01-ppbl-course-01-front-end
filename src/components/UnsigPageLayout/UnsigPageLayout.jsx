@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Button, Center, Stack } from "@chakra-ui/react";
+import { Button, Center, Stack, FormControl, FormLabel, FormErrorMessage, FormHelperText, Input } from "@chakra-ui/react";
 import { motion } from "framer-motion"; // for hover, if time
 import { Link } from "gatsby";
 import { useStoreState, useStoreActions } from "easy-peasy";
@@ -39,6 +39,10 @@ const numberStyle = {
 const infoStyle = {
     marginLeft: "2rem",
     fontSize: "2rem"
+}
+
+const offerInfoStyle = {
+    fontSize: "1rem"
 }
 
 const propertiesStyle = {
@@ -241,20 +245,13 @@ const UnsigPageLayout = (props) => {
                             <img src={iURL} alt="unsig" width={800} height={800} style={imageStyle} />
                         </motion.div>
                         <Center h='100px'>
-                            <Stack direction='row' spacing={10}>
+                            <Stack spacing={10}>
                                 <Button colorScheme='teal'>If listed: Buy this Unsig</Button>
-                                <Button colorScheme='orange' onClick={handleList}>If owned: List this Unsig</Button>
+
                                 <Button colorScheme='red' onClick={handleCancel}>If owned and listed: Cancel</Button>
                             </Stack>
                         </Center>
-                        <div style={{ backgroundColor: "red", color: "black"}}>
-                            <form>
-                                <label>Sale Price:</label>
-                                <input name="unsigOfferPriceAda" onChange={formik.handleChange} value={formik.values.unsigOfferPriceAda} />
-                            </form>
-                            <div>
-                                {currentOffer}
-                            </div>
+                        <div style={{ color: "white"}}>
                         </div>
 
                     </div>
@@ -264,8 +261,22 @@ const UnsigPageLayout = (props) => {
                             # {unsigDetails.details.index}
                         </p>
                         <p>
-                            {(props.isOffered) ? ("Offer price=") : ("not for sale")} {" | "}
-                            {(isOwned) ? ("You own this!") : ("not your unsig")}
+                            {(props.isOffered) ? ("Offer price=") : ("This Unsig is not for sale.")}
+                            {(isOwned) ? (
+                                <>
+                                    <p style={offerInfoStyle}>You own this Unsig. To offer it for sale, enter a Sale Price and click "List this Unsig". After clicking the button, you will be promted to confirm your offer in your wallet.</p>
+                                    <FormControl>
+                                        <FormLabel>Sale Price:</FormLabel>
+                                        <Input name="unsigOfferPriceAda" onChange={formik.handleChange} value={formik.values.unsigOfferPriceAda} />
+                                    </FormControl>
+                                    <Button colorScheme='orange' onClick={handleList}>List this Unsig</Button>
+                                    <p style={offerInfoStyle}>
+                                        (Note: remove this line) You entered an offer price of {currentOffer} ADA for Unsig # {unsigDetails.details.index}
+                                    </p>
+                                </>
+                            ) : (
+                                "not your unsig"
+                            )}
                         </p>
                         <p style={numberStyle}>
                             {unsigDetails.details.num_props}

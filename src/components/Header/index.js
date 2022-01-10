@@ -36,9 +36,6 @@ const Header = () => {
                 }}
             >
                 <NavButton>
-                    <Link to="/explore/">Explore</Link>
-                </NavButton>
-                <NavButton>
                     <Link to="/marketplace/">Marketplace</Link>
                 </NavButton>
                 {connected ? (
