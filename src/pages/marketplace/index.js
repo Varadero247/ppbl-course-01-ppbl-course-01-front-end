@@ -6,7 +6,8 @@ import { Unsig } from "../../components/Unsig"
 import { UnsigRandomScrollList } from "../../components/UnsigRandomScrollList"
 import { UnsigOrderedScrollList} from "../../components/UnsigOrderedScrollList"
 
-import { Center, Box, FormControl, FormLabel, Switch, Spacer } from '@chakra-ui/react';
+import { Center, Box, FormControl, FormLabel, Switch, Spacer, Flex } from '@chakra-ui/react';
+import UnsigOfferScrollList from '../../components/UnsigOfferScrollList/UnsigOfferScrollList';
 
 // styles
 const pageStyles = {
@@ -18,17 +19,21 @@ const pageStyles = {
 const MarketplacePage = ({unsigs}) => {
   const connected = useStoreState((state) => state.connection.connected);
   // TODO
-  // User can toggle between random view and search
   // Use state to hold:
-  // a) Random vs search
-  // b) List offers vs list for sale
+  // b) List offers vs list for sale --> create an UnsigOfferList view that is just like random (are we handling ability to see if a searched-for unsig is for sale in gallery view??)
   // c) current search?
   // User can toggle between seeing all unsigs and only those for sale
 
   const [search, setSearch] = useState(false)
+  const [viewOffers, setViewOffers] = useState(false)
 
   const handleSearchChange = () => {
     setSearch(!search)
+  }
+
+  const handleViewOffersChange = () => {
+    setViewOffers(!viewOffers)
+    console.log("hit me with " + viewOffers)
   }
 
   return (
@@ -51,10 +56,14 @@ const MarketplacePage = ({unsigs}) => {
           <FormLabel>
             View Offers Only
           </FormLabel>
-          <Switch id='set-view-offers' />
+          <Switch id='set-view-offers' onChange={handleViewOffersChange} />
         </FormControl>
       </Center>
-        {search ? <UnsigOrderedScrollList /> : <UnsigRandomScrollList />}
+      <Flex w='95%' direction='column'>
+        {viewOffers ?
+          (<UnsigOfferScrollList />) :  (<UnsigRandomScrollList />)
+        }
+      </Flex>
 
 
     </main>

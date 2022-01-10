@@ -51,7 +51,7 @@ const UnsigRandomScrollList = (props) => {
             <motion.div style={collectionStyles}>
                 {loadedUnsigs.map((i) => (<Unsig key={i} number={i} />))}
             </motion.div>
-            <Center display='flex' w='100%'>
+            <Center display='flex' w='100%' py='20px'>
                 <Button onClick={handleLoadMore}>LOAD MORE</Button>
             </Center>
         </>
