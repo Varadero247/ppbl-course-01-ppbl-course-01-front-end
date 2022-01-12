@@ -15,7 +15,8 @@ import { fromHex, fromStr, toHex } from "../../utils/converter";
 // const unsigPolicyId = "0e14267a8020229adc0184dd25fa3174c3f7d6caadcb4425c70e7c04";
 
 // Test Unsig PolicyId
-const unsigPolicyId = "1e82bbd44f7bd555a8bcc829bd4f27056e86412fbb549efdbf78f42d";
+const unsigPolicyId =
+  "1e82bbd44f7bd555a8bcc829bd4f27056e86412fbb549efdbf78f42d";
 // 1e82bbd44f7bd555a8bcc829bd4f27056e86412fbb549efdbf78f42d
 
 export const offerAsset = async (datum, { address, utxosParam }) => {
@@ -111,52 +112,48 @@ export const cancelOffer = async (
   }
 };
 
-// export const buyAsset = async (
-//   datum,
-//   buyer: { address: BaseAddress, utxos: [] },
-//   beneficiaries: {
-//     seller: BaseAddress,
-//     artist: BaseAddress,
-//     market: BaseAddress,
-//   },
-//   assetUtxo
-// ) => {
-//   try {
-//     const { txBuilder, datums, outputs } = initializeTx();
+export const buyAsset = async (
+  datum,
+  { address, utxosParam },
+  { seller, artist, market },
+  assetUtxo
+) => {
+  try {
+    const { txBuilder, datums, outputs } = initializeTx();
 
-//     const utxos = buyer.utxos.map((utxo) =>
-//       Cardano.Instance.TransactionUnspentOutput.from_bytes(fromHex(utxo))
-//     );
+    const utxos = utxosParam.map((utxo) =>
+      Cardano.Instance.TransactionUnspentOutput.from_bytes(fromHex(utxo))
+    );
 
-//     const offerAssetDatum = serializeOffer(datum);
-//     datums.add(offerAssetDatum);
+    const offerAssetDatum = serializeOffer(datum);
+    datums.add(offerAssetDatum);
 
-//     outputs.add(
-//       createTxOutput(buyer.address.to_address(), assetUtxo.output().amount())
-//     );
+    outputs.add(
+      createTxOutput(address.to_address(), assetUtxo.output().amount())
+    );
 
-//     splitAmount(beneficiaries, datum.requestedAmount, outputs);
+    splitAmount({ seller, artist, market }, datum.requestedAmount, outputs);
 
-//     const requiredSigners = Cardano.Instance.Ed25519KeyHashes.new();
-//     requiredSigners.add(buyer.address.payment_cred().to_keyhash());
-//     txBuilder.set_required_signers(requiredSigners);
+    const requiredSigners = Cardano.Instance.Ed25519KeyHashes.new();
+    requiredSigners.add(address.payment_cred().to_keyhash());
+    txBuilder.set_required_signers(requiredSigners);
 
-//     const txHash = await finalizeTx({
-//       txBuilder,
-//       utxos,
-//       outputs,
-//       datums,
-//       changeAddress: buyer.address,
-//       scriptUtxo: assetUtxo,
-//       plutusScripts: contractScripts(),
-//       action: BUY,
-//     });
+    const txHash = await finalizeTx({
+      txBuilder,
+      utxos,
+      outputs,
+      datums,
+      changeAddress: address,
+      scriptUtxo: assetUtxo,
+      plutusScripts: contractScripts(),
+      action: BUY,
+    });
 
-//     return txHash;
-//   } catch (error) {
-//     handleError(error, "buyAsset");
-//   }
-// };
+    return txHash;
+  } catch (error) {
+    handleError(error, "buyAsset");
+  }
+};
 
 const handleError = (error, source) => {
   console.error(`Unexpected error in ${source}. [Message: ${error.message}]`);
@@ -182,6 +179,39 @@ const handleError = (error, source) => {
   }
 };
 
-const splitAmount = ({ seller, artist, market }, price, outputs) => {
-  // TODO: Fees Calculation.
+const splitAmount = (
+  { seller, artist, market },
+  price,
+  outputs
+) => {
+  const minimumAmount = 1000000;
+  const marketFeePercentage = 1 / 100;
+  const royaltyFeePercentage = 1 / 100;
+
+  const royaltyFees = Math.max(royaltyFeePercentage * price, minimumAmount);
+  outputs.add(
+    createTxOutput(
+      artist.to_address(),
+      assetsToValue([{ unit: "lovelace", quantity: `${royaltyFees}` }])
+    )
+  );
+
+  const marketFees = Math.max(marketFeePercentage * price, minimumAmount);
+  outputs.add(
+    createTxOutput(
+      market.to_address(),
+      assetsToValue([{ unit: "lovelace", quantity: `${marketFees}` }])
+    )
+  );
+
+  const netPrice =
+    price - royaltyFeePercentage * price - marketFeePercentage * price;
+  outputs.add(
+    createTxOutput(
+      seller.to_address(),
+      assetsToValue([
+        { unit: "lovelace", quantity: `${Math.max(netPrice, minimumAmount)}` },
+      ])
+    )
+  );
 };
