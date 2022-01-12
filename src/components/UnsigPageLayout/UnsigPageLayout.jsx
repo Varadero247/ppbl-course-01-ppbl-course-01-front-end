@@ -4,7 +4,7 @@ import { motion } from "framer-motion"; // for hover, if time
 import { Link } from "gatsby";
 import { useStoreState, useStoreActions } from "easy-peasy";
 import { Formik, useFormik } from 'formik';
-import { cancelOffer, offerAsset } from "../../cardano/market-contract";
+import { buyAsset, cancelOffer, offerAsset } from "../../cardano/market-contract";
 import { createOfferDatum } from "../../utils/factory"
 import { fromBech32 } from "../../utils/converter";
 import { createTxUnspentOutput } from "../../cardano/transaction";
@@ -170,6 +170,43 @@ const UnsigPageLayout = (props) => {
 
         //
 
+        const blockfrostResponse =
+            {
+                "tx_hash": "288d41d77f6914d3fcc3d468726ac92bd09c01ad808faf690d87d332c9bfcab6",
+                "tx_index": 0,
+                "output_index": 0,
+                "amount": [
+                    {
+                        "unit": "lovelace",
+                        "quantity": "2000000"
+                    },
+                    {
+                        "unit": "1e82bbd44f7bd555a8bcc829bd4f27056e86412fbb549efdbf78f42d756e7369673030303035",
+                        "quantity": "1"
+                    }
+                ],
+                "block": "eafd005f5f2b9185d8fb15c218217d2e1e6f1d065ed84a677f8ecb54a2b536f9",
+                "data_hash": "20396beff6e759117c7360a52162f937d0fec1322e0289c82059149e994c193e"
+            }
+
+
+        try {
+            const seller = "addr_test1qzuwzwkwa3lr3mjawz0dzpnvd0zddkj9chtcnmzkwzl855lk7z0vd4ntcd00kh7ey6v6qflwejzeu2mfg9nue8hs74ks3ar9ma"
+            // const seller = unsigDetails.offerDetails.owner
+            const price = 100
+            // const price = unsigDetails.offerDetails.amount
+
+            const datum = createOfferDatum(seller, price, numString)
+            const buyer = {"address": fromBech32(owner), "utxosParam": utxos}
+            const txhash = await buyAsset(
+                datum,
+                buyer,
+                fromBech32(seller),
+                createTxUnspentOutput(contractAddress(), blockfrostResponse)
+            )
+        } catch (error) {
+            console.log(error)
+        }
     }
 
     const handleList = async () => {
@@ -201,22 +238,67 @@ const UnsigPageLayout = (props) => {
             // Here is an example of what we'll expect from blockfrost endpoint
             // Our backend should return this object to represent each OFFER
             // backend db should update when it confirms that UTXO exists at CONTRACT Address
-            const bfUTxO = {
-                "tx_hash": "1333e457b3feaa600a57db9fbb698500bbda50b6a7ba3255a4d1521c384fa978",
-                "output_index": 0,
-                "amount": [
-                    {
-                        "unit": "lovelace",
-                        "quantity": "2000000"
-                    },
-                    {
-                        // "unit": "1e82bbd44f7bd555a8bcc829bd4f27056e86412fbb549efdbf78f42d.unsig00001", // we're pretty sure this doesn't work, double check
-                        "unit": "1e82bbd44f7bd555a8bcc829bd4f27056e86412fbb549efdbf78f42d756e7369673030303031",
-                        "quantity": "1"
-                    }
-                ],
-                "data_hash": "1e305b7824e441540b61497609c5084bd53db4683673ba59083a633caa95857f"
-            } // test
+
+            // Original test response:
+            // Replace with relevant response from below
+
+            // const bfUTxO = {
+            //     "tx_hash": "1333e457b3feaa600a57db9fbb698500bbda50b6a7ba3255a4d1521c384fa978",
+            //     "output_index": 0,
+            //     "amount": [
+            //         {
+            //             "unit": "lovelace",
+            //             "quantity": "2000000"
+            //         },
+            //         {
+            //             // "unit": "1e82bbd44f7bd555a8bcc829bd4f27056e86412fbb549efdbf78f42d.unsig00001", // we're pretty sure this doesn't work, double check
+            //             "unit": "1e82bbd44f7bd555a8bcc829bd4f27056e86412fbb549efdbf78f42d756e7369673030303031",
+            //             "quantity": "1"
+            //         }
+            //     ],
+            //     "data_hash": "1e305b7824e441540b61497609c5084bd53db4683673ba59083a633caa95857f"
+            // }
+
+            // Current Offers locked at Contract:
+            // [
+            // #00017
+            //     {
+            //         "tx_hash": "fcc578320e22d8dbba0ef6b43322db752f7d4d9a098a0bd42c17fb86f4d757c3",
+            //         "tx_index": 0,
+            //         "output_index": 0,
+            //         "amount": [
+            //             {
+            //                 "unit": "lovelace",
+            //                 "quantity": "2000000"
+            //             },
+            //             {
+            //                 "unit": "1e82bbd44f7bd555a8bcc829bd4f27056e86412fbb549efdbf78f42d756e7369673030303137",
+            //                 "quantity": "1"
+            //             }
+            //         ],
+            //         "block": "390763314be13dfd5f1684987f6354f4b1eef75cdd6d0cc28c8d56592dce75db",
+            //         "data_hash": "805eab4897be8ba4c8029e06371794f8a372cf8f8aacbb324d11c34c55890442"
+            //     },
+            // #00005
+            //     {
+            //         "tx_hash": "288d41d77f6914d3fcc3d468726ac92bd09c01ad808faf690d87d332c9bfcab6",
+            //         "tx_index": 0,
+            //         "output_index": 0,
+            //         "amount": [
+            //             {
+            //                 "unit": "lovelace",
+            //                 "quantity": "2000000"
+            //             },
+            //             {
+            //                 "unit": "1e82bbd44f7bd555a8bcc829bd4f27056e86412fbb549efdbf78f42d756e7369673030303035",
+            //                 "quantity": "1"
+            //             }
+            //         ],
+            //         "block": "eafd005f5f2b9185d8fb15c218217d2e1e6f1d065ed84a677f8ecb54a2b536f9",
+            //         "data_hash": "20396beff6e759117c7360a52162f937d0fec1322e0289c82059149e994c193e"
+            //     }
+            // ]
+
 
             // and we can write a transaction with this utxo as input
 
@@ -246,7 +328,7 @@ const UnsigPageLayout = (props) => {
                         </motion.div>
                         <Center h='100px'>
                             <Stack spacing={10}>
-                                <Button colorScheme='teal'>If listed: Buy this Unsig</Button>
+                                <Button colorScheme='teal' onClick={handleBuy}>If listed: Buy this Unsig</Button>
 
                                 <Button colorScheme='red' onClick={handleCancel}>If owned and listed: Cancel</Button>
                             </Stack>

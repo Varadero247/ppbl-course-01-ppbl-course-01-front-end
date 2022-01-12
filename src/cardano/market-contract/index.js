@@ -11,13 +11,21 @@ import {
 } from "../transaction";
 import { fromHex, fromStr, toHex } from "../../utils/converter";
 
+
 // Unsig PolicyId
 // const unsigPolicyId = "0e14267a8020229adc0184dd25fa3174c3f7d6caadcb4425c70e7c04";
+// mainnet addresses for royalites and dao fee
+// const daoAddress =
+// const artistAddress =
 
 // Test Unsig PolicyId
 const unsigPolicyId =
   "1e82bbd44f7bd555a8bcc829bd4f27056e86412fbb549efdbf78f42d";
 // 1e82bbd44f7bd555a8bcc829bd4f27056e86412fbb549efdbf78f42d
+
+// test addresses
+const daoAddress = "addr_test1vq9c8va8q9zledunvjg73m3zhndceu34h6z4ctmyavqkvegdkppxw" // from unsigs-market-plutus/testnet/treasury.addr
+const artistAddress = "addr_test1vq9c8va8q9zledunvjg73m3zhndceu34h6z4ctmyavqkvegdkppxw" // from unsigs-market-plutus/testnet/creator.addr
 
 export const offerAsset = async (datum, { address, utxosParam }) => {
   try {
@@ -115,7 +123,7 @@ export const cancelOffer = async (
 export const buyAsset = async (
   datum,
   { address, utxosParam },
-  { seller, artist, market },
+  seller,
   assetUtxo
 ) => {
   try {
@@ -132,7 +140,7 @@ export const buyAsset = async (
       createTxOutput(address.to_address(), assetUtxo.output().amount())
     );
 
-    splitAmount({ seller, artist, market }, datum.requestedAmount, outputs);
+    splitAmount({ seller, artistAddress, daoAddress }, datum.requestedAmount, outputs);
 
     const requiredSigners = Cardano.Instance.Ed25519KeyHashes.new();
     requiredSigners.add(address.payment_cred().to_keyhash());
@@ -180,32 +188,34 @@ const handleError = (error, source) => {
 };
 
 const splitAmount = (
-  { seller, artist, market },
+  { seller, artistAddress, daoAddress },
   price,
   outputs
 ) => {
   const minimumAmount = 1000000;
-  const marketFeePercentage = 1 / 100;
-  const royaltyFeePercentage = 1 / 100;
+  const daoFeePercentage = 125 / 10000;
+  const royaltyFeePercentage = 125 / 10000;
+
+  console.log("Artist", Cardano.Instance.Address.from_bech32(artistAddress))
 
   const royaltyFees = Math.max(royaltyFeePercentage * price, minimumAmount);
   outputs.add(
     createTxOutput(
-      artist.to_address(),
+      Cardano.Instance.Address.from_bech32(artistAddress),
       assetsToValue([{ unit: "lovelace", quantity: `${royaltyFees}` }])
     )
   );
 
-  const marketFees = Math.max(marketFeePercentage * price, minimumAmount);
+  const daoFees = Math.max(daoFeePercentage * price, minimumAmount);
   outputs.add(
     createTxOutput(
-      market.to_address(),
-      assetsToValue([{ unit: "lovelace", quantity: `${marketFees}` }])
+      Cardano.Instance.Address.from_bech32(daoAddress),
+      assetsToValue([{ unit: "lovelace", quantity: `${daoFees}` }])
     )
   );
 
   const netPrice =
-    price - royaltyFeePercentage * price - marketFeePercentage * price;
+    price - royaltyFeePercentage * price - daoFeePercentage * price;
   outputs.add(
     createTxOutput(
       seller.to_address(),
