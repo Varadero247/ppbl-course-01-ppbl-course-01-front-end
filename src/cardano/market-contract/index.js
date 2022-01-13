@@ -24,7 +24,7 @@ const unsigPolicyId =
 // 1e82bbd44f7bd555a8bcc829bd4f27056e86412fbb549efdbf78f42d
 
 // test addresses
-const daoAddress = "addr_test1vq9c8va8q9zledunvjg73m3zhndceu34h6z4ctmyavqkvegdkppxw" // from unsigs-market-plutus/testnet/treasury.addr
+const daoAddress = "addr_test1vqme2uc8smlyjc896e6s4sl9ayf4qxq6hp6g9rteajh0eyg677fcz" // from unsigs-market-plutus/testnet/treasury.addr
 const artistAddress = "addr_test1vq9c8va8q9zledunvjg73m3zhndceu34h6z4ctmyavqkvegdkppxw" // from unsigs-market-plutus/testnet/creator.addr
 
 export const offerAsset = async (datum, { address, utxosParam }) => {
