@@ -31,6 +31,7 @@ const pageStyles = {
 const unsigID = "1e82bbd44f7bd555a8bcc829bd4f27056e86412fbb549efdbf78f42d"
 
 async function getWalletAssets() {
+  await Cardano.load();
   const utxos = await Wallet.getUtxos();
 
   const nativeAssets = utxos

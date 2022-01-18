@@ -19,7 +19,7 @@ import { fromHex, fromStr, toHex } from "../../utils/converter";
 // const artistAddress =
 
 // Test Unsig PolicyId
-const unsigPolicyId =
+export const unsigPolicyId =
   "1e82bbd44f7bd555a8bcc829bd4f27056e86412fbb549efdbf78f42d";
 // 1e82bbd44f7bd555a8bcc829bd4f27056e86412fbb549efdbf78f42d
 

@@ -4,9 +4,9 @@ import { motion } from "framer-motion"; // for hover, if time
 import { Link } from "gatsby";
 import { useStoreState, useStoreActions } from "easy-peasy";
 import { Formik, useFormik } from 'formik';
-import { buyAsset, cancelOffer, offerAsset } from "../../cardano/market-contract";
+import { buyAsset, cancelOffer, offerAsset, unsigPolicyId } from "../../cardano/market-contract";
 import { createOfferDatum } from "../../utils/factory"
-import { fromBech32 } from "../../utils/converter";
+import { fromBech32, fromStr, toHex } from "../../utils/converter";
 import { createTxUnspentOutput } from "../../cardano/transaction";
 import { contractAddress } from "../../cardano/market-contract/validator";
 import Wallet from "../../cardano/wallet";
@@ -84,12 +84,13 @@ function pad(num, size) {
     return num;
 }
 
+const backendBaseUrl = "http://localhost:8088/api/v1/";
+
 const UnsigPageLayout = (props) => {
 // props.number
 // props.isOffered
 
 // Todo: loading behavior
-
 
     // File under why I wish I knew TypeScript
     const emptyUnsig = {
@@ -116,7 +117,7 @@ const UnsigPageLayout = (props) => {
     const isOwned = ownedUnsigs.includes(numString);
 
     useEffect(() => {
-        fetch(`http://localhost:8088/api/v1/unsigs/unsig${numString}`)
+        fetch(`${backendBaseUrl}unsigs/unsig${numString}`)
             .then(response => response.json())
             .then(resultData => {setUnsigDetails(resultData)})
     }, []);
@@ -136,7 +137,6 @@ const UnsigPageLayout = (props) => {
 
     // need useEffect to update ownership
 
-
     const owner = useStoreState((state) => state.connection.connected)
     const utxos = useStoreState((state) => state.ownedUtxos.utxos)
     const setWalletUtxos = useStoreActions((actions) => actions.ownedUtxos.add)
@@ -148,53 +148,40 @@ const UnsigPageLayout = (props) => {
         setWalletUtxos(utxos);
     }, []);
 
-    const handleBuy = async () => {
-        // get offer details from backend
-        // (see handleCancel)
+    const fetchAssetUtxo = async () => {
+        const datumHash = unsigDetails?.offerDetails?.datumHash;
+        const unsigAsset = `${unsigPolicyId}${toHex(fromStr(`unsig${numString}`))}`;
+        const response = await fetch(
+            `${backendBaseUrl}utxo?address=${contractAddress().to_bech32()}&unsigAsset=${unsigAsset}&datumHash=${datumHash}`
+        )
 
-        // query blockfrost to get the txhash+txid (etc...) of the utxo holding the unsig i want to buy
-        // Q: can this query include a filter on the datum hash?
+        const assetUTxO = await response.json();
 
-        // get buyer details from wallet
-        // const buyer = {"address": fromBech32(owner), "utxosParam": utxos}
+        return {
+            "tx_hash": assetUTxO.txHash,
+            "output_index": assetUTxO.outputIndex,
+            "amount": assetUTxO.amount,
+        }
+    }
 
-        // get seller details from backend
-
-        // recreate datum by
-        // a) pulling offer price and seller address from backend
-        // b) get the unsig id from the url param
-
-        // get the hash of the datum we just recreated, and compare it to the datum has pulled from bf query
-
-        // Q: what should we be checking to make sure this is working?
-
-        //
-
-        const blockfrostResponse =
-            {
-                "tx_hash": "9296d8fd4f464b1efe08fc8df63f689983e9b9bd47eac141002e01d45b2ac755",
-                "tx_index": 0,
-                "output_index": 0,
-                "amount": [
-                    {
-                        "unit": "lovelace",
-                        "quantity": "2000000"
-                    },
-                    {
-                        "unit": "1e82bbd44f7bd555a8bcc829bd4f27056e86412fbb549efdbf78f42d756e7369673030303136",
-                        "quantity": "1"
-                    }
-                ],
-                "block": "09fec04f85359b86c2f2b51469406af21001dd43e72e9fba4af755f21dd8cb70",
-                "data_hash": "9c5de6bf6c9d49375e341067dd25e97f193d66c53fe758cc46b1e074336caab8"
+    const deleteAssetOffer = async () => {
+        await fetch(`${backendBaseUrl}offers`, {
+            method: "DELETE",
+            body: {
+                "unsigId": `unsig${numString}`,
+                "owner": owner,
+                "amount": currentOffer,
             }
+        });
+        console.log(`Offer for Unsig${numString} has been deleted!`);
+    }
 
-
+    const handleBuy = async () => {
         try {
-            const seller = "addr_test1qz2h42hnke3hf8n05m2hzdaamup6edfqvvs2snqhmufv0eryqhtfq6cfwktmrdw79n2smpdd8n244z8x9f3267g8cz6s59993r"
-            // const seller = unsigDetails.offerDetails.owner
-            const price = 100
-            // const price = unsigDetails.offerDetails.amount
+            const seller = unsigDetails?.offerDetails?.owner
+            const price = unsigDetails.offerDetails.amount
+
+            const bfUTxO = await fetchAssetUtxo();
 
             const datum = createOfferDatum(seller, price, numString)
             const buyer = {"address": fromBech32(owner), "utxosParam": utxos}
@@ -202,8 +189,11 @@ const UnsigPageLayout = (props) => {
                 datum,
                 buyer,
                 fromBech32(seller),
-                createTxUnspentOutput(contractAddress(), blockfrostResponse)
+                createTxUnspentOutput(contractAddress(), bfUTxO)
             )
+            if (txHash) {
+                await deleteAssetOffer();
+            }
         } catch (error) {
             console.log(error)
         }
@@ -212,12 +202,23 @@ const UnsigPageLayout = (props) => {
     const handleList = async () => {
         try {
             const datum = createOfferDatum(owner, currentOffer, numString)
-            // console.log(utxos)
-            const seller = {"address": fromBech32(owner), "utxosParam": utxos} // add current wallet utxos to state
+            const seller = {"address": fromBech32(owner), "utxosParam": utxos}
             const listResult = await offerAsset(datum, seller)
-            // console.log("Success", listResult)
-            // returns datumHash and txHash --> show txHash to user; store it in backend as receipt?
-            // we need the datumHash -- good idea to check that datumHash is right before we build a "buy asset" tx
+            
+            if (listResult && listResult.datumHash && listResult.txHash) {
+                await fetch(`${backendBaseUrl}offers`, {
+                    method: "PUT",
+                    body: {
+                        "unsigId" : `unsig${numString}`,
+                        "owner" : owner,
+                        "amount" : currentOffer,
+                        "txHash" : listResult.txHash,
+                        "datumHash" : listResult.datumHash,
+                        "txIndex" : 0,
+                      }
+                });
+                console.log(`Offer for Unsig${numString} has been created!`);
+            }
         } catch (error) {
             console.log(error)
         }
@@ -225,89 +226,17 @@ const UnsigPageLayout = (props) => {
 
     const handleCancel = async () => {
         try {
-            // TODO: get offer details from backend
-            const datum = createOfferDatum(owner, 900, numString)
+            const price = unsigDetails?.offerDetails?.amount;
+            const datum = createOfferDatum(owner, price, numString)
             const seller = {"address": fromBech32(owner), "utxosParam": utxos}
-            // we need an endpoint that takes two params: the contract address and the assetID
 
-            // when endpoint returns utxo, check utxo datum hash against datum we just created
-            // if there's a match, then we're confident that we're trying to consume the right utxo
-            // TODO: can we gather these params from backend?
-            // const bfUTxO = {tx_hash, output_index, amount, data_hash}
-
-            // Here is an example of what we'll expect from blockfrost endpoint
-            // Our backend should return this object to represent each OFFER
-            // backend db should update when it confirms that UTXO exists at CONTRACT Address
-
-            // Original test response:
-            // Replace with relevant response from below
-
-            // const bfUTxO = {
-            //     "tx_hash": "1333e457b3feaa600a57db9fbb698500bbda50b6a7ba3255a4d1521c384fa978",
-            //     "output_index": 0,
-            //     "amount": [
-            //         {
-            //             "unit": "lovelace",
-            //             "quantity": "2000000"
-            //         },
-            //         {
-            //             // "unit": "1e82bbd44f7bd555a8bcc829bd4f27056e86412fbb549efdbf78f42d.unsig00001", // we're pretty sure this doesn't work, double check
-            //             "unit": "1e82bbd44f7bd555a8bcc829bd4f27056e86412fbb549efdbf78f42d756e7369673030303031",
-            //             "quantity": "1"
-            //         }
-            //     ],
-            //     "data_hash": "1e305b7824e441540b61497609c5084bd53db4683673ba59083a633caa95857f"
-            // }
-
-            // Current Offers locked at Contract:
-            // [
-            // #00017
-            //     {
-            //         "tx_hash": "fcc578320e22d8dbba0ef6b43322db752f7d4d9a098a0bd42c17fb86f4d757c3",
-            //         "tx_index": 0,
-            //         "output_index": 0,
-            //         "amount": [
-            //             {
-            //                 "unit": "lovelace",
-            //                 "quantity": "2000000"
-            //             },
-            //             {
-            //                 "unit": "1e82bbd44f7bd555a8bcc829bd4f27056e86412fbb549efdbf78f42d756e7369673030303137",
-            //                 "quantity": "1"
-            //             }
-            //         ],
-            //         "block": "390763314be13dfd5f1684987f6354f4b1eef75cdd6d0cc28c8d56592dce75db",
-            //         "data_hash": "805eab4897be8ba4c8029e06371794f8a372cf8f8aacbb324d11c34c55890442"
-            //     },
-            // #00005
-            //     {
-            //         "tx_hash": "288d41d77f6914d3fcc3d468726ac92bd09c01ad808faf690d87d332c9bfcab6",
-            //         "tx_index": 0,
-            //         "output_index": 0,
-            //         "amount": [
-            //             {
-            //                 "unit": "lovelace",
-            //                 "quantity": "2000000"
-            //             },
-            //             {
-            //                 "unit": "1e82bbd44f7bd555a8bcc829bd4f27056e86412fbb549efdbf78f42d756e7369673030303035",
-            //                 "quantity": "1"
-            //             }
-            //         ],
-            //         "block": "eafd005f5f2b9185d8fb15c218217d2e1e6f1d065ed84a677f8ecb54a2b536f9",
-            //         "data_hash": "20396beff6e759117c7360a52162f937d0fec1322e0289c82059149e994c193e"
-            //     }
-            // ]
-
-
-            // and we can write a transaction with this utxo as input
+            const bfUTxO = await fetchAssetUtxo();
 
             const assetUTxO = createTxUnspentOutput(contractAddress(), bfUTxO)
-            console.log(assetUTxO)
-
-            // NEXT STEP: Make cancelResult work
-            const cancelResult = await cancelOffer(datum, seller, assetUTxO)
-            console.log(cancelResult)
+            const txHash = await cancelOffer(datum, seller, assetUTxO)
+            if (txHash) {
+                await deleteAssetOffer();
+            }
         } catch (error) {
             console.log(error)
         }
