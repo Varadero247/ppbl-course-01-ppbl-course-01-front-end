@@ -64,10 +64,10 @@ const UnsigOrderedScrollList = (props) => {
 
     return (
         <>
-            <Box w='25%' h='100px' ml='20px' bg='#444' color='white'>
+            <Box w='25%' h='70px' bg='#444' color='white'>
                 <FormControl w='90%' mx='auto' >
                     <FormLabel>Search Unsigs by #</FormLabel>
-                    <Input size='lg' placeholder='search for unsig' name="searching" onChange={formik.handleChange} value={formik.values.searching} />
+                    <Input placeholder='search for unsig' name="searching" onChange={formik.handleChange} value={formik.values.searching} />
                 </FormControl>
             </Box>
             {(!loadedUnsigData) ?
@@ -77,7 +77,8 @@ const UnsigOrderedScrollList = (props) => {
                             <UnsigCard
                                 number={i.details.index}
                                 numProps={i.details.num_props}
-                                isOwned={ownedUnsigs.includes(i.unsigId.substring(5))} // why doesn't easy peasy state reliably persist?
+                                isOwned={ownedUnsigs.includes(i.unsigId.substring(5))}
+                                isOffered={i.offerDetails}
                             />
                         ))}
                     </Collection>

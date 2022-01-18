@@ -42,30 +42,37 @@ const MarketplacePage = ({unsigs}) => {
       <h1>
         The Unsig Marketplace
       </h1>
-      <Center w='25%' h='70px' ml='20px' bg='#444' color='white'>
+      <Flex w='25%' p='1' bg='#444' color='white' directtion='row'>
 
         <FormControl padding='4'>
           <FormLabel>
             Search Unsigs
           </FormLabel>
           <Switch id='set-search' onChange={handleSearchChange} />
-
         </FormControl>
-        <FormControl padding='4'>
-
-          <FormLabel>
-            View Offers Only
-          </FormLabel>
-          <Switch id='set-view-offers' onChange={handleViewOffersChange} />
-        </FormControl>
-      </Center>
-      <Flex w='95%' direction='column'>
-        {viewOffers ?
-          (<UnsigOfferScrollList />) :  (<UnsigRandomScrollList />)
+        {/* IF SEARCH THEN motion ui the SEARCH BOX in, OTHERWISE YOU GET THE VIEW OFFERS TOGGLE */}
+        {search ? "" :
+          (
+            <FormControl padding='4'>
+              <FormLabel>
+                View Offers Only
+              </FormLabel>
+              <Switch id='set-view-offers' onChange={handleViewOffersChange} />
+            </FormControl>
+          )
         }
       </Flex>
-
-
+      <Flex w='95%' direction='column'>
+        {search ?
+          (<UnsigOrderedScrollList />) : (
+            <>
+              {viewOffers ?
+                (<UnsigOfferScrollList />) :  (<UnsigRandomScrollList />)
+              }
+            </>
+          )
+        }
+      </Flex>
     </main>
   )
 }

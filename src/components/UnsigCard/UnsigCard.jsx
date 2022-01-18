@@ -62,8 +62,8 @@ const Owned = (props) => {
 
 const ForSale = () => {
     return (
-        <Center p='1'>
-            Listed
+        <Center bg='green' p='1'>
+            For Sale
         </Center>
     )
 }

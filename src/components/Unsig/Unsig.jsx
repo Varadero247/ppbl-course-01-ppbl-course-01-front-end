@@ -123,7 +123,7 @@ const Unsig = (props) => {
                     <Flex flexDirection='row'>
                         <UnsigProps number={unsigDetails.details.num_props} />
                         <Spacer />
-                        {props.isOffered ? <ForSale /> : ""}
+                        {unsigDetails.offerDetails ? <ForSale /> : ""}
                         <Spacer />
                         <Owned owner={isOwned} />
                     </Flex>
