@@ -64,7 +64,7 @@ const UnsigOrderedScrollList = (props) => {
 
     return (
         <>
-            <Box w='25%' h='70px' bg='#444' color='white'>
+            <Box w='25%' h='70px' my='5' color='white'>
                 <FormControl w='90%' mx='auto' >
                     <FormLabel>Search Unsigs by #</FormLabel>
                     <Input placeholder='search for unsig' name="searching" onChange={formik.handleChange} value={formik.values.searching} />

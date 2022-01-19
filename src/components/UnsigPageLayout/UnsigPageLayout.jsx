@@ -1,5 +1,22 @@
 import React, { useState, useEffect } from "react";
-import { Button, Center, Stack, FormControl, FormLabel, FormErrorMessage, FormHelperText, Input } from "@chakra-ui/react";
+import {
+    Button,
+    Center,
+    Stack,
+    FormControl,
+    FormLabel,
+    FormErrorMessage,
+    FormHelperText,
+    Input,
+    Modal,
+    ModalOverlay,
+    ModalContent,
+    ModalHeader,
+    ModalFooter,
+    ModalBody,
+    ModalCloseButton,
+    useDisclosure,
+} from "@chakra-ui/react";
 import { motion } from "framer-motion"; // for hover, if time
 import { Link } from "gatsby";
 import { useStoreState, useStoreActions } from "easy-peasy";
@@ -16,7 +33,6 @@ const unsigStyle = {
     flexDirection: "row",
     background: "#232129",
     color: "white",
-    marginTop: "2rem",
     padding: "2rem",
 }
 
@@ -33,7 +49,7 @@ const detailRow = {
 }
 
 const numberStyle = {
-    fontSize: "6rem"
+    fontSize: "4rem"
 }
 
 const infoStyle = {
@@ -69,9 +85,9 @@ const propertiesItemStyle = {
 //     fontSize: "1rem",
 // }
 
-function getImageURL (unsigID, resolution) {
-// unsigID [0...31118]
-// resolution [128, 256, 512, 1024, 2048]
+function getImageURL(unsigID, resolution) {
+    // unsigID [0...31118]
+    // resolution [128, 256, 512, 1024, 2048]
     const unsigNumber = unsigID;
     const res = resolution;
     const imageURL = "https://s3-ap-northeast-1.amazonaws.com/unsigs.com/images/" + res + "/" + unsigNumber + ".png";
@@ -87,12 +103,11 @@ function pad(num, size) {
 const backendBaseUrl = "http://localhost:8088/api/v1/";
 
 const UnsigPageLayout = (props) => {
-// props.number
-// props.isOffered
+    // props.number
+    // props.isOffered
 
-// Todo: loading behavior
+    // Todo: loading behavior
 
-    // File under why I wish I knew TypeScript
     const emptyUnsig = {
         "unsigId": "",
         "details": {
@@ -108,23 +123,26 @@ const UnsigPageLayout = (props) => {
     }
 
     const number = props.number
-    const numString = pad(number,5)
-    const iURL = getImageURL (numString, "4096")
+    const numString = pad(number, 5)
+    const iURL = getImageURL(numString, "4096")
 
     const [unsigDetails, setUnsigDetails] = useState(emptyUnsig);
 
     const ownedUnsigs = useStoreState((state) => state.ownedUnsigs.unsigIds);
     const isOwned = ownedUnsigs.includes(numString);
 
+    // for chakra ui modal
+    const { isOpen, onOpen, onClose } = useDisclosure()
+
     useEffect(() => {
         fetch(`${backendBaseUrl}unsigs/unsig${numString}`)
             .then(response => response.json())
-            .then(resultData => {setUnsigDetails(resultData)})
+            .then(resultData => { setUnsigDetails(resultData) })
     }, []);
 
     const formik = useFormik({
         initialValues: {
-            unsigOfferPriceAda: 100,
+            unsigOfferPriceAda: 0,
         },
     })
 
@@ -184,7 +202,7 @@ const UnsigPageLayout = (props) => {
             const bfUTxO = await fetchAssetUtxo();
 
             const datum = createOfferDatum(seller, price, numString)
-            const buyer = {"address": fromBech32(owner), "utxosParam": utxos}
+            const buyer = { "address": fromBech32(owner), "utxosParam": utxos }
             const txhash = await buyAsset(
                 datum,
                 buyer,
@@ -202,20 +220,20 @@ const UnsigPageLayout = (props) => {
     const handleList = async () => {
         try {
             const datum = createOfferDatum(owner, currentOffer, numString)
-            const seller = {"address": fromBech32(owner), "utxosParam": utxos}
+            const seller = { "address": fromBech32(owner), "utxosParam": utxos }
             const listResult = await offerAsset(datum, seller)
-            
+
             if (listResult && listResult.datumHash && listResult.txHash) {
                 await fetch(`${backendBaseUrl}offers`, {
                     method: "PUT",
                     body: {
-                        "unsigId" : `unsig${numString}`,
-                        "owner" : owner,
-                        "amount" : currentOffer,
-                        "txHash" : listResult.txHash,
-                        "datumHash" : listResult.datumHash,
-                        "txIndex" : 0,
-                      }
+                        "unsigId": `unsig${numString}`,
+                        "owner": owner,
+                        "amount": currentOffer,
+                        "txHash": listResult.txHash,
+                        "datumHash": listResult.datumHash,
+                        "txIndex": 0,
+                    }
                 });
                 console.log(`Offer for Unsig${numString} has been created!`);
             }
@@ -228,7 +246,7 @@ const UnsigPageLayout = (props) => {
         try {
             const price = unsigDetails?.offerDetails?.amount;
             const datum = createOfferDatum(owner, price, numString)
-            const seller = {"address": fromBech32(owner), "utxosParam": utxos}
+            const seller = { "address": fromBech32(owner), "utxosParam": utxos }
 
             const bfUTxO = await fetchAssetUtxo();
 
@@ -242,27 +260,38 @@ const UnsigPageLayout = (props) => {
         }
     }
 
-    return(
+    return (
         <motion.div
-            initial={{ opacity: 0, x: -1200}}
-            animate={{ opacity: 1, x: 0}}
+            initial={{ opacity: 0, x: -1200 }}
+            animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.5 }}
         >
             <Link to={`/marketplace/${number}`}>
                 <div style={unsigStyle}>
-                    <div style={{ display: "flex", flexDirection: "column"}}>
+                    <div style={{ display: "flex", flexDirection: "column" }}>
                         {/* not sure why Gatsby's StaticImage doesn't work here, this is ok for now */}
-                        <motion.div initial={{ opacity: 0}} animate={{ opacity: 1 }} transition={{ duration: 1 }}>
+                        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 1 }}>
                             <img src={iURL} alt="unsig" width={800} height={800} style={imageStyle} />
                         </motion.div>
                         <Center h='100px'>
-                            <Stack spacing={10}>
-                                <Button colorScheme='teal' onClick={handleBuy}>If listed: Buy this Unsig</Button>
+                            {/* TODO 2022-01-19: how to check offers in owners wallet */}
+                            {isOwned ? (
+                                <Button bg='#cccccc' color='#991111' borderRadius='0' mx='2' onClick={handleCancel}>Cancel Listing</Button>
+                            ) : (
+                                "Not Yours"
+                            )}
+                            {(props.isOffered) ? (
+                                <>
+                                    <p>Offer price:</p>
+                                    <Button bg='#cccccc' color='#115511' borderRadius='0' mx='2' onClick={handleBuy}>Buy this Unsig</Button>
+                                </>
+                            ) : (
+                                "Not For Sale"
+                            )}
 
-                                <Button colorScheme='red' onClick={handleCancel}>If owned and listed: Cancel</Button>
-                            </Stack>
+
                         </Center>
-                        <div style={{ color: "white"}}>
+                        <div style={{ color: "white" }}>
                         </div>
 
                     </div>
@@ -272,21 +301,37 @@ const UnsigPageLayout = (props) => {
                             # {unsigDetails.details.index}
                         </p>
                         <p>
-                            {(props.isOffered) ? ("Offer price=") : ("This Unsig is not for sale.")}
                             {(isOwned) ? (
                                 <>
                                     <p style={offerInfoStyle}>You own this Unsig. To offer it for sale, enter a Sale Price and click "List this Unsig". After clicking the button, you will be promted to confirm your offer in your wallet.</p>
-                                    <FormControl>
-                                        <FormLabel>Sale Price:</FormLabel>
-                                        <Input name="unsigOfferPriceAda" onChange={formik.handleChange} value={formik.values.unsigOfferPriceAda} />
-                                    </FormControl>
-                                    <Button colorScheme='orange' onClick={handleList}>List this Unsig</Button>
-                                    <p style={offerInfoStyle}>
-                                        (Note: remove this line) You entered an offer price of {currentOffer} ADA for Unsig # {unsigDetails.details.index}
-                                    </p>
+                                    <Button colorScheme='teal' onClick={onOpen}>Open Offer Modal</Button>
+                                    <Modal isOpen={isOpen} onClose={onClose}>
+                                        <ModalOverlay />
+                                        <ModalContent>
+                                            <ModalHeader>
+                                                Create a listing for Unsig #{numString}
+                                            </ModalHeader>
+                                            <ModalCloseButton />
+                                            <FormControl>
+                                                <ModalBody p='5'>
+                                                    <FormLabel>Enter your offer price here (in ADA)</FormLabel>
+                                                    <Input name="unsigOfferPriceAda" onChange={formik.handleChange} value={formik.values.unsigOfferPriceAda} />
+                                                    <FormHelperText color="#994444" pt='2'>
+                                                        When you click "List this Unsig", you will be prompted to confirm this transaction in Nami Wallet.
+                                                    </FormHelperText>
+                                                </ModalBody>
+                                                <ModalFooter p='5'>
+                                                    <Button colorScheme='blue' mr={3} onClick={onClose}>
+                                                        Cancel
+                                                    </Button>
+                                                    <Button colorScheme='green' onClick={handleList}>List this Unsig</Button>
+                                                </ModalFooter>
+                                            </FormControl>
+                                        </ModalContent>
+                                    </Modal>
                                 </>
                             ) : (
-                                "not your unsig"
+                                ""
                             )}
                         </p>
                         <p style={numberStyle}>
@@ -296,11 +341,22 @@ const UnsigPageLayout = (props) => {
                             PROPERTIES
                         </p>
                         <ul style={propertiesStyle}>
-                            <li style={propertiesItemStyle}>[{unsigDetails.details.properties.multipliers.join(", ")}]{"  "} <span style={propertiesNameStyle}>MULTIPLIERS</span></li>
-                            <li style={propertiesItemStyle}>[{unsigDetails.details.properties.colors.join(", ")}]{"  "} <span style={propertiesNameStyle}>COLORS</span></li>
-                            <li style={propertiesItemStyle}>[{unsigDetails.details.properties.distributions.join(", ")}]{"  "}<span style={propertiesNameStyle}>DISTRIBUTIONS</span></li>
-                            <li style={propertiesItemStyle}>[{unsigDetails.details.properties.rotations.join(", ")}]{"  "}<span style={propertiesNameStyle}>ROTATIONS</span></li>
-                            <li style={propertiesItemStyle}>[coming soon!]{"  "} <span style={propertiesNameStyle}>COLLECTIONS</span></li>
+                            <li style={propertiesItemStyle}>
+                                [{unsigDetails.details.properties.multipliers.join(", ")}]{"  "}
+                                <span style={propertiesNameStyle}>MULTIPLIERS</span>
+                            </li>
+                            <li style={propertiesItemStyle}>
+                                [{unsigDetails.details.properties.colors.join(", ")}]{"  "}
+                                <span style={propertiesNameStyle}>COLORS</span>
+                            </li>
+                            <li style={propertiesItemStyle}>
+                                [{unsigDetails.details.properties.distributions.join(", ")}]{"  "}
+                                <span style={propertiesNameStyle}>DISTRIBUTIONS</span>
+                            </li>
+                            <li style={propertiesItemStyle}>
+                                [{unsigDetails.details.properties.rotations.join(", ")}]{"  "}
+                                <span style={propertiesNameStyle}>ROTATIONS</span>
+                            </li>
                         </ul>
                     </div>
 
