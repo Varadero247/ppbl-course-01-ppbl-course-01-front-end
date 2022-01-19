@@ -9,12 +9,7 @@ import { fromHex, toStr } from "../utils/converter"
 import { useStoreActions, useStoreState } from "easy-peasy";
 
 import { Unsig } from "../components/Unsig"
-
-// styles
-const pageStyles = {
-  color: "#232129",
-  padding: 96
-}
+import { Box, Heading, Text } from "@chakra-ui/react"
 
 // User Journey for /collection
 // 1. User can view the Unsigs in their connected wallet
@@ -87,37 +82,33 @@ const CollectionPage = ({ unsigs }) => {
   const setOwnedUnsigs = useStoreActions((actions) => actions.ownedUnsigs.add);
 
   useEffect(async () => {
-    if(connected){
+    if (connected) {
       const unsigs = await getMyUnsigs();
       setCollection(unsigs);
     }
   }, []);
 
   useEffect(() => {
-    if(connected) {
+    if (connected) {
       setOwnedUnsigs(collection);
     }
   }, [collection]);
 
   return (
-    <main style={pageStyles}>
+    <Box w='100%' px='24' py='12' bg='#232129' color='white'>
       <title>MY COLLECTION</title>
-      <div>
-        <h1>
+      <Box>
+        <Heading size='4xl' fontWeight='medium'>
           User Collection of Unsigs
-        </h1>
-        <ol>
-          {ownedUnsigs.map((i) => <li>{i}</li>)}
-        </ol>
-
+        </Heading>
         {connected ? (
           <div>
-            <p>
-              If wallet is connected, show the unsigs in connected wallet
-            </p>
-            <p>
-              Wallet connected at address: {connected} has
-            </p>
+            <Text fontSize='xl' py='3'>
+              Wallet connected at address:
+            </Text>
+            <Text fontSize='xl'>
+              {connected}
+            </Text>
             <Collection>
 
               {collection.map((i) => <Unsig number={i} />)}
@@ -126,16 +117,15 @@ const CollectionPage = ({ unsigs }) => {
           </div>
         ) : (
           <div>
-            <p>
-              If no wallet is connected, then prompt user to connect Nami wallet.
-            </p>
+            <Text fontSize='xl' py='3'>
+              To view your collection of Unsigs, please connect a wallet.
+            </Text>
           </div>
         )}
-        <Collection>
-        </Collection>
-      </div>
 
-    </main>
+      </Box>
+
+    </Box>
   )
 }
 

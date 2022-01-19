@@ -6,15 +6,8 @@ import { Unsig } from "../../components/Unsig"
 import { UnsigRandomScrollList } from "../../components/UnsigRandomScrollList"
 import { UnsigOrderedScrollList} from "../../components/UnsigOrderedScrollList"
 
-import { Center, Box, FormControl, FormLabel, Switch, Spacer, Flex } from '@chakra-ui/react';
+import { Center, Box, FormControl, FormLabel, Switch, Spacer, Flex, Heading } from '@chakra-ui/react';
 import UnsigOfferScrollList from '../../components/UnsigOfferScrollList/UnsigOfferScrollList';
-
-// styles
-const pageStyles = {
-  backgroundColor: "#232129",
-  paddingTop: 40,
-  paddingLeft: 96,
-}
 
 const MarketplacePage = ({unsigs}) => {
   const connected = useStoreState((state) => state.connection.connected);
@@ -37,12 +30,12 @@ const MarketplacePage = ({unsigs}) => {
   }
 
   return (
-    <main style={pageStyles}>
+    <Box bg='#232129' w='100%' px='24' py='12'>
       <title>FOR SALE</title>
-      <h1>
+      <Heading size='4xl' fontWeight='medium' color='white'>
         The Unsig Marketplace
-      </h1>
-      <Flex w='25%' p='1' bg='#444' color='white' directtion='row'>
+      </Heading>
+      <Flex w='25%' my='4' p='1' color='white' directtion='row'>
 
         <FormControl padding='4'>
           <FormLabel>
@@ -73,7 +66,7 @@ const MarketplacePage = ({unsigs}) => {
           )
         }
       </Flex>
-    </main>
+    </Box>
   )
 }
 

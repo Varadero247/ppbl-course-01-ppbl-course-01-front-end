@@ -3,10 +3,10 @@ import { StaticImage } from "gatsby-plugin-image"
 import styled from "styled-components";
 import { useStoreState } from "easy-peasy";
 
-import Hero from "../components/Hero"
 import Section from "../components/Section"
 import Wallet from "../cardano/wallet";
 import { fromAscii, fromHex } from "../utils/converter";
+import { Center, Heading, Text } from "@chakra-ui/react";
 
 const IndexPage = () => {
   const connected = useStoreState((state) => state.connection.connected);
@@ -25,16 +25,10 @@ const IndexPage = () => {
 
   return (
     <main>
-      <title>Home Page</title>
-      <Hero>
-        <h1>Unsigs Marketplace</h1>
-      </Hero>
-      <Section>
-        <h2>learn more, {connected}</h2>
-        <p>You own {ownedUnsigs.join()}</p>
-        <p>{walletFunds}</p>
-        <p>put some basic instructions here, "you must connect a Nami wallet to use the marketplace..."</p>
-      </Section>
+      <title>Welcome</title>
+      <Center w='100%' h='1000px' bg='#232129'>
+        <Heading size='4xl' color='white' fontWeight='medium'>Unsigs Marketplace</Heading>
+      </Center>
     </main>
   )
 }

@@ -1,8 +1,12 @@
 import React, { useState, useEffect } from "react";
 import {
-    Button,
+    Box,
+    Flex,
     Center,
     Stack,
+    Heading,
+    Text,
+    Button,
     FormControl,
     FormLabel,
     FormErrorMessage,
@@ -27,63 +31,6 @@ import { fromBech32, fromStr, toHex } from "../../utils/converter";
 import { createTxUnspentOutput } from "../../cardano/transaction";
 import { contractAddress } from "../../cardano/market-contract/validator";
 import Wallet from "../../cardano/wallet";
-
-const unsigStyle = {
-    display: "flex",
-    flexDirection: "row",
-    background: "#232129",
-    color: "white",
-    padding: "2rem",
-}
-
-const imageStyle = {
-
-}
-
-const detailRow = {
-    display: "flex",
-    flexDirection: "row",
-    color: "white",
-    margin: "1rem",
-    padding: "1rem"
-}
-
-const numberStyle = {
-    fontSize: "4rem"
-}
-
-const infoStyle = {
-    marginLeft: "2rem",
-    fontSize: "2rem"
-}
-
-const offerInfoStyle = {
-    fontSize: "1rem"
-}
-
-const propertiesStyle = {
-    listStyleType: "none",
-    margin: "0",
-    marginTop: "3 rem",
-    padding: "0",
-}
-
-const propertiesNameStyle = {
-    fontSize: "0.9rem",
-    letterSpacing: "0.3rem"
-}
-
-const propertiesItemStyle = {
-    marginTop: "2rem"
-}
-
-// play with hover if time
-// const unsigOverlayStyle = {
-//     zIndex: 20,
-//     padding: "1rem",
-//     margin: "1rem",
-//     fontSize: "1rem",
-// }
 
 function getImageURL(unsigID, resolution) {
     // unsigID [0...31118]
@@ -266,102 +213,99 @@ const UnsigPageLayout = (props) => {
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.5 }}
         >
-            <Link to={`/marketplace/${number}`}>
-                <div style={unsigStyle}>
-                    <div style={{ display: "flex", flexDirection: "column" }}>
-                        {/* not sure why Gatsby's StaticImage doesn't work here, this is ok for now */}
-                        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 1 }}>
-                            <img src={iURL} alt="unsig" width={800} height={800} style={imageStyle} />
-                        </motion.div>
-                        <Center h='100px'>
-                            {/* TODO 2022-01-19: how to check offers in owners wallet */}
-                            {isOwned ? (
-                                <Button bg='#cccccc' color='#991111' borderRadius='0' mx='2' onClick={handleCancel}>Cancel Listing</Button>
-                            ) : (
-                                "Not Yours"
-                            )}
-                            {(props.isOffered) ? (
-                                <>
-                                    <p>Offer price:</p>
-                                    <Button bg='#cccccc' color='#115511' borderRadius='0' mx='2' onClick={handleBuy}>Buy this Unsig</Button>
-                                </>
-                            ) : (
-                                "Not For Sale"
-                            )}
 
+                <Flex direction='row' bg='#232129' color='white' p='10'>
+                    <Flex w='90%' mx='auto'>
 
-                        </Center>
-                        <div style={{ color: "white" }}>
-                        </div>
+                        <Flex direction='column'>
+                            {/* not sure why Gatsby's StaticImage doesn't work here, this is ok for now */}
+                            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 1 }}>
+                                <img src={iURL} alt="unsig" width={800} height={800} />
+                            </motion.div>
+                            <Center h='100px'>
+                                {/* TODO 2022-01-19: how to check offers in owners wallet */}
+                                {isOwned ? (
+                                    <Button bg='#cccccc' color='#991111' borderRadius='0' mx='2' onClick={handleCancel}>Cancel Listing</Button>
+                                ) : (
+                                    <Heading p='5' size='md'>Not Yours</Heading>
+                                )}
+                                {(props.isOffered) ? (
+                                    <>
+                                        <p>Offer price:</p>
+                                        <Button bg='#cccccc' color='#115511' borderRadius='0' mx='2' onClick={handleBuy}>Buy this Unsig</Button>
+                                    </>
+                                ) : (
+                                    <Heading p='5' size='md'>Not For Sale</Heading>
+                                )}
+                            </Center>
+                        </Flex>
 
-                    </div>
+                        <Box ml='10'>
+                            <Heading size='4xl'>
+                                # {unsigDetails.details.index}
+                            </Heading>
+                            <Text fontSize='4xl' py='5'>
+                                {unsigDetails.details.num_props} PROPS
+                            </Text>
 
-                    <div style={infoStyle}>
-                        <p style={numberStyle}>
-                            # {unsigDetails.details.index}
-                        </p>
-                        <p>
-                            {(isOwned) ? (
-                                <>
-                                    <p style={offerInfoStyle}>You own this Unsig. To offer it for sale, enter a Sale Price and click "List this Unsig". After clicking the button, you will be promted to confirm your offer in your wallet.</p>
-                                    <Button colorScheme='teal' onClick={onOpen}>Open Offer Modal</Button>
-                                    <Modal isOpen={isOpen} onClose={onClose}>
-                                        <ModalOverlay />
-                                        <ModalContent>
-                                            <ModalHeader>
-                                                Create a listing for Unsig #{numString}
-                                            </ModalHeader>
-                                            <ModalCloseButton />
-                                            <FormControl>
-                                                <ModalBody p='5'>
-                                                    <FormLabel>Enter your offer price here (in ADA)</FormLabel>
-                                                    <Input name="unsigOfferPriceAda" onChange={formik.handleChange} value={formik.values.unsigOfferPriceAda} />
-                                                    <FormHelperText color="#994444" pt='2'>
-                                                        When you click "List this Unsig", you will be prompted to confirm this transaction in Nami Wallet.
-                                                    </FormHelperText>
-                                                </ModalBody>
-                                                <ModalFooter p='5'>
-                                                    <Button colorScheme='blue' mr={3} onClick={onClose}>
-                                                        Cancel
-                                                    </Button>
-                                                    <Button colorScheme='green' onClick={handleList}>List this Unsig</Button>
-                                                </ModalFooter>
-                                            </FormControl>
-                                        </ModalContent>
-                                    </Modal>
-                                </>
-                            ) : (
-                                ""
-                            )}
-                        </p>
-                        <p style={numberStyle}>
-                            {unsigDetails.details.num_props}
-                        </p>
-                        <p>
-                            PROPERTIES
-                        </p>
-                        <ul style={propertiesStyle}>
-                            <li style={propertiesItemStyle}>
-                                [{unsigDetails.details.properties.multipliers.join(", ")}]{"  "}
-                                <span style={propertiesNameStyle}>MULTIPLIERS</span>
-                            </li>
-                            <li style={propertiesItemStyle}>
-                                [{unsigDetails.details.properties.colors.join(", ")}]{"  "}
-                                <span style={propertiesNameStyle}>COLORS</span>
-                            </li>
-                            <li style={propertiesItemStyle}>
-                                [{unsigDetails.details.properties.distributions.join(", ")}]{"  "}
-                                <span style={propertiesNameStyle}>DISTRIBUTIONS</span>
-                            </li>
-                            <li style={propertiesItemStyle}>
-                                [{unsigDetails.details.properties.rotations.join(", ")}]{"  "}
-                                <span style={propertiesNameStyle}>ROTATIONS</span>
-                            </li>
-                        </ul>
-                    </div>
+                            <Box mt='5'>
+                                <Text mt='10' fontSize='xl' fontWeight='bold'>
+                                    [{unsigDetails.details.properties.multipliers.join(", ")}]{"  "}
+                                </Text>
+                                <Text fontWeight='light' letterSpacing='3px'>MULTIPLIERS</Text>
+                                <Text mt='10' fontSize='xl' fontWeight='bold'>
+                                    [{unsigDetails.details.properties.colors.join(", ")}]{"  "}
+                                </Text>
+                                <Text fontWeight='light' letterSpacing='3px'>COLORS</Text>
+                                <Text mt='10' fontSize='xl' fontWeight='bold'>
+                                    [{unsigDetails.details.properties.distributions.join(", ")}]{"  "}
+                                </Text>
+                                <Text fontWeight='light' letterSpacing='3px'>DISTRIBUTIONS</Text>
+                                <Text mt='10' fontSize='xl' fontWeight='bold'>
+                                    [{unsigDetails.details.properties.rotations.join(", ")}]{"  "}
+                                </Text>
+                                <Text fontWeight='light' letterSpacing='3px'>ROTATIONS</Text>
+                            </Box>
+                            <Text fontSize='lg'>
+                                {(isOwned) ? (
+                                    <>
+                                        <Text fontSize='sm' width='50%' py='5'>
+                                            You own this Unsig. To offer it for sale, enter a Sale Price and click "List this Unsig". After clicking the button, you will be promted to confirm your offer in your wallet.
+                                        </Text>
+                                        <Button colorScheme='teal' onClick={onOpen}>Open Offer Modal</Button>
+                                        <Modal isOpen={isOpen} onClose={onClose}>
+                                            <ModalOverlay />
+                                            <ModalContent>
+                                                <ModalHeader>
+                                                    Create a listing for Unsig #{numString}
+                                                </ModalHeader>
+                                                <ModalCloseButton />
+                                                <FormControl>
+                                                    <ModalBody p='5'>
+                                                        <FormLabel>Enter your offer price here (in ADA)</FormLabel>
+                                                        <Input name="unsigOfferPriceAda" onChange={formik.handleChange} value={formik.values.unsigOfferPriceAda} />
+                                                        <FormHelperText color="#994444" pt='2'>
+                                                            When you click "List this Unsig", you will be prompted to confirm this transaction in Nami Wallet.
+                                                        </FormHelperText>
+                                                    </ModalBody>
+                                                    <ModalFooter p='5'>
+                                                        <Button colorScheme='blue' mr={3} onClick={onClose}>
+                                                            Cancel
+                                                        </Button>
+                                                        <Button colorScheme='green' onClick={handleList}>List this Unsig</Button>
+                                                    </ModalFooter>
+                                                </FormControl>
+                                            </ModalContent>
+                                        </Modal>
+                                    </>
+                                ) : (
+                                    ""
+                                )}
+                            </Text>
+                        </Box>
+                    </Flex>
+                </Flex>
 
-                </div>
-            </Link>
         </motion.div>
     );
 }
