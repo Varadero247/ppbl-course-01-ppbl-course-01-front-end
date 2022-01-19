@@ -30,42 +30,45 @@ const MarketplacePage = ({unsigs}) => {
   }
 
   return (
-    <Box bg='#232129' w='100%' px='24' py='12'>
+    <Box bg='#232129' w='100%' py='12'>
       <title>FOR SALE</title>
-      <Heading size='4xl' fontWeight='medium' color='white'>
-        The Unsig Marketplace
-      </Heading>
-      <Flex w='25%' my='4' p='1' color='white' directtion='row'>
+      <Box w='85%' mx='auto'>
 
-        <FormControl padding='4'>
-          <FormLabel>
-            Search Unsigs
-          </FormLabel>
-          <Switch id='set-search' onChange={handleSearchChange} />
-        </FormControl>
-        {/* IF SEARCH THEN motion ui the SEARCH BOX in, OTHERWISE YOU GET THE VIEW OFFERS TOGGLE */}
-        {search ? "" :
-          (
-            <FormControl padding='4'>
-              <FormLabel>
-                View Offers Only
-              </FormLabel>
-              <Switch id='set-view-offers' onChange={handleViewOffersChange} />
-            </FormControl>
-          )
-        }
-      </Flex>
-      <Flex w='95%' direction='column'>
-        {search ?
-          (<UnsigOrderedScrollList />) : (
-            <>
-              {viewOffers ?
-                (<UnsigOfferScrollList />) :  (<UnsigRandomScrollList />)
-              }
-            </>
-          )
-        }
-      </Flex>
+        <Heading size='4xl' fontWeight='medium' color='white'>
+          The Unsig Marketplace
+        </Heading>
+        <Flex w='40%' my='4' p='1' color='white' direction='row'>
+
+          <FormControl padding='4'>
+            <FormLabel fontSize='xl'>
+              Search Unsigs
+            </FormLabel>
+            <Switch id='set-search' onChange={handleSearchChange} />
+          </FormControl>
+          {/* IF SEARCH THEN motion ui the SEARCH BOX in, OTHERWISE YOU GET THE VIEW OFFERS TOGGLE */}
+          {search ? "" :
+            (
+              <FormControl padding='4'>
+                <FormLabel fontSize='xl'>
+                  View Offers Only
+                </FormLabel>
+                <Switch id='set-view-offers' onChange={handleViewOffersChange} />
+              </FormControl>
+            )
+          }
+        </Flex>
+        <Flex direction='column'>
+          {search ?
+            (<UnsigOrderedScrollList />) : (
+              <>
+                {viewOffers ?
+                  (<UnsigOfferScrollList />) :  (<UnsigRandomScrollList />)
+                }
+              </>
+            )
+          }
+        </Flex>
+      </Box>
     </Box>
   )
 }

@@ -132,11 +132,14 @@ const UnsigPageLayout = (props) => {
     const deleteAssetOffer = async () => {
         await fetch(`${backendBaseUrl}offers`, {
             method: "DELETE",
-            body: {
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
                 "unsigId": `unsig${numString}`,
-                "owner": owner,
-                "amount": currentOffer,
-            }
+                "owner": unsigDetails?.offerDetails?.owner,
+                "amount": unsigDetails.offerDetails.amount,
+            })
         });
         console.log(`Offer for Unsig${numString} has been deleted!`);
     }
@@ -150,12 +153,13 @@ const UnsigPageLayout = (props) => {
 
             const datum = createOfferDatum(seller, price, numString)
             const buyer = { "address": fromBech32(owner), "utxosParam": utxos }
-            const txhash = await buyAsset(
+            const txHash = await buyAsset(
                 datum,
                 buyer,
                 fromBech32(seller),
                 createTxUnspentOutput(contractAddress(), bfUTxO)
             )
+            console.log("txHash is ", txHash)
             if (txHash) {
                 await deleteAssetOffer();
             }
@@ -171,16 +175,20 @@ const UnsigPageLayout = (props) => {
             const listResult = await offerAsset(datum, seller)
 
             if (listResult && listResult.datumHash && listResult.txHash) {
+                console.log(`${backendBaseUrl}offers`)
                 await fetch(`${backendBaseUrl}offers`, {
                     method: "PUT",
-                    body: {
+                    headers: {
+                        "Content-Type": "application/json",
+                     },
+                    body: JSON.stringify({
                         "unsigId": `unsig${numString}`,
                         "owner": owner,
                         "amount": currentOffer,
                         "txHash": listResult.txHash,
                         "datumHash": listResult.datumHash,
                         "txIndex": 0,
-                    }
+                    })
                 });
                 console.log(`Offer for Unsig${numString} has been created!`);
             }
@@ -214,97 +222,99 @@ const UnsigPageLayout = (props) => {
             transition={{ duration: 0.5 }}
         >
 
-                <Flex direction='row' bg='#232129' color='white' p='10'>
-                    <Flex w='90%' mx='auto'>
+            <Flex direction='row' bg='#232129' color='white' p='10'>
+                <Flex w='90%' mx='auto'>
 
-                        <Flex direction='column'>
-                            {/* not sure why Gatsby's StaticImage doesn't work here, this is ok for now */}
-                            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 1 }}>
-                                <img src={iURL} alt="unsig" width={800} height={800} />
-                            </motion.div>
-                            <Center h='100px'>
-                                {/* TODO 2022-01-19: how to check offers in owners wallet */}
-                                {isOwned ? (
-                                    <Button bg='#cccccc' color='#991111' borderRadius='0' mx='2' onClick={handleCancel}>Cancel Listing</Button>
-                                ) : (
-                                    <Heading p='5' size='md'>Not Yours</Heading>
-                                )}
-                                {(props.isOffered) ? (
-                                    <>
-                                        <p>Offer price:</p>
-                                        <Button bg='#cccccc' color='#115511' borderRadius='0' mx='2' onClick={handleBuy}>Buy this Unsig</Button>
-                                    </>
-                                ) : (
-                                    <Heading p='5' size='md'>Not For Sale</Heading>
-                                )}
-                            </Center>
-                        </Flex>
-
-                        <Box ml='10'>
-                            <Heading size='4xl'>
-                                # {unsigDetails.details.index}
-                            </Heading>
-                            <Text fontSize='4xl' py='5'>
-                                {unsigDetails.details.num_props} PROPS
-                            </Text>
-
-                            <Box mt='5'>
-                                <Text mt='10' fontSize='xl' fontWeight='bold'>
-                                    [{unsigDetails.details.properties.multipliers.join(", ")}]{"  "}
-                                </Text>
-                                <Text fontWeight='light' letterSpacing='3px'>MULTIPLIERS</Text>
-                                <Text mt='10' fontSize='xl' fontWeight='bold'>
-                                    [{unsigDetails.details.properties.colors.join(", ")}]{"  "}
-                                </Text>
-                                <Text fontWeight='light' letterSpacing='3px'>COLORS</Text>
-                                <Text mt='10' fontSize='xl' fontWeight='bold'>
-                                    [{unsigDetails.details.properties.distributions.join(", ")}]{"  "}
-                                </Text>
-                                <Text fontWeight='light' letterSpacing='3px'>DISTRIBUTIONS</Text>
-                                <Text mt='10' fontSize='xl' fontWeight='bold'>
-                                    [{unsigDetails.details.properties.rotations.join(", ")}]{"  "}
-                                </Text>
-                                <Text fontWeight='light' letterSpacing='3px'>ROTATIONS</Text>
-                            </Box>
-                            <Text fontSize='lg'>
-                                {(isOwned) ? (
-                                    <>
-                                        <Text fontSize='sm' width='50%' py='5'>
-                                            You own this Unsig. To offer it for sale, enter a Sale Price and click "List this Unsig". After clicking the button, you will be promted to confirm your offer in your wallet.
-                                        </Text>
-                                        <Button colorScheme='teal' onClick={onOpen}>Open Offer Modal</Button>
-                                        <Modal isOpen={isOpen} onClose={onClose}>
-                                            <ModalOverlay />
-                                            <ModalContent>
-                                                <ModalHeader>
-                                                    Create a listing for Unsig #{numString}
-                                                </ModalHeader>
-                                                <ModalCloseButton />
-                                                <FormControl>
-                                                    <ModalBody p='5'>
-                                                        <FormLabel>Enter your offer price here (in ADA)</FormLabel>
-                                                        <Input name="unsigOfferPriceAda" onChange={formik.handleChange} value={formik.values.unsigOfferPriceAda} />
-                                                        <FormHelperText color="#994444" pt='2'>
-                                                            When you click "List this Unsig", you will be prompted to confirm this transaction in Nami Wallet.
-                                                        </FormHelperText>
-                                                    </ModalBody>
-                                                    <ModalFooter p='5'>
-                                                        <Button colorScheme='blue' mr={3} onClick={onClose}>
-                                                            Cancel
-                                                        </Button>
-                                                        <Button colorScheme='green' onClick={handleList}>List this Unsig</Button>
-                                                    </ModalFooter>
-                                                </FormControl>
-                                            </ModalContent>
-                                        </Modal>
-                                    </>
-                                ) : (
-                                    ""
-                                )}
-                            </Text>
-                        </Box>
+                    <Flex direction='column'>
+                        {/* not sure why Gatsby's StaticImage doesn't work here, this is ok for now */}
+                        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 1 }}>
+                            <img src={iURL} alt="unsig" width={800} height={800} />
+                        </motion.div>
+                        <Center h='100px'>
+                            {/* TODO 2022-01-19: how to check offers in owners wallet */}
+                            {/* {isOwned ? (
+                                <Button bg='#cccccc' color='#991111' borderRadius='0' mx='2' onClick={handleCancel}>Cancel Listing</Button>
+                            ) : (
+                                <Heading p='5' size='md'>Not Yours</Heading>
+                            )} */}
+                            {/* {(props.isOffered) ? (
+                                <>
+                                    <p>Offer price:</p>
+                                    <Button bg='#cccccc' color='#115511' borderRadius='0' mx='2' onClick={handleBuy}>Buy this Unsig</Button>
+                                </>
+                            ) : (
+                                <Heading p='5' size='md'>Not For Sale</Heading>
+                            )} */}
+                            <Button bg='#cccccc' color='#991111' borderRadius='0' mx='2' onClick={handleCancel}>Cancel Listing</Button>
+                            <Button bg='#cccccc' color='#115511' borderRadius='0' mx='2' onClick={handleBuy}>Buy this Unsig</Button>
+                        </Center>
                     </Flex>
+
+                    <Box ml='10'>
+                        <Heading size='4xl'>
+                            # {unsigDetails.details.index}
+                        </Heading>
+                        <Text fontSize='4xl' py='5'>
+                            {unsigDetails.details.num_props} PROPS
+                        </Text>
+
+                        <Box mt='5'>
+                            <Text mt='10' fontSize='xl' fontWeight='bold'>
+                                [{unsigDetails.details.properties.multipliers.join(", ")}]{"  "}
+                            </Text>
+                            <Text fontWeight='light' letterSpacing='3px'>MULTIPLIERS</Text>
+                            <Text mt='10' fontSize='xl' fontWeight='bold'>
+                                [{unsigDetails.details.properties.colors.join(", ")}]{"  "}
+                            </Text>
+                            <Text fontWeight='light' letterSpacing='3px'>COLORS</Text>
+                            <Text mt='10' fontSize='xl' fontWeight='bold'>
+                                [{unsigDetails.details.properties.distributions.join(", ")}]{"  "}
+                            </Text>
+                            <Text fontWeight='light' letterSpacing='3px'>DISTRIBUTIONS</Text>
+                            <Text mt='10' fontSize='xl' fontWeight='bold'>
+                                [{unsigDetails.details.properties.rotations.join(", ")}]{"  "}
+                            </Text>
+                            <Text fontWeight='light' letterSpacing='3px'>ROTATIONS</Text>
+                        </Box>
+                        <Text fontSize='lg'>
+                            {(isOwned) ? (
+                                <>
+                                    <Text fontSize='sm' width='50%' py='5'>
+                                        You own this Unsig. To offer it for sale, enter a Sale Price and click "List this Unsig". After clicking the button, you will be promted to confirm your offer in your wallet.
+                                    </Text>
+                                    <Button colorScheme='teal' onClick={onOpen}>Open Offer Modal</Button>
+                                    <Modal isOpen={isOpen} onClose={onClose}>
+                                        <ModalOverlay />
+                                        <ModalContent>
+                                            <ModalHeader>
+                                                Create a listing for Unsig #{numString}
+                                            </ModalHeader>
+                                            <ModalCloseButton />
+                                            <FormControl>
+                                                <ModalBody p='5'>
+                                                    <FormLabel>Enter your offer price here (in ADA)</FormLabel>
+                                                    <Input name="unsigOfferPriceAda" onChange={formik.handleChange} value={formik.values.unsigOfferPriceAda} />
+                                                    <FormHelperText color="#994444" pt='2'>
+                                                        When you click "List this Unsig", you will be prompted to confirm this transaction in Nami Wallet.
+                                                    </FormHelperText>
+                                                </ModalBody>
+                                                <ModalFooter p='5'>
+                                                    <Button colorScheme='blue' mr={3} onClick={onClose}>
+                                                        Cancel
+                                                    </Button>
+                                                    <Button colorScheme='green' onClick={handleList}>List this Unsig</Button>
+                                                </ModalFooter>
+                                            </FormControl>
+                                        </ModalContent>
+                                    </Modal>
+                                </>
+                            ) : (
+                                ""
+                            )}
+                        </Text>
+                    </Box>
                 </Flex>
+            </Flex>
 
         </motion.div>
     );
