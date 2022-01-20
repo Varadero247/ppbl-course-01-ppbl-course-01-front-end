@@ -109,8 +109,10 @@ const UnsigPageLayout = (props) => {
     // need useEffect to update utxos after (1) creating offer and (2) success of that tx
     // what events does Nami provide that we can subscribe to?
     useEffect(async () => {
-        const utxos = await Wallet.getUtxos();
-        setWalletUtxos(utxos);
+        if (await Wallet.enable()) {
+            const utxos = await Wallet.getUtxos();
+            setWalletUtxos(utxos);
+        }
     }, []);
 
     const fetchAssetUtxo = async () => {

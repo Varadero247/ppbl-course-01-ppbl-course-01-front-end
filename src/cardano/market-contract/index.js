@@ -21,7 +21,6 @@ import { fromHex, fromStr, toHex } from "../../utils/converter";
 // Test Unsig PolicyId
 export const unsigPolicyId =
   "1e82bbd44f7bd555a8bcc829bd4f27056e86412fbb549efdbf78f42d";
-// 1e82bbd44f7bd555a8bcc829bd4f27056e86412fbb549efdbf78f42d
 
 // test addresses
 const daoAddress = "addr_test1vqme2uc8smlyjc896e6s4sl9ayf4qxq6hp6g9rteajh0eyg677fcz" // from unsigs-market-plutus/testnet/treasury.addr

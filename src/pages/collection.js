@@ -3,8 +3,9 @@ import { StaticImage } from "gatsby-plugin-image"
 import data from "../../data/dummy-unsigs.json"
 import styled from "styled-components"
 import Cardano from "../cardano/serialization-lib"
-import Wallet from "../cardano/wallet";
+import Wallet from "../cardano/wallet"
 import { serializeTxUnspentOutput, valueToAssets } from "../cardano/transaction"
+import { unsigPolicyId } from "../cardano/market-contract"
 import { fromHex, toStr } from "../utils/converter"
 import { useStoreActions, useStoreState } from "easy-peasy";
 
@@ -18,12 +19,6 @@ import { Box, Heading, Text } from "@chakra-ui/react"
 // User Journey for /collection/create-offer
 // 1. User can list an Unsig
 // - This means that the owner of an Unsig can create an offer for that Unsig
-
-// Unsig PolicyID
-// const unsigID = "0e14267a8020229adc0184dd25fa3174c3f7d6caadcb4425c70e7c04";
-
-// Testnet Unsig Policy ID:
-const unsigID = "1e82bbd44f7bd555a8bcc829bd4f27056e86412fbb549efdbf78f42d"
 
 async function getWalletAssets() {
   await Cardano.load();
@@ -47,7 +42,7 @@ async function getMyUnsigs() {
   let myNFTS = [];
 
   assetList.forEach(nft => {
-    if (nft.startsWith(unsigID)) {
+    if (nft.startsWith(unsigPolicyId)) {
       let output = fromHex(nft.substring(56))
       let myWord = toStr(output)
       let myNumber = myWord.substring(5)
