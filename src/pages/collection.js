@@ -75,11 +75,13 @@ const CollectionPage = ({ unsigs }) => {
   const [collection, setCollection] = useState([]);
   const ownedUnsigs = useStoreState((state) => state.ownedUnsigs.unsigIds);
   const setOwnedUnsigs = useStoreActions((actions) => actions.ownedUnsigs.add);
+  const [myOffers, setMyOffers] = useState([]);
 
   useEffect(async () => {
     if (connected) {
       const unsigs = await getMyUnsigs();
       setCollection(unsigs);
+      loadMyOffers();
     }
   }, []);
 
@@ -88,6 +90,17 @@ const CollectionPage = ({ unsigs }) => {
       setOwnedUnsigs(collection);
     }
   }, [collection]);
+
+  const loadMyOffers = async () => {
+    // offers endpoint is paginated, so this might not actually work
+    // TODO - create new endpoint /api/v1/offersByOwner...
+    const response = await fetch("http://localhost:8088/api/v1/offers")
+    const data = await response.json()
+    const resultOffers = data.resultList.filter((o) => o.owner === connected)
+    // Above line will be removed after we call new endpoint
+    setMyOffers(resultOffers);
+    console.log("MY OFFERS", resultOffers)
+  }
 
   return (
     <Box w='100%' px='24' py='12' bg='#232129' color='white'>
@@ -104,11 +117,20 @@ const CollectionPage = ({ unsigs }) => {
             <Text fontSize='xl'>
               {connected}
             </Text>
+            <Heading>My Unsigs</Heading>
             <Collection>
 
-              {collection.map((i) => <Unsig number={i} />)}
+              {collection.map((i) => <Unsig key={i} number={i} />)}
 
             </Collection>
+            <Heading>
+              My Offers: (which i can update or cancel)
+            </Heading>
+            <Text>Make sure to show offered unsigs here</Text>
+            {/* Look at Offers Data type and use it here -- we need Unsig details */}
+            {/* <Collection>
+              {myOffers.map((i) => <Unsig key={i} number={i} />)}
+            </Collection> */}
           </div>
         ) : (
           <div>

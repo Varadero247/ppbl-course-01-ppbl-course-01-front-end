@@ -247,6 +247,7 @@ const UnsigPageLayout = (props) => {
                             ) : (
                                 <Heading p='5' size='md'>Not For Sale</Heading>
                             )} */}
+                            {/* TODO Re-enable conditions */}
                             <Button bg='#cccccc' color='#991111' borderRadius='0' mx='2' onClick={handleCancel}>Cancel Listing</Button>
                             <Button bg='#cccccc' color='#115511' borderRadius='0' mx='2' onClick={handleBuy}>Buy this Unsig</Button>
                         </Center>
@@ -284,7 +285,10 @@ const UnsigPageLayout = (props) => {
                                     <Text fontSize='sm' width='50%' py='5'>
                                         You own this Unsig. To offer it for sale, enter a Sale Price and click "List this Unsig". After clicking the button, you will be promted to confirm your offer in your wallet.
                                     </Text>
-                                    <Button colorScheme='teal' onClick={onOpen}>Open Offer Modal</Button>
+                                    <Button colorScheme='teal' onClick={onOpen}>Create Offer OR Update Offer</Button>
+                                    <Button colorScheme='teal' onClick={onOpen}>Create Offer OR Update Offer</Button>
+                                    {/* Confetti, Confirmation... */}
+                                    {/* Show offer price */}
                                     <Modal isOpen={isOpen} onClose={onClose}>
                                         <ModalOverlay />
                                         <ModalContent>
