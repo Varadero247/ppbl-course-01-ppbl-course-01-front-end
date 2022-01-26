@@ -94,13 +94,14 @@ const CollectionPage = ({ unsigs }) => {
   const loadMyOffers = async () => {
     // offers endpoint is paginated, so this might not actually work
     // TODO - create new endpoint /api/v1/offersByOwner...
-    const response = await fetch("http://localhost:8088/api/v1/offers")
+    const response = await fetch(`http://localhost:8088/api/v1/offers?owner=${connected}`)
     const data = await response.json()
-    const resultOffers = data.resultList.filter((o) => o.owner === connected)
     // Above line will be removed after we call new endpoint
-    setMyOffers(resultOffers);
-    console.log("MY OFFERS", resultOffers)
+    setMyOffers(data);
+    console.log("MY OFFERS", data.resultList)
   }
+
+
 
   return (
     <Box w='100%' px='24' py='12' bg='#232129' color='white'>
@@ -127,10 +128,10 @@ const CollectionPage = ({ unsigs }) => {
               My Offers: (which i can update or cancel)
             </Heading>
             <Text>Make sure to show offered unsigs here</Text>
-            {/* Look at Offers Data type and use it here -- we need Unsig details */}
-            {/* <Collection>
-              {myOffers.map((i) => <Unsig key={i} number={i} />)}
-            </Collection> */}
+            Look at Offers Data type and use it here -- we need Unsig details
+            <Collection>
+              {myOffers?.resultList?.map((i) => <Unsig key={i} number={i.details.index} price={i.amount} />)}
+            </Collection>
           </div>
         ) : (
           <div>

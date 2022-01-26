@@ -60,10 +60,10 @@ const Owned = (props) => {
     }
 }
 
-const ForSale = () => {
+const ForSale = (props) => {
     return (
         <Center p='1'>
-            Listed
+            Listed for {props.price}
         </Center>
     )
 }
@@ -123,7 +123,7 @@ const Unsig = (props) => {
                     <Flex flexDirection='row'>
                         <UnsigProps number={unsigDetails.details.num_props} />
                         <Spacer />
-                        {unsigDetails.offerDetails ? <ForSale /> : ""}
+                        {unsigDetails.offerDetails ? <ForSale price={props.price} /> : ""}
                         <Spacer />
                         <Owned owner={isOwned} />
                     </Flex>
