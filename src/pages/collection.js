@@ -10,7 +10,7 @@ import { fromHex, toStr } from "../utils/converter"
 import { useStoreActions, useStoreState } from "easy-peasy";
 
 import { Unsig } from "../components/Unsig"
-import { Box, Heading, Text } from "@chakra-ui/react"
+import { Box, Heading, Text, Flex } from "@chakra-ui/react"
 
 // User Journey for /collection
 // 1. User can view the Unsigs in their connected wallet
@@ -108,30 +108,31 @@ const CollectionPage = ({ unsigs }) => {
       <title>MY COLLECTION</title>
       <Box>
         <Heading size='4xl' fontWeight='medium'>
-          User Collection of Unsigs
+          My Collection
         </Heading>
         {connected ? (
           <div>
-            <Text fontSize='xl' py='3'>
-              Wallet connected at address:
-            </Text>
-            <Text fontSize='xl'>
-              {connected}
-            </Text>
-            <Heading>My Unsigs</Heading>
-            <Collection>
+            <Heading>Not For Sale</Heading>
+            <Flex direction='row'>
 
               {collection.map((i) => <Unsig key={i} number={i} />)}
 
-            </Collection>
+            </Flex>
             <Heading>
-              My Offers: (which i can update or cancel)
+              For Sale:
             </Heading>
-            <Text>Make sure to show offered unsigs here</Text>
-            Look at Offers Data type and use it here -- we need Unsig details
-            <Collection>
+
+            <Flex direction='row'>
               {myOffers?.resultList?.map((i) => <Unsig key={i} number={i.details.index} price={i.amount} />)}
-            </Collection>
+            </Flex>
+            <Box py='10'>
+              <Text fontSize='xl' py='3'>
+                Wallet connected at address:
+              </Text>
+              <Heading fontSize='md' fontWeight='light'>
+                {connected}
+              </Heading>
+            </Box>
           </div>
         ) : (
           <div>
@@ -148,12 +149,6 @@ const CollectionPage = ({ unsigs }) => {
 }
 
 export default CollectionPage
-
-const Collection = styled.div`
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-`
 
 // Playing with Nami Wallet
 
