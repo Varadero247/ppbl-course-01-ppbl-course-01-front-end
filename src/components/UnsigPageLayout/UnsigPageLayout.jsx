@@ -42,9 +42,9 @@ function getImageURL(unsigID, resolution) {
 }
 
 function pad(num, size) {
-    num = num.toString();
-    while (num.length < size) num = "0" + num;
-    return num;
+    const res = num.toString();
+    while (res.length < size) res = "0" + res;
+    return res;
 }
 
 const backendBaseUrl = process.env.GATSBY_TESTNET_API_URL;
