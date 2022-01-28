@@ -48,7 +48,13 @@ const Owned = (props) => {
     if (props.owner) {
         return (
             <Center backgroundColor='#448844' p='1'>
-                owner
+                    Owned
+                </Center>
+        )
+    } else if (props.offered) {
+        return (
+            <Center backgroundColor='#448844' p='1' fontSize='xs'>
+                Offer: {props.price} ADA
             </Center>
         )
     } else {
@@ -58,14 +64,6 @@ const Owned = (props) => {
             </Center>
         )
     }
-}
-
-const ForSale = (props) => {
-    return (
-        <Center p='1'>
-            Listed for {props.price}
-        </Center>
-    )
 }
 
 const Unsig = (props) => {
@@ -123,9 +121,7 @@ const Unsig = (props) => {
                     <Flex flexDirection='row'>
                         <UnsigProps number={unsigDetails.details.num_props} />
                         <Spacer />
-                        {unsigDetails.offerDetails ? <ForSale price={props.price} /> : ""}
-                        <Spacer />
-                        <Owned owner={isOwned} />
+                        <Owned owner={isOwned} offered={unsigDetails.offerDetails} price={props.price} />
                     </Flex>
 
 

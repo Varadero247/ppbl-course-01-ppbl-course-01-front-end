@@ -223,8 +223,7 @@ const UnsigPageLayout = (props) => {
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.5 }}
         >
-
-            <Flex direction='row' bg='#232129' color='white' p='10'>
+            <Flex w='70%' mx='auto' direction='row' bg='#232129' color='white' p='10'>
                 <Flex w='90%' mx='auto'>
 
                     <Flex direction='column'>

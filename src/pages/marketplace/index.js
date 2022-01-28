@@ -41,7 +41,7 @@ const MarketplacePage = ({unsigs}) => {
 
           <FormControl padding='4'>
             <FormLabel fontSize='xl'>
-              Search Unsigs
+              Search All Unsigs
             </FormLabel>
             <Switch id='set-search' onChange={handleSearchChange} />
           </FormControl>

@@ -48,7 +48,19 @@ const Owned = (props) => {
     if (props.owner) {
         return (
             <Center backgroundColor='#448844' p='1'>
-                owner
+                Owned
+            </Center>
+        )
+    } else if (props.offerIsMine) {
+        return (
+            <Center backgroundColor='#ff0000' p='1' fontSize='xs'>
+                My Offer: {props.price} ADA
+            </Center>
+        )
+    } else if (props.offered) {
+        return (
+            <Center backgroundColor='#448844' p='1' fontSize='xs'>
+                Offer: {props.price} ADA
             </Center>
         )
     } else {
@@ -58,14 +70,6 @@ const Owned = (props) => {
             </Center>
         )
     }
-}
-
-const ForSale = () => {
-    return (
-        <Center bg='green' p='1'>
-            For Sale
-        </Center>
-    )
 }
 
 const UnsigCard = (props) => {
@@ -101,9 +105,7 @@ const UnsigCard = (props) => {
                     <Flex flexDirection='row'>
                         <UnsigProps number={props.numProps} />
                         <Spacer />
-                        {props.isOffered ? <ForSale /> : ""}
-                        <Spacer />
-                        <Owned owner={props.isOwned} />
+                        <Owned owner={props.owned} offered={props.offered} offerIsMine={props.offerIsMine} price={props.price} />
                     </Flex>
 
 

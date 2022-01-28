@@ -61,6 +61,16 @@ const UnsigOrderedScrollList = (props) => {
     }, [listUnsigs])
 
     const ownedUnsigs = useStoreState((state) => state.ownedUnsigs.unsigIds);
+    const myOfferedUnsigs = useStoreState((state) => state.myOffers.unsigIds);
+
+    // 2022-01-27 Pick up here + make Offered work in Gallery view
+    const checkMyOffer = (number) => {
+        console.log("looking for number", number, myOfferedUnsigs.length)
+        if(myOfferedUnsigs?.length > 0){
+            return (myOfferedUnsigs?.includes(number));
+        }
+        return false;
+    }
 
     return (
         <>
@@ -77,8 +87,10 @@ const UnsigOrderedScrollList = (props) => {
                             <UnsigCard
                                 number={i.details.index}
                                 numProps={i.details.num_props}
-                                isOwned={ownedUnsigs.includes(i.unsigId.substring(5))}
-                                isOffered={i.offerDetails}
+                                owned={ownedUnsigs.includes(i.unsigId.substring(5))}
+                                offered={i.offerDetails}
+                                offerIsMine={checkMyOffer(i.details.index)}
+                                price={i.offerDetails?.amount}
                             />
                         ))}
                     </Collection>

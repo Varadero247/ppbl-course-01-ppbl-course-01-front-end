@@ -28,8 +28,9 @@ const UnsigOfferScrollList = (props) => {
                             <UnsigCard
                                 number={i.details.index}
                                 numProps={i.details.num_props}
-                                isOwned={ownedUnsigs.includes(i.unsigId.substring(5))}
-                                isOffered={true}
+                                owned={ownedUnsigs.includes(i.unsigId.substring(5))}
+                                offered={true}
+                                price={i.amount}
                             />
                         ))}
                     </Collection>

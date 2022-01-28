@@ -36,16 +36,14 @@ const Header = () => {
                 }}
             >
                 <NavButton>
-                    <Link to="/marketplace/">Marketplace</Link>
+                    <Link to="/marketplace/">Gallery + Marketplace</Link>
                 </NavButton>
-                {connected ? (
-                    <NavButton>
-                        <Link to="/collection/">My Collection</Link>
-                    </NavButton>
-                ) : ""}
 
                 <NavButton>
-                    <Link to="/explore/">Guide</Link>
+                    <Link to="/guide/">Guide</Link>
+                </NavButton>
+                <NavButton>
+                    <Link to="/about/">About</Link>
                 </NavButton>
                 <WalletButton />
             </div>

@@ -1,5 +1,6 @@
 import * as React from "react"
 import { UnsigPageLayout } from "../../components/UnsigPageLayout";
+import { Box } from "@chakra-ui/react";
 
 const pageStyles = {
     color: "#232129",
@@ -10,9 +11,9 @@ function UnsigPage(props) {
   const unsig = props.params.unsig;
 
   return(
-    <div style={pageStyles}>
+    <Box bg='#232129'>
       <UnsigPageLayout number={unsig} />
-    </div>
+    </Box>
   )
 }
 

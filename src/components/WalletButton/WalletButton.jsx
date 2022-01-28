@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { Link } from "gatsby"
 
 import { navigate } from "gatsby-link";
 import Cardano from "../../cardano/serialization-lib"
@@ -62,9 +63,11 @@ const WalletButton = (props) => {
     }, []);
 
     return connected ? (
-        <Button colorScheme='teal'>
-            You are connected!
-        </Button>
+        <Link to="/collection">
+          <Button colorScheme='teal'>
+              My Collection
+          </Button>
+        </Link>
     ) : (
         <Button
             isDisabled={loading}

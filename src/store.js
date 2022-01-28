@@ -13,6 +13,12 @@ const store = createStore({
             state.unsigIds = payload;
         }),
     },
+    myOffers : {
+        unsigIds: [],
+        add: action((state, payload) => {
+            state.unsigIds = payload;
+        }),
+    },
     ownedUtxos : {
         utxos: [],
         add: action((state, payload) => {

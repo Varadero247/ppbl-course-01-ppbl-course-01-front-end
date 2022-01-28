@@ -75,6 +75,7 @@ const CollectionPage = ({ unsigs }) => {
   const [collection, setCollection] = useState([]);
   const ownedUnsigs = useStoreState((state) => state.ownedUnsigs.unsigIds);
   const setOwnedUnsigs = useStoreActions((actions) => actions.ownedUnsigs.add);
+  const setOfferedUnsigs = useStoreActions((actions) => actions.myOffers.add);
   const [myOffers, setMyOffers] = useState([]);
 
   useEffect(async () => {
@@ -101,6 +102,9 @@ const CollectionPage = ({ unsigs }) => {
     console.log("MY OFFERS", data.resultList)
   }
 
+  useEffect(() => {
+    setOfferedUnsigs(myOffers);
+  }, [myOffers])
 
 
   return (
@@ -111,19 +115,30 @@ const CollectionPage = ({ unsigs }) => {
           My Collection
         </Heading>
         {connected ? (
-          <div>
-            <Heading>Not For Sale</Heading>
+          <Box>
+            { (myOffers.resultList?.length > 0) ? (
+              <Box my='5'>
+                <Heading py='5'>
+                  For Sale:
+                </Heading>
+                <Flex direction='row'>
+                  {myOffers?.resultList?.map((i) => <Unsig key={i} number={i.details.index} price={i.amount} />)}
+                </Flex>
+                { (collection.length > 0) ? (
+                  <Heading py='5'>
+                    Hodling:
+                  </Heading>
+                ) : ("")}
+              </Box>
+            ) : (
+              <Box my='5'>
+                <Text fontSize='2xl'>
+                  Click on an Unsig to create an offer.
+                </Text>
+              </Box>
+            )}
             <Flex direction='row'>
-
               {collection.map((i) => <Unsig key={i} number={i} />)}
-
-            </Flex>
-            <Heading>
-              For Sale:
-            </Heading>
-
-            <Flex direction='row'>
-              {myOffers?.resultList?.map((i) => <Unsig key={i} number={i.details.index} price={i.amount} />)}
             </Flex>
             <Box py='10'>
               <Text fontSize='xl' py='3'>
@@ -133,7 +148,7 @@ const CollectionPage = ({ unsigs }) => {
                 {connected}
               </Heading>
             </Box>
-          </div>
+          </Box>
         ) : (
           <div>
             <Text fontSize='xl' py='3'>
