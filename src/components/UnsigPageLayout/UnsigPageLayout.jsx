@@ -42,7 +42,7 @@ function getImageURL(unsigID, resolution) {
 }
 
 function pad(num, size) {
-    const res = num.toString();
+    let res = num.toString();
     while (res.length < size) res = "0" + res;
     return res;
 }
