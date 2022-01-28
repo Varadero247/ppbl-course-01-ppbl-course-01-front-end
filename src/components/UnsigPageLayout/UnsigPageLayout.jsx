@@ -69,7 +69,11 @@ const UnsigPageLayout = (props) => {
         }
     }
 
-    const number = props.number
+    let number = 0
+
+    if (props.number) {
+        number = props.number
+    }
     const numString = pad(number, 5)
     const iURL = getImageURL(numString, "4096")
 
