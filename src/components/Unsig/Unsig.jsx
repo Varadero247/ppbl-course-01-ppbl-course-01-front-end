@@ -95,7 +95,7 @@ const Unsig = (props) => {
 
 
     useEffect(() => {
-        fetch(`http://localhost:8088/api/v1/unsigs/unsig${numString}`)
+        fetch(`${process.env.GATSBY_TESTNET_API_URL}/unsigs/unsig${numString}`)
             .then(response => response.json())
             .then(resultData => { setUnsigDetails(resultData) })
     }, []);

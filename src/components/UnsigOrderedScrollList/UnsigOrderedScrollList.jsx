@@ -54,7 +54,7 @@ const UnsigOrderedScrollList = (props) => {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(listUnsigs)
         }
-        const response = await fetch('http://localhost:8088/api/v1/unsigs/find', requestOptions)
+        const response = await fetch(`${process.env.GATSBY_TESTNET_API_URL}/unsigs/find`, requestOptions)
         const data = await response.json();
         setLoadedUnsigData(data.resultList)
         console.log("loaded", loadedUnsigData)

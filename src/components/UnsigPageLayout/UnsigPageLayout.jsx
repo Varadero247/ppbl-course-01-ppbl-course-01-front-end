@@ -47,7 +47,7 @@ function pad(num, size) {
     return num;
 }
 
-const backendBaseUrl = "http://localhost:8088/api/v1/";
+const backendBaseUrl = process.env.GATSBY_TESTNET_API_URL;
 
 const UnsigPageLayout = (props) => {
     // props.number
@@ -82,7 +82,7 @@ const UnsigPageLayout = (props) => {
     const { isOpen, onOpen, onClose } = useDisclosure()
 
     useEffect(() => {
-        fetch(`${backendBaseUrl}unsigs/unsig${numString}`)
+        fetch(`${backendBaseUrl}/unsigs/unsig${numString}`)
             .then(response => response.json())
             .then(resultData => { setUnsigDetails(resultData) })
     }, []);
@@ -119,7 +119,7 @@ const UnsigPageLayout = (props) => {
         const datumHash = unsigDetails?.offerDetails?.datumHash;
         const unsigAsset = `${unsigPolicyId}${toHex(fromStr(`unsig${numString}`))}`;
         const response = await fetch(
-            `${backendBaseUrl}utxo?address=${contractAddress().to_bech32()}&unsigAsset=${unsigAsset}&datumHash=${datumHash}`
+            `${backendBaseUrl}/utxo?address=${contractAddress().to_bech32()}&unsigAsset=${unsigAsset}&datumHash=${datumHash}`
         )
 
         const assetUTxO = await response.json();
@@ -132,7 +132,7 @@ const UnsigPageLayout = (props) => {
     }
 
     const deleteAssetOffer = async () => {
-        await fetch(`${backendBaseUrl}offers`, {
+        await fetch(`${backendBaseUrl}/offers`, {
             method: "DELETE",
             headers: {
                 "Content-Type": "application/json",
@@ -177,8 +177,8 @@ const UnsigPageLayout = (props) => {
             const listResult = await offerAsset(datum, seller)
 
             if (listResult && listResult.datumHash && listResult.txHash) {
-                console.log(`${backendBaseUrl}offers`)
-                await fetch(`${backendBaseUrl}offers`, {
+                console.log(`${backendBaseUrl}/offers`)
+                await fetch(`${backendBaseUrl}/offers`, {
                     method: "PUT",
                     headers: {
                         "Content-Type": "application/json",

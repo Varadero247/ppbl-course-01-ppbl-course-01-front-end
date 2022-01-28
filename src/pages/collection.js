@@ -95,7 +95,7 @@ const CollectionPage = ({ unsigs }) => {
   const loadMyOffers = async () => {
     // offers endpoint is paginated, so this might not actually work
     // TODO - create new endpoint /api/v1/offersByOwner...
-    const response = await fetch(`http://localhost:8088/api/v1/offers?owner=${connected}`)
+    const response = await fetch(`${process.env.GATSBY_TESTNET_API_URL}/offers?owner=${connected}`)
     const data = await response.json()
     // Above line will be removed after we call new endpoint
     setMyOffers(data);

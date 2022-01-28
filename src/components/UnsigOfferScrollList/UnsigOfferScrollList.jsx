@@ -13,7 +13,7 @@ const UnsigOfferScrollList = (props) => {
 
     // get the data
     useEffect(async () => {
-        const response = await fetch('http://localhost:8088/api/v1/offers')
+        const response = await fetch(`${process.env.GATSBY_TESTNET_API_URL}/offers`)
         const data = await response.json();
         setLoadedUnsigData(data.resultList)
         console.log("loaded", loadedUnsigData)
