@@ -1,20 +1,11 @@
+import { Flex, Text } from "@chakra-ui/react";
 import React from "react";
 
 const Footer = () => {
     return(
-        <div id="footer"
-            style={{
-                height: "2%",
-                margin: "2%",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "space-between",
-            }}
-        >
-            <p>Unsigs Marketplace</p>
-            <a>Explore</a>
-            <a>Learn More</a>
-        </div>
+        <Flex id='footer' width='100%' py='10' justify='center' bg='#232129' color='#FFF'>
+            <Text>A project of the Unsigned_DAO and Gimbalabs</Text>
+        </Flex>
     )
 }
 

@@ -97,6 +97,7 @@ const UnsigPageLayout = (props) => {
     const { isOpen: isCreateOfferOpen , onOpen: onCreateOfferOpen, onClose: onCreateOfferClose } = useDisclosure()
     const { isOpen: isOfferSuccessOpen , onOpen: onOfferSuccessOpen, onClose: onOfferSuccessClose } = useDisclosure()
     const { isOpen: isCancelOfferOpen , onOpen: onCancelOfferOpen, onClose: onCancelOfferClose } = useDisclosure()
+    const { isOpen: isCancelSuccessOpen , onOpen: onCancelSuccessOpen, onClose: onCancelSuccessClose } = useDisclosure()
     const { isOpen: isBuySuccessOpen , onOpen: onBuySuccessOpen, onClose: onBuySuccessClose } = useDisclosure()
 
 
@@ -236,6 +237,7 @@ const UnsigPageLayout = (props) => {
             if (txHash) {
                 await deleteAssetOffer();
             }
+            onCancelSuccessOpen();
         } catch (error) {
             console.log(error)
         }
@@ -260,13 +262,6 @@ const UnsigPageLayout = (props) => {
                         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 1 }}>
                             <img src={iURL} alt="unsig" width={800} height={800} />
                         </motion.div>
-                        <Center h='100px'>
-                            { isOfferOwner ? (
-                                <Button bg='#cccccc' color='#991111' borderRadius='0' mx='2' onClick={handleCancel}>Cancel My Offer</Button>
-                            ) : (
-                                ""
-                            )}
-                        </Center>
                     </Flex>
 
                     <Box ml='10'>
@@ -295,13 +290,15 @@ const UnsigPageLayout = (props) => {
                             <Text fontWeight='light' letterSpacing='3px'>ROTATIONS</Text>
                         </Box>
                         {/* { isMyOffer ? ("You are currently offering this for sale") : ("Not owned or not offered") } */}
-                        { isOffered ? (
+                        { (isOffered && !isOfferOwner) ? (
                             <>
                                 <Flex direction='column' my='3'>
                                     <Button bg='#cccccc' color='#115511' borderRadius='0' width="50%" mb='3' onClick={handleBuy}>
                                         Buy for {unsigDetails.offerDetails.amount} ADA
                                     </Button>
-                                    <Text fontSize='sm'>When you click this button you will be prompted to confirm the transaction in Nami wallet.</Text>
+                                    <Text fontSize='sm'>
+                                        When you click this button you will be prompted to confirm the transaction in Nami wallet.
+                                    </Text>
                                 </Flex>
                                 <Modal isOpen={isBuySuccessOpen} onClose={onBuySuccessClose}>
                                     <ModalOverlay />
@@ -321,7 +318,40 @@ const UnsigPageLayout = (props) => {
                                 </Modal>
                             </>
                         ) : (
-                            "this one is not for sale"
+                            ""
+                        )}
+                        { isOfferOwner ? (
+                            <>
+                                <Flex direction='column' my='3' bg='black' p='3'>
+                                    <Heading size='md' width='80%' mx='auto' mb='3'>
+                                        You are currently offering this Unsig for {unsigDetails.offerDetails.amount} ADA
+                                    </Heading>
+                                    <Button bg='#cccccc' color='#991111' borderRadius='0' width="50%" mx='auto' onClick={handleCancel}>
+                                        Cancel My Offer
+                                    </Button>
+                                    <Text fontSize='sm' width='80%' mx='auto' mt='3'>
+                                        When you click this button you will be prompted to confirm the transaction in Nami wallet.
+                                    </Text>
+                                </Flex>
+                                <Modal isOpen={isCancelSuccessOpen} onClose={onCancelSuccessClose}>
+                                    <ModalOverlay />
+                                    <ModalContent>
+                                        <ModalHeader>
+                                            Got It
+                                        </ModalHeader>
+                                        <ModalCloseButton />
+                                        <ModalBody p='5' bg='black'>
+                                            <Text p='3' fontStyle='bold' color='white'>You just canceled your offer for this Unsig. The transaction is valid, and this Unsig no longer appears in the marketplace.</Text>
+                                            <Text p='3' fontStyle='bold' color='white'>You will not see the Unsig in your wallet until the transaction is confirmed on chain.</Text>
+                                        </ModalBody>
+                                        <ModalFooter p='5' justifyContent='center'>
+                                            <Button colorScheme='green' onClick={onCancelSuccessClose}>ok</Button>
+                                        </ModalFooter>
+                                    </ModalContent>
+                                </Modal>
+                            </>
+                        ) : (
+                            ""
                         )}
 
                         <Text fontSize='lg'>

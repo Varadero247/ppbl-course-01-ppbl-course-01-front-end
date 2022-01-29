@@ -26,7 +26,7 @@ const IndexPage = () => {
   return (
     <main>
       <title>Welcome</title>
-      <Center w='100%' h='1000px' bg='#232129'>
+      <Center w='100%' h='800px' bg='#232129'>
         <Heading size='4xl' color='white' fontWeight='medium'>Unsigs Marketplace</Heading>
       </Center>
     </main>
