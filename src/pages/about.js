@@ -28,6 +28,8 @@ const AboutPage = ({unsigs}) => {
             <Text py='3'>Community Resources</Text>
             <Heading py='3'>FAQs</Heading>
             <Text py='3'>Unsigned DAO + Gimbalabs</Text>
+            <Heading py='3'>Wallet Contract Address</Heading>
+            <Text py='3'><a href="https://testnet.cardanoscan.io/address/addr_test1wp8zdhctf4cmf4uuy4twnma56f8n9q4up29ayy6msnpjxqgrplfzt">addr_test1wp8zdhctf4cmf4uuy4twnma56f8n9q4up29ayy6msnpjxqgrplfzt</a></Text>
         </Flex>
       </Box>
     </Box>
