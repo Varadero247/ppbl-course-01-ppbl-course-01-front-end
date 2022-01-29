@@ -105,7 +105,7 @@ const CollectionPage = ({ unsigs }) => {
 
 
   return (
-    <Box w='100%' h='800px' px='24' py='12' bg='#232129' color='white'>
+    <Box w='100%' minH='800px' px='24' py='12' bg='#232129' color='white'>
       <title>MY COLLECTION</title>
       <Box>
         <Heading size='4xl' fontWeight='medium'>

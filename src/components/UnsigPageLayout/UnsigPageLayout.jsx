@@ -360,7 +360,7 @@ const UnsigPageLayout = (props) => {
                                     <Text fontSize='sm' width='50%' py='5'>
                                         You own this Unsig. To offer it for sale, click Create Offer.
                                     </Text>
-                                    <Button colorScheme='teal' onClick={onCreateOfferOpen}>Create Offer OR Update Offer</Button>
+                                    <Button colorScheme='teal' onClick={onCreateOfferOpen}>Create Offer</Button>
                                     {/* Confetti, Confirmation... */}
                                     {/* Show offer price */}
                                     <Modal isOpen={isCreateOfferOpen} onClose={onCreateOfferClose}>
