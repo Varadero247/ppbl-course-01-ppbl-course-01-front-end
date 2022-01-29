@@ -82,10 +82,23 @@ const UnsigPageLayout = (props) => {
     const ownedUnsigs = useStoreState((state) => state.ownedUnsigs.unsigIds);
     const isOwned = ownedUnsigs.includes(numString);
 
+    const isOffered = unsigDetails.offerDetails;
+    let offerOwner = null;
+    if (isOffered) {
+        offerOwner = unsigDetails.offerDetails.owner;
+    }
+
+
+    // const myOffers = useStoreState((state) => state.myOffers.unsigIds);
+    // const isMyOffer = myOffers.includes(numString);
+
+
     // for chakra ui modals
     const { isOpen: isCreateOfferOpen , onOpen: onCreateOfferOpen, onClose: onCreateOfferClose } = useDisclosure()
     const { isOpen: isOfferSuccessOpen , onOpen: onOfferSuccessOpen, onClose: onOfferSuccessClose } = useDisclosure()
     const { isOpen: isCancelOfferOpen , onOpen: onCancelOfferOpen, onClose: onCancelOfferClose } = useDisclosure()
+    const { isOpen: isBuySuccessOpen , onOpen: onBuySuccessOpen, onClose: onBuySuccessClose } = useDisclosure()
+
 
 
     useEffect(() => {
@@ -112,6 +125,8 @@ const UnsigPageLayout = (props) => {
     const owner = useStoreState((state) => state.connection.connected)
     const utxos = useStoreState((state) => state.ownedUtxos.utxos)
     const setWalletUtxos = useStoreActions((actions) => actions.ownedUtxos.add)
+
+    const isOfferOwner = (owner && (owner === offerOwner))
 
     // need useEffect to update utxos after (1) creating offer and (2) success of that tx
     // what events does Nami provide that we can subscribe to?
@@ -172,6 +187,7 @@ const UnsigPageLayout = (props) => {
             if (txHash) {
                 await deleteAssetOffer();
             }
+            onBuySuccessOpen();
         } catch (error) {
             console.log(error)
         }
@@ -245,23 +261,11 @@ const UnsigPageLayout = (props) => {
                             <img src={iURL} alt="unsig" width={800} height={800} />
                         </motion.div>
                         <Center h='100px'>
-                            {/* TODO 2022-01-19: how to check offers in owners wallet */}
-                            {/* {isOwned ? (
-                                <Button bg='#cccccc' color='#991111' borderRadius='0' mx='2' onClick={handleCancel}>Cancel Listing</Button>
+                            { isOfferOwner ? (
+                                <Button bg='#cccccc' color='#991111' borderRadius='0' mx='2' onClick={handleCancel}>Cancel My Offer</Button>
                             ) : (
-                                <Heading p='5' size='md'>Not Yours</Heading>
-                            )} */}
-                            {/* {(props.isOffered) ? (
-                                <>
-                                    <p>Offer price:</p>
-                                    <Button bg='#cccccc' color='#115511' borderRadius='0' mx='2' onClick={handleBuy}>Buy this Unsig</Button>
-                                </>
-                            ) : (
-                                <Heading p='5' size='md'>Not For Sale</Heading>
-                            )} */}
-                            {/* TODO Re-enable conditions */}
-                            <Button bg='#cccccc' color='#991111' borderRadius='0' mx='2' onClick={handleCancel}>If listed and mine, Cancel Listing</Button>
-                            <Button bg='#cccccc' color='#115511' borderRadius='0' mx='2' onClick={handleBuy}>If listed and not mine, Buy this Unsig</Button>
+                                ""
+                            )}
                         </Center>
                     </Flex>
 
@@ -269,32 +273,57 @@ const UnsigPageLayout = (props) => {
                         <Heading size='4xl'>
                             # {unsigDetails.details.index}
                         </Heading>
-                        {}
-                        <Text fontSize='4xl' py='5'>
-                            For Sale XXX ADA
-                        </Text>
-                        <Text fontSize='4xl' py='5'>
+                        <Text fontSize='4xl' py='3'>
                             {unsigDetails.details.num_props} PROPS
                         </Text>
-
-                        <Box mt='5'>
-                            <Text mt='10' fontSize='xl' fontWeight='bold'>
+                        <Box mt='3'>
+                            <Text mt='5' fontSize='xl' fontWeight='bold'>
                                 [{unsigDetails.details.properties.multipliers.join(", ")}]{"  "}
                             </Text>
                             <Text fontWeight='light' letterSpacing='3px'>MULTIPLIERS</Text>
-                            <Text mt='10' fontSize='xl' fontWeight='bold'>
+                            <Text mt='5' fontSize='xl' fontWeight='bold'>
                                 [{unsigDetails.details.properties.colors.join(", ")}]{"  "}
                             </Text>
                             <Text fontWeight='light' letterSpacing='3px'>COLORS</Text>
-                            <Text mt='10' fontSize='xl' fontWeight='bold'>
+                            <Text mt='5' fontSize='xl' fontWeight='bold'>
                                 [{unsigDetails.details.properties.distributions.join(", ")}]{"  "}
                             </Text>
                             <Text fontWeight='light' letterSpacing='3px'>DISTRIBUTIONS</Text>
-                            <Text mt='10' fontSize='xl' fontWeight='bold'>
+                            <Text mt='5' fontSize='xl' fontWeight='bold'>
                                 [{unsigDetails.details.properties.rotations.join(", ")}]{"  "}
                             </Text>
                             <Text fontWeight='light' letterSpacing='3px'>ROTATIONS</Text>
                         </Box>
+                        {/* { isMyOffer ? ("You are currently offering this for sale") : ("Not owned or not offered") } */}
+                        { isOffered ? (
+                            <>
+                                <Flex direction='column' my='3'>
+                                    <Button bg='#cccccc' color='#115511' borderRadius='0' width="50%" mb='3' onClick={handleBuy}>
+                                        Buy for {unsigDetails.offerDetails.amount} ADA
+                                    </Button>
+                                    <Text fontSize='sm'>When you click this button you will be prompted to confirm the transaction in Nami wallet.</Text>
+                                </Flex>
+                                <Modal isOpen={isBuySuccessOpen} onClose={onBuySuccessClose}>
+                                    <ModalOverlay />
+                                    <ModalContent>
+                                        <ModalHeader>
+                                            Success!
+                                        </ModalHeader>
+                                        <ModalCloseButton />
+                                        <ModalBody p='5' bg='black'>
+                                            <Text p='3' fontStyle='bold' color='white'>You just bought an Unsig! And the transaction is valid.</Text>
+                                            <Text p='3' fontStyle='bold' color='white'>You will not see the Unsig in your wallet until the transaction is confirmed on chain.</Text>
+                                        </ModalBody>
+                                        <ModalFooter p='5' justifyContent='center'>
+                                            <Button colorScheme='green' onClick={onBuySuccessClose}>ok</Button>
+                                        </ModalFooter>
+                                    </ModalContent>
+                                </Modal>
+                            </>
+                        ) : (
+                            "this one is not for sale"
+                        )}
+
                         <Text fontSize='lg'>
                             {(isOwned) ? (
                                 <>
@@ -302,7 +331,6 @@ const UnsigPageLayout = (props) => {
                                         You own this Unsig. To offer it for sale, click Create Offer.
                                     </Text>
                                     <Button colorScheme='teal' onClick={onCreateOfferOpen}>Create Offer OR Update Offer</Button>
-                                    <Button colorScheme='teal' onClick={onOfferSuccessOpen}>DUMMY SUCCESS</Button>
                                     {/* Confetti, Confirmation... */}
                                     {/* Show offer price */}
                                     <Modal isOpen={isCreateOfferOpen} onClose={onCreateOfferClose}>
@@ -336,13 +364,13 @@ const UnsigPageLayout = (props) => {
                                                 Success!
                                             </ModalHeader>
                                             <ModalCloseButton />
-                                            <ModalBody p='5'>
-                                                <Text>Your offer has been created, and the transaction is valid.</Text>
-                                                <Text>You will still see the Unsig in your wallet until the transaction is confirmed on chain.</Text>
-                                                <Text>(On your Collection Page, you might also see two instances of this Unsig, until the tx is confirmed.)</Text>
+                                            <ModalBody p='5' bg='black'>
+                                                <Text p='3' fontStyle='bold' color='white'>Your offer has been created, and the transaction is valid.</Text>
+                                                <Text p='3' fontStyle='bold' color='white'>You will still see the Unsig in your wallet until the transaction is confirmed on chain.</Text>
+                                                <Text p='3' fontStyle='bold' color='white'>(On your Collection Page, you might also see two instances of this Unsig, until the tx is confirmed.)</Text>
                                             </ModalBody>
-                                            <ModalFooter p='5'>
-                                                <Button colorScheme='green' onClick={onOfferSuccessClose}>YAY!</Button>
+                                            <ModalFooter p='5' justifyContent='center'>
+                                                <Button colorScheme='green' onClick={onOfferSuccessClose}>ok</Button>
                                             </ModalFooter>
                                         </ModalContent>
                                     </Modal>

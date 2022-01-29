@@ -21,8 +21,10 @@ const GuidePage = ({unsigs}) => {
         <Flex w='40%' my='4' p='1' color='white' direction='column'>
             <Heading py='3'>How to Sell Unsigs</Heading>
             <Text py='3'>Link wallet, view collection, list</Text>
+
             <Heading py='3'>How to Buy Unsigs</Heading>
             <Text py='3'>Link wallet, view marketplace, search for individual unsigs or browse listings</Text>
+            <Text py='3'>You must set collateral in order to buy from this marketplace.</Text>
             <Heading py='3'>Fees</Heading>
             <Text py='3'>1.25% and 1.25%</Text>
             <Heading py='3'>Get Involved</Heading>
