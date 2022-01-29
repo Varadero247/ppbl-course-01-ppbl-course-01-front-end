@@ -106,6 +106,7 @@ const Unsig = (props) => {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: false }}
             exit={{ opacity: 0, y: 50 }}
+            transition={{ duration: 1.2 }}
         >
             <Link to={`/marketplace/${number}`}>
                 <div style={unsigStyle}>

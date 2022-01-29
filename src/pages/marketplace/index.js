@@ -32,7 +32,7 @@ const MarketplacePage = ({unsigs}) => {
   return (
     <Box bg='#232129' w='100%' py='12'>
       <title>FOR SALE</title>
-      <Box w='85%' mx='auto'>
+      <Box w='90%' mx='auto'>
 
         <Heading size='4xl' fontWeight='medium' color='white'>
           The Unsig Marketplace

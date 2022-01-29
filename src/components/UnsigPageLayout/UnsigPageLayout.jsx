@@ -82,8 +82,11 @@ const UnsigPageLayout = (props) => {
     const ownedUnsigs = useStoreState((state) => state.ownedUnsigs.unsigIds);
     const isOwned = ownedUnsigs.includes(numString);
 
-    // for chakra ui modal
-    const { isOpen, onOpen, onClose } = useDisclosure()
+    // for chakra ui modals
+    const { isOpen: isCreateOfferOpen , onOpen: onCreateOfferOpen, onClose: onCreateOfferClose } = useDisclosure()
+    const { isOpen: isOfferSuccessOpen , onOpen: onOfferSuccessOpen, onClose: onOfferSuccessClose } = useDisclosure()
+    const { isOpen: isCancelOfferOpen , onOpen: onCancelOfferOpen, onClose: onCancelOfferClose } = useDisclosure()
+
 
     useEffect(() => {
         fetch(`${backendBaseUrl}/unsigs/unsig${numString}`)
@@ -197,6 +200,7 @@ const UnsigPageLayout = (props) => {
                     })
                 });
                 console.log(`Offer for Unsig${numString} has been created!`);
+                handleSuccess();
             }
         } catch (error) {
             console.log(error)
@@ -219,6 +223,11 @@ const UnsigPageLayout = (props) => {
         } catch (error) {
             console.log(error)
         }
+    }
+
+    const handleSuccess = () => {
+        onCreateOfferClose();
+        onOfferSuccessOpen();
     }
 
     return (
@@ -251,8 +260,8 @@ const UnsigPageLayout = (props) => {
                                 <Heading p='5' size='md'>Not For Sale</Heading>
                             )} */}
                             {/* TODO Re-enable conditions */}
-                            <Button bg='#cccccc' color='#991111' borderRadius='0' mx='2' onClick={handleCancel}>Cancel Listing</Button>
-                            <Button bg='#cccccc' color='#115511' borderRadius='0' mx='2' onClick={handleBuy}>Buy this Unsig</Button>
+                            <Button bg='#cccccc' color='#991111' borderRadius='0' mx='2' onClick={handleCancel}>If listed and mine, Cancel Listing</Button>
+                            <Button bg='#cccccc' color='#115511' borderRadius='0' mx='2' onClick={handleBuy}>If listed and not mine, Buy this Unsig</Button>
                         </Center>
                     </Flex>
 
@@ -260,6 +269,10 @@ const UnsigPageLayout = (props) => {
                         <Heading size='4xl'>
                             # {unsigDetails.details.index}
                         </Heading>
+                        {}
+                        <Text fontSize='4xl' py='5'>
+                            For Sale XXX ADA
+                        </Text>
                         <Text fontSize='4xl' py='5'>
                             {unsigDetails.details.num_props} PROPS
                         </Text>
@@ -286,34 +299,51 @@ const UnsigPageLayout = (props) => {
                             {(isOwned) ? (
                                 <>
                                     <Text fontSize='sm' width='50%' py='5'>
-                                        You own this Unsig. To offer it for sale, enter a Sale Price and click "List this Unsig". After clicking the button, you will be promted to confirm your offer in your wallet.
+                                        You own this Unsig. To offer it for sale, click Create Offer.
                                     </Text>
-                                    <Button colorScheme='teal' onClick={onOpen}>Create Offer OR Update Offer</Button>
-                                    <Button colorScheme='teal' onClick={onOpen}>Create Offer OR Update Offer</Button>
+                                    <Button colorScheme='teal' onClick={onCreateOfferOpen}>Create Offer OR Update Offer</Button>
+                                    <Button colorScheme='teal' onClick={onOfferSuccessOpen}>DUMMY SUCCESS</Button>
                                     {/* Confetti, Confirmation... */}
                                     {/* Show offer price */}
-                                    <Modal isOpen={isOpen} onClose={onClose}>
+                                    <Modal isOpen={isCreateOfferOpen} onClose={onCreateOfferClose}>
                                         <ModalOverlay />
                                         <ModalContent>
                                             <ModalHeader>
-                                                Create a listing for Unsig #{numString}
+                                                Create an Offer for Unsig #{numString}
                                             </ModalHeader>
                                             <ModalCloseButton />
                                             <FormControl>
                                                 <ModalBody p='5'>
-                                                    <FormLabel>Enter your offer price here (in ADA)</FormLabel>
+                                                    <FormLabel>Enter your Offer price here (in ADA)</FormLabel>
                                                     <Input name="unsigOfferPriceAda" onChange={formik.handleChange} value={formik.values.unsigOfferPriceAda} />
                                                     <FormHelperText color="#994444" pt='2'>
                                                         When you click "List this Unsig", you will be prompted to confirm this transaction in Nami Wallet.
                                                     </FormHelperText>
                                                 </ModalBody>
                                                 <ModalFooter p='5'>
-                                                    <Button colorScheme='blue' mr={3} onClick={onClose}>
+                                                    <Button colorScheme='blue' mr={3} onClick={onCreateOfferClose}>
                                                         Cancel
                                                     </Button>
                                                     <Button colorScheme='green' onClick={handleList}>List this Unsig</Button>
                                                 </ModalFooter>
                                             </FormControl>
+                                        </ModalContent>
+                                    </Modal>
+                                    <Modal isOpen={isOfferSuccessOpen} onClose={onOfferSuccessClose}>
+                                        <ModalOverlay />
+                                        <ModalContent>
+                                            <ModalHeader>
+                                                Success!
+                                            </ModalHeader>
+                                            <ModalCloseButton />
+                                            <ModalBody p='5'>
+                                                <Text>Your offer has been created, and the transaction is valid.</Text>
+                                                <Text>You will still see the Unsig in your wallet until the transaction is confirmed on chain.</Text>
+                                                <Text>(On your Collection Page, you might also see two instances of this Unsig, until the tx is confirmed.)</Text>
+                                            </ModalBody>
+                                            <ModalFooter p='5'>
+                                                <Button colorScheme='green' onClick={onOfferSuccessClose}>YAY!</Button>
+                                            </ModalFooter>
                                         </ModalContent>
                                     </Modal>
                                 </>

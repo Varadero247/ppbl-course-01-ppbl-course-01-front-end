@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { motion } from "framer-motion"; // for hover, if time
+import { motion } from "framer-motion";
 import { Link } from "gatsby";
 import { useStoreState } from "easy-peasy";
 import { Center } from "@chakra-ui/layout";

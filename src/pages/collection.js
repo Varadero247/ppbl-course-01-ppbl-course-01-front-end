@@ -1,7 +1,4 @@
 import React, { useState, useEffect } from "react"
-import { StaticImage } from "gatsby-plugin-image"
-import data from "../../data/dummy-unsigs.json"
-import styled from "styled-components"
 import Cardano from "../cardano/serialization-lib"
 import Wallet from "../cardano/wallet"
 import { serializeTxUnspentOutput, valueToAssets } from "../cardano/transaction"

@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Button, Box, Center } from "@chakra-ui/react";
-import styled from "styled-components";
+import { Flex } from "@chakra-ui/react";
 import { useStoreState } from "easy-peasy";
 
 import { UnsigCard } from "../UnsigCard"
@@ -23,7 +22,7 @@ const UnsigOfferScrollList = (props) => {
         <>
              {(!loadedUnsigData) ?
                 ("loading") : (
-                    <Collection>
+                    <Flex direction='row' wrap='wrap'>
                         {loadedUnsigData.map((i) => (
                             <UnsigCard
                                 number={i.details.index}
@@ -33,7 +32,7 @@ const UnsigOfferScrollList = (props) => {
                                 price={i.amount}
                             />
                         ))}
-                    </Collection>
+                    </Flex>
                 )
             }
         </>
@@ -41,9 +40,3 @@ const UnsigOfferScrollList = (props) => {
 };
 
 export default UnsigOfferScrollList;
-
-const Collection = styled.div`
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-`

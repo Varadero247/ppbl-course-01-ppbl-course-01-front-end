@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
-import { Button, Box, Center, FormControl, FormLabel, FormErrorMessage, FormHelperText, Input } from "@chakra-ui/react";
+import { Button, Box, Flex, FormControl, FormLabel, FormErrorMessage, FormHelperText, Input } from "@chakra-ui/react";
 import { Formik, useFormik } from 'formik';
-import styled from "styled-components";
+import { motion } from "framer-motion";
 import { useStoreState } from "easy-peasy";
 
 import { UnsigCard } from "../UnsigCard"
@@ -74,26 +74,39 @@ const UnsigOrderedScrollList = (props) => {
 
     return (
         <>
-            <Box w='25%' h='70px' my='5' color='white'>
-                <FormControl w='90%' mx='auto' >
-                    <FormLabel>Search Unsigs by #</FormLabel>
-                    <Input placeholder='search for unsig' name="searching" onChange={formik.handleChange} value={formik.values.searching} />
-                </FormControl>
-            </Box>
+            <motion.div
+                initial={{ opacity: 0, scaleY: 0.1 }}
+                whileInView={{ opacity: 1, scaleY: 1.0 }}
+                transition={{ duration: 0.8 }}
+                viewport={{ once: false }}
+            >
+                <Box w='25%' h='70px' my='1' color='white'>
+                    <FormControl w='90%' mx='auto' >
+                        <FormLabel>Search Unsigs by #</FormLabel>
+                        <Input placeholder='search for unsig' name="searching" onChange={formik.handleChange} value={formik.values.searching} />
+                    </FormControl>
+                </Box>
+            </motion.div>
             {(!loadedUnsigData) ?
                 ("loading") : (
-                    <Collection>
-                        {loadedUnsigData.map((i) => (
-                            <UnsigCard
-                                number={i.details.index}
-                                numProps={i.details.num_props}
-                                owned={ownedUnsigs.includes(i.unsigId.substring(5))}
-                                offered={i.offerDetails}
-                                offerIsMine={checkMyOffer(i.details.index)}
-                                price={i.offerDetails?.amount}
-                            />
-                        ))}
-                    </Collection>
+                    <motion.div
+                        initial={{ opacity: 0, scaleY: 0.1 }}
+                        animate={{ opacity: 100, scaleY: 1.0 }}
+                        transition={{ duration: 1.2 }}
+                    >
+                        <Flex direction='row' wrap='wrap'>
+                            {loadedUnsigData.map((i) => (
+                                <UnsigCard
+                                    number={i.details.index}
+                                    numProps={i.details.num_props}
+                                    owned={ownedUnsigs.includes(i.unsigId.substring(5))}
+                                    offered={i.offerDetails}
+                                    offerIsMine={checkMyOffer(i.details.index)}
+                                    price={i.offerDetails?.amount}
+                                />
+                            ))}
+                        </Flex>
+                    </motion.div>
                 )
             }
         </>
@@ -101,9 +114,3 @@ const UnsigOrderedScrollList = (props) => {
 };
 
 export default UnsigOrderedScrollList;
-
-const Collection = styled.div`
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-`
