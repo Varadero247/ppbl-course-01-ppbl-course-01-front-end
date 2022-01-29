@@ -35,13 +35,13 @@ const MarketplacePage = ({unsigs}) => {
       <Box w='90%' mx='auto'>
 
         <Heading size='4xl' fontWeight='medium' color='white'>
-          The Unsig Marketplace
+          unsig_marketplace
         </Heading>
         <Flex w='40%' my='4' p='1' color='white' direction='row'>
 
           <FormControl padding='4'>
             <FormLabel fontSize='xl'>
-              Search All Unsigs
+              search all
             </FormLabel>
             <Switch id='set-search' onChange={handleSearchChange} />
           </FormControl>
@@ -50,7 +50,7 @@ const MarketplacePage = ({unsigs}) => {
             (
               <FormControl padding='4'>
                 <FormLabel fontSize='xl'>
-                  View Offers Only
+                  view offers
                 </FormLabel>
                 <Switch id='set-view-offers' onChange={handleViewOffersChange} />
               </FormControl>

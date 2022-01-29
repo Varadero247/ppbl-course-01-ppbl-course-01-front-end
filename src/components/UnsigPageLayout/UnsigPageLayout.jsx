@@ -96,9 +96,9 @@ const UnsigPageLayout = (props) => {
     // for chakra ui modals
     const { isOpen: isCreateOfferOpen , onOpen: onCreateOfferOpen, onClose: onCreateOfferClose } = useDisclosure()
     const { isOpen: isOfferSuccessOpen , onOpen: onOfferSuccessOpen, onClose: onOfferSuccessClose } = useDisclosure()
-    const { isOpen: isCancelOfferOpen , onOpen: onCancelOfferOpen, onClose: onCancelOfferClose } = useDisclosure()
     const { isOpen: isCancelSuccessOpen , onOpen: onCancelSuccessOpen, onClose: onCancelSuccessClose } = useDisclosure()
     const { isOpen: isBuySuccessOpen , onOpen: onBuySuccessOpen, onClose: onBuySuccessClose } = useDisclosure()
+    const { isOpen: isErrorOpen , onOpen: onErrorOpen, onClose: onErrorClose } = useDisclosure()
 
 
 
@@ -246,6 +246,10 @@ const UnsigPageLayout = (props) => {
     const handleSuccess = () => {
         onCreateOfferClose();
         onOfferSuccessOpen();
+    }
+
+    const handleError = () => {
+        onErrorOpen();
     }
 
     return (
@@ -409,6 +413,26 @@ const UnsigPageLayout = (props) => {
                                 ""
                             )}
                         </Text>
+                        <Modal isOpen={isErrorOpen} onClose={onErrorClose}>
+                            <ModalOverlay />
+                            <ModalContent>
+                                <ModalHeader>
+                                    Error
+                                </ModalHeader>
+                                <ModalCloseButton />
+                                <ModalBody p='5' bg='black'>
+                                    <Text p='3' fontStyle='bold' color='white'>
+                                        Transaction not submitted.
+                                    </Text>
+                                    <Text p='3' fontStyle='bold' color='white'>
+                                        Error message:
+                                    </Text>
+                                </ModalBody>
+                                <ModalFooter p='5' justifyContent='center'>
+                                    <Button colorScheme='green' onClick={onErrorClose}>ok</Button>
+                                </ModalFooter>
+                            </ModalContent>
+                        </Modal>
                     </Box>
                 </Flex>
             </Flex>

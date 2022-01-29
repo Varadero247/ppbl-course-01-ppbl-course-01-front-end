@@ -106,10 +106,10 @@ const CollectionPage = ({ unsigs }) => {
 
   return (
     <Box w='100%' minH='800px' px='24' py='12' bg='#232129' color='white'>
-      <title>MY COLLECTION</title>
+      <title>collection</title>
       <Box>
         <Heading size='4xl' fontWeight='medium'>
-          My Collection
+          my collection
         </Heading>
         {connected ? (
           <Box>
@@ -118,7 +118,7 @@ const CollectionPage = ({ unsigs }) => {
                 <Heading py='5'>
                   For Sale:
                 </Heading>
-                <Flex direction='row'>
+                <Flex direction='row' wrap='wrap'>
                   {myOffers?.resultList?.map((i) => <Unsig key={i} number={i.details.index} price={i.amount} />)}
                 </Flex>
                 { (collection.length > 0) ? (
@@ -130,11 +130,11 @@ const CollectionPage = ({ unsigs }) => {
             ) : (
               <Box my='5'>
                 <Text fontSize='2xl'>
-                  Click on an Unsig to create an offer.
+                  Click on an unsig to create an offer.
                 </Text>
               </Box>
             )}
-            <Flex direction='row'>
+            <Flex direction='row' wrap='wrap'>
               {collection.map((i) => <Unsig key={i} number={i} />)}
             </Flex>
             <Box py='10'>
@@ -149,7 +149,7 @@ const CollectionPage = ({ unsigs }) => {
         ) : (
           <div>
             <Text fontSize='xl' py='3'>
-              To view your collection of Unsigs, please connect a wallet.
+              To view your collection of unsigs, please connect a wallet.
             </Text>
           </div>
         )}
