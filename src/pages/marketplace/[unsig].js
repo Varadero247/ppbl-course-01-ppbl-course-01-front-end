@@ -11,7 +11,7 @@ function UnsigPage(props) {
   const unsig = props.params.unsig;
 
   return(
-    <Box bg='#232129'>
+    <Box bg='#232129' minH='1200px'>
       <UnsigPageLayout number={unsig} />
     </Box>
   )
