@@ -116,7 +116,7 @@ const Unsig = (props) => {
                             <img src={iURL} alt="unsig" width={256} height={256} style={imageStyle} />
                         </motion.div>
                         <h3>
-                            # {unsigDetails.details.index}
+                            # {numString}
                         </h3>
                     </Box>
                     <Flex flexDirection='row'>

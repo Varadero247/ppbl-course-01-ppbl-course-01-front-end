@@ -270,7 +270,7 @@ const UnsigPageLayout = (props) => {
 
                     <Box ml='10'>
                         <Heading size='4xl'>
-                            # {unsigDetails.details.index}
+                            # {numString}
                         </Heading>
                         <Text fontSize='4xl' py='3'>
                             {unsigDetails.details.num_props} PROPS
