@@ -15,8 +15,8 @@ const AboutPage = ({unsigs}) => {
       <title>About</title>
       <Box w='85%' mx='auto'>
 
-        <Heading size='4xl' fontWeight='medium' color='white'>
-          About Unsigs
+        <Heading size='4xl' fontWeight='medium' color='white' pb='4'>
+          about unsigned_algorithms
         </Heading>
         <Flex w='40%' my='4' p='1' color='white' direction='column'>
             <Heading py='3'>Uniqueness</Heading>

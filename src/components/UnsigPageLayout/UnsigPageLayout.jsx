@@ -140,12 +140,16 @@ const UnsigPageLayout = (props) => {
 
     const fetchAssetUtxo = async () => {
         const datumHash = unsigDetails?.offerDetails?.datumHash;
+        console.log("Line 143", datumHash)
         const unsigAsset = `${unsigPolicyId}${toHex(fromStr(`unsig${numString}`))}`;
+        console.log("Line 145", unsigAsset)
+
         const response = await fetch(
             `${backendBaseUrl}/utxo?address=${contractAddress().to_bech32()}&unsigAsset=${unsigAsset}&datumHash=${datumHash}`
         )
 
         const assetUTxO = await response.json();
+        console.log("Line 149", assetUTxO)
 
         return {
             "tx_hash": assetUTxO.txHash,

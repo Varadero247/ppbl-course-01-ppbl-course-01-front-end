@@ -12,11 +12,11 @@ const GuidePage = ({unsigs}) => {
 
   return (
     <Box bg='#232129' w='100%' py='12'>
-      <title>Guide</title>
+      <title>guide</title>
       <Box w='85%' mx='auto'>
 
-        <Heading size='4xl' fontWeight='medium' color='white'>
-          Marketplace Guide
+        <Heading size='4xl' fontWeight='medium' color='white' pb='4'>
+          marketplace_guide
         </Heading>
         <Flex w='40%' my='4' p='1' color='white' direction='column'>
             <Heading py='3'>How to Sell Unsigs</Heading>

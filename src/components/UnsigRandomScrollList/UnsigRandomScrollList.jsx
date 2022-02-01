@@ -24,7 +24,7 @@ const makeNumberList = (incoming, count) => {
 }
 
 const UnsigRandomScrollList = (props) => {
-    const unsigList = makeNumberList([], 12);
+    const unsigList = makeNumberList([], 30);
     const [loading, setLoading] = useState(false);
     const [loadedUnsigs, setLoadedUnsigs] = useState(unsigList)
 
@@ -34,7 +34,7 @@ const UnsigRandomScrollList = (props) => {
 
     useEffect(() => {
         if (loading) {
-            let newList = makeNumberList(loadedUnsigs, 12);
+            let newList = makeNumberList(loadedUnsigs, 30);
             setLoadedUnsigs(newList)
             setLoading(false);
         }
@@ -47,7 +47,7 @@ const UnsigRandomScrollList = (props) => {
                         animate={{ opacity: 100, scaleY: 1.0 }}
                         transition={{ duration: 0.8 }}
             >
-                <Flex direction='row' wrap='wrap'>
+                <Flex direction='row' wrap='wrap' justify='center'>
                     {loadedUnsigs.map((i) => (<Unsig key={i} number={i} />))}
                 </Flex>
             </motion.div>

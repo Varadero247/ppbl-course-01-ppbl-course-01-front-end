@@ -36,14 +36,14 @@ const Header = () => {
                 }}
             >
                 <NavButton>
-                    <Link to="/marketplace/">Gallery + Marketplace</Link>
+                    <Link to="/marketplace/">marketplace</Link>
                 </NavButton>
 
                 <NavButton>
-                    <Link to="/guide/">Guide</Link>
+                    <Link to="/guide/">guide</Link>
                 </NavButton>
                 <NavButton>
-                    <Link to="/about/">About</Link>
+                    <Link to="/about/">about</Link>
                 </NavButton>
                 <WalletButton />
             </div>

@@ -8,7 +8,7 @@ import { UnsigCard } from "../UnsigCard"
 
 const UnsigOrderedScrollList = (props) => {
 
-    const numPerPage = 25;
+    const numPerPage = 30;
 
     const [loading, setLoading] = useState(false);
     const [listUnsigs, setListUnsigs] = useState(["unsig00000"]);
@@ -80,9 +80,8 @@ const UnsigOrderedScrollList = (props) => {
                 transition={{ duration: 0.8 }}
                 viewport={{ once: false }}
             >
-                <Box w='25%' h='70px' my='1' color='white'>
+                <Box w='25%' h='70px' mx='auto' my='5' color='white'>
                     <FormControl w='90%' mx='auto' >
-                        <FormLabel>Search Unsigs by #</FormLabel>
                         <Input placeholder='search for unsig' name="searching" onChange={formik.handleChange} value={formik.values.searching} />
                     </FormControl>
                 </Box>
@@ -94,7 +93,7 @@ const UnsigOrderedScrollList = (props) => {
                         animate={{ opacity: 100, scaleY: 1.0 }}
                         transition={{ duration: 1.2 }}
                     >
-                        <Flex direction='row' wrap='wrap'>
+                        <Flex direction='row' wrap='wrap' justify='center'>
                             {loadedUnsigData.map((i) => (
                                 <UnsigCard
                                     number={i.details.index}

@@ -20,7 +20,7 @@ const Layout = (props) => {
     return (
         <StoreProvider store={store}>
             <ChakraProvider theme={theme}>
-                <div style={{ width: "100%" }}>
+                <div style={{ width: "100%", minHeight:"100vh", backgroundColor: "#232129" }}>
                     <Header />
                     {props.children}
                     <Footer />

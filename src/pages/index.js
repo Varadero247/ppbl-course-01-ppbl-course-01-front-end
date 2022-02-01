@@ -6,7 +6,8 @@ import { useStoreState } from "easy-peasy";
 import Section from "../components/Section"
 import Wallet from "../cardano/wallet";
 import { fromAscii, fromHex } from "../utils/converter";
-import { Center, Heading, Text } from "@chakra-ui/react";
+import { Flex, Center, Heading, Text } from "@chakra-ui/react";
+import { UnsigRandomScrollList } from "../components/UnsigRandomScrollList";
 
 const IndexPage = () => {
   const connected = useStoreState((state) => state.connection.connected);
@@ -24,12 +25,15 @@ const IndexPage = () => {
   }, [])
 
   return (
-    <main>
-      <title>Welcome</title>
-      <Center w='100%' h='800px' bg='#232129'>
-        <Heading size='4xl' color='white' fontWeight='medium'>Unsigs Marketplace</Heading>
-      </Center>
-    </main>
+    <>
+      <title>unsigned</title>
+      <Flex w='100%' mx='auto' direction='column' wrap='wrap' bg='#232129'>
+        <Center w='100%' h='300px'>
+          <Heading size='4xl' color='white' fontWeight='medium'>unsigned_algorithms</Heading>
+        </Center>
+        <UnsigRandomScrollList />
+      </Flex>
+    </>
   )
 }
 

@@ -11,64 +11,41 @@ import UnsigOfferScrollList from '../../components/UnsigOfferScrollList/UnsigOff
 
 const MarketplacePage = ({unsigs}) => {
   const connected = useStoreState((state) => state.connection.connected);
-  // TODO
-  // Use state to hold:
-  // b) List offers vs list for sale --> create an UnsigOfferList view that is just like random (are we handling ability to see if a searched-for unsig is for sale in gallery view??)
-  // c) current search?
-  // User can toggle between seeing all unsigs and only those for sale
 
-  const [search, setSearch] = useState(false)
-  const [viewOffers, setViewOffers] = useState(false)
+  const [viewSearch, setViewSearch] = useState(false)
 
   const handleSearchChange = () => {
-    setSearch(!search)
+    setViewSearch(!viewSearch)
   }
 
-  const handleViewOffersChange = () => {
-    setViewOffers(!viewOffers)
-    console.log("hit me with " + viewOffers)
+  const currentView = () => {
+    if(viewSearch) return "search unsigs"
+    return "view all current offers"
   }
+
+
 
   return (
     <Box bg='#232129' w='100%' py='12'>
-      <title>FOR SALE</title>
-      <Box w='90%' mx='auto'>
-
+      <title>marketplace</title>
+      <Center w='50%' mx='auto'>
         <Heading size='4xl' fontWeight='medium' color='white'>
-          unsig_marketplace
+          unsigned_marketplace
         </Heading>
-        <Flex w='40%' my='4' p='1' color='white' direction='row'>
-
-          <FormControl padding='4'>
-            <FormLabel fontSize='xl'>
-              search all
-            </FormLabel>
-            <Switch id='set-search' onChange={handleSearchChange} />
-          </FormControl>
-          {/* IF SEARCH THEN motion ui the SEARCH BOX in, OTHERWISE YOU GET THE VIEW OFFERS TOGGLE */}
-          {search ? "" :
-            (
-              <FormControl padding='4'>
-                <FormLabel fontSize='xl'>
-                  view offers
-                </FormLabel>
-                <Switch id='set-view-offers' onChange={handleViewOffersChange} />
-              </FormControl>
-            )
-          }
-        </Flex>
-        <Flex direction='column'>
-          {search ?
-            (<UnsigOrderedScrollList />) : (
-              <>
-                {viewOffers ?
-                  (<UnsigOfferScrollList />) :  (<UnsigRandomScrollList />)
-                }
-              </>
-            )
-          }
-        </Flex>
-      </Box>
+      </Center>
+      <FormControl w='5%' mx='auto' my='10'>
+        <Switch id='set-search' onChange={handleSearchChange} />
+      </FormControl>
+      <Center>
+        <Heading size='2xl' fontWeight='medium' color='white'>
+          {currentView()}
+        </Heading>
+      </Center>
+      <Flex direction='column' pt='5'>
+        {viewSearch ?
+          (<UnsigOrderedScrollList />) : (<UnsigOfferScrollList />)
+        }
+      </Flex>
     </Box>
   )
 }

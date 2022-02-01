@@ -22,7 +22,7 @@ const UnsigOfferScrollList = (props) => {
         <>
              {(!loadedUnsigData) ?
                 ("loading") : (
-                    <Flex direction='row' wrap='wrap'>
+                    <Flex direction='row' wrap='wrap' justify='center'>
                         {loadedUnsigData.map((i) => (
                             <UnsigCard
                                 number={i.details.index}

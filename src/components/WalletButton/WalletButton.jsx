@@ -65,7 +65,7 @@ const WalletButton = (props) => {
     return connected ? (
         <Link to="/collection">
           <Button colorScheme='teal'>
-              My Collection
+              my collection
           </Button>
         </Link>
     ) : (
