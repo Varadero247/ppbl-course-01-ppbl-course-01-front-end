@@ -90,7 +90,7 @@ const WalletButton = (props) => {
                 setLoading(false);
             }}
         >
-            Connect a Nami Wallet
+            Connect Wallet
         </Button>
     )
 }
@@ -121,7 +121,7 @@ const NoNami = (toast) => {
         >
           <InfoIcon />
           <Box ml="3" fontWeight="medium">
-            Nami not installed
+            No wallet installed
           </Box>
           <Button
             rounded="3xl"
@@ -131,7 +131,7 @@ const NoNami = (toast) => {
             size="xs"
             rightIcon={<ChevronRightIcon />}
           >
-            Get it
+            Get Nami
           </Button>
         </Box>
       ),
