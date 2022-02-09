@@ -8,6 +8,7 @@ import { useStoreActions, useStoreState } from "easy-peasy";
 
 import { Unsig } from "../components/Unsig"
 import { Box, Heading, Text, Flex } from "@chakra-ui/react"
+import useWallet from "../hooks/useWallet"
 
 // User Journey for /collection
 // 1. User can view the Unsigs in their connected wallet
@@ -17,11 +18,8 @@ import { Box, Heading, Text, Flex } from "@chakra-ui/react"
 // 1. User can list an Unsig
 // - This means that the owner of an Unsig can create an offer for that Unsig
 
-async function getWalletAssets() {
-  await Cardano.load();
-  const utxos = await Wallet.getUtxos();
-
-  const nativeAssets = utxos
+function getWalletAssets(wallet) {
+  const nativeAssets = wallet.utxos
     .map((utxo) => serializeTxUnspentOutput(utxo).output())
     .filter((txOut) => txOut.amount().multiasset() !== undefined)
     .map((txOut) => valueToAssets(txOut.amount()))
@@ -34,8 +32,8 @@ async function getWalletAssets() {
   return [...new Set(nativeAssets)];
 };
 
-async function getMyUnsigs() {
-  let assetList = await getWalletAssets();
+function getMyUnsigs(wallet) {
+  let assetList = getWalletAssets(wallet);
   let myNFTS = [];
 
   assetList.forEach(nft => {
@@ -74,17 +72,18 @@ const CollectionPage = ({ unsigs }) => {
   const setOwnedUnsigs = useStoreActions((actions) => actions.ownedUnsigs.add);
   const setOfferedUnsigs = useStoreActions((actions) => actions.myOffers.add);
   const [myOffers, setMyOffers] = useState([]);
+  const { wallet } = useWallet(null);
 
-  useEffect(async () => {
-    if (connected) {
-      const unsigs = await getMyUnsigs();
+  useEffect(() => {
+    if (wallet) {
+      const unsigs = getMyUnsigs(wallet);
       setCollection(unsigs);
       loadMyOffers();
     }
-  }, []);
+  }, [wallet]);
 
   useEffect(() => {
-    if (connected) {
+    if (collection) {
       setOwnedUnsigs(collection);
     }
   }, [collection]);
