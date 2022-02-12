@@ -204,7 +204,7 @@ const UnsigPageLayout = (props) => {
             const seller = { "address": fromBech32(owner), "utxosParam": utxos }
             const listResult = await offerAsset(datum, seller)
 
-            if (listResult && listResult.datumHash && listResult.txHash) {
+            if (listResult && listResult.datumHash && listResult.txHash && (currentOffer >= 8)) {
                 console.log(`${backendBaseUrl}/offers`)
                 await fetch(`${backendBaseUrl}/offers`, {
                     method: "PUT",
@@ -387,10 +387,13 @@ const UnsigPageLayout = (props) => {
                                                     </FormHelperText>
                                                 </ModalBody>
                                                 <ModalFooter p='5'>
+                                                    {/* {(currentOffer > 8) ? () : ()} */}
                                                     <Button colorScheme='blue' mr={3} onClick={onCreateOfferClose}>
                                                         Cancel
                                                     </Button>
-                                                    <Button colorScheme='green' onClick={handleList}>List this Unsig</Button>
+                                                    <Button colorScheme='green' onClick={handleList} isDisabled={!(parseInt(currentOffer, 10) >= 8)}>
+                                                         {(parseInt(currentOffer) >= 8) ? (`List this Unsig for ${parseInt(currentOffer)}`) : ("Minimum 8")} ADA
+                                                    </Button>
                                                 </ModalFooter>
                                             </FormControl>
                                         </ModalContent>
