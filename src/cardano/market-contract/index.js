@@ -11,20 +11,21 @@ import {
 } from "../transaction";
 import { fromHex, fromStr, toHex } from "../../utils/converter";
 
-
+// --------------- MAINNET -------------------------------------------------------
 // Unsig PolicyId
-// const unsigPolicyId = "0e14267a8020229adc0184dd25fa3174c3f7d6caadcb4425c70e7c04";
+export const unsigPolicyId = "0e14267a8020229adc0184dd25fa3174c3f7d6caadcb4425c70e7c04";
 // mainnet addresses for royalites and dao fee
-// const daoAddress =
-// const artistAddress =
+const daoAddress = "addr1q9nrhgv36aadwffj9czyj247thgf5jw40g9zvd0sda2zlnxejr8w5surg3an3l7h7f3urjtq4k8wawsu9lf4shc43axqvnnu6w"
+const artistAddress = "addr1qydp5w9nuxmadgcyaug9tamq9tz9wgq8hej8ldj0jepqs0vtgmws29wcvgarzt0hug34gh66wyujz0v4cyfju3qd0s9sry7flu"
+// --------------------------------------------------------------------------------
 
-// Test Unsig PolicyId
-export const unsigPolicyId =
-  "1e82bbd44f7bd555a8bcc829bd4f27056e86412fbb549efdbf78f42d";
-
-// test addresses
-const daoAddress = "addr_test1vqme2uc8smlyjc896e6s4sl9ayf4qxq6hp6g9rteajh0eyg677fcz" // from unsigs-market-plutus/testnet/treasury.addr
-const artistAddress = "addr_test1vq9c8va8q9zledunvjg73m3zhndceu34h6z4ctmyavqkvegdkppxw" // from unsigs-market-plutus/testnet/creator.addr
+// // --------------- TESTNET -------------------------------------------------------
+// // Test Unsig PolicyId
+// export const unsigPolicyId = "1e82bbd44f7bd555a8bcc829bd4f27056e86412fbb549efdbf78f42d";
+// // testnet addresses
+// const daoAddress = "addr_test1vqme2uc8smlyjc896e6s4sl9ayf4qxq6hp6g9rteajh0eyg677fcz" // from unsigs-market-plutus/testnet/treasury.addr
+// const artistAddress = "addr_test1vq9c8va8q9zledunvjg73m3zhndceu34h6z4ctmyavqkvegdkppxw" // from unsigs-market-plutus/testnet/creator.addr
+// // --------------------------------------------------------------------------------
 
 export const offerAsset = async (datum, { address, utxosParam }) => {
   try {

@@ -6,6 +6,7 @@ export const createOfferDatum = (tradeOwner, requestedAmount, unsigId) => {
   // amount = lovelace
   // unsigId = "#####"
 
+  console.log("creating datum")
   if (tradeOwner && requestedAmount && unsigId) {
     return {
       tradeOwner: getAddressKeyHash(tradeOwner),

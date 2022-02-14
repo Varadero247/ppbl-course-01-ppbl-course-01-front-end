@@ -47,7 +47,7 @@ function pad(num, size) {
     return res;
 }
 
-const backendBaseUrl = process.env.GATSBY_TESTNET_API_URL;
+const backendBaseUrl = process.env.GATSBY_MAINNET_API_URL;
 
 const UnsigPageLayout = (props) => {
     // props.number
@@ -140,16 +140,16 @@ const UnsigPageLayout = (props) => {
 
     const fetchAssetUtxo = async () => {
         const datumHash = unsigDetails?.offerDetails?.datumHash;
-        console.log("Line 143", datumHash)
+        console.log("datumHash", datumHash)
         const unsigAsset = `${unsigPolicyId}${toHex(fromStr(`unsig${numString}`))}`;
-        console.log("Line 145", unsigAsset)
+        console.log("unsigAsset", unsigAsset)
 
         const response = await fetch(
             `${backendBaseUrl}/utxo?address=${contractAddress().to_bech32()}&unsigAsset=${unsigAsset}&datumHash=${datumHash}`
         )
 
         const assetUTxO = await response.json();
-        console.log("Line 149", assetUTxO)
+        console.log("assetUTxo", assetUTxO)
 
         return {
             "tx_hash": assetUTxO.txHash,
@@ -234,6 +234,7 @@ const UnsigPageLayout = (props) => {
             const datum = createOfferDatum(owner, price, numString)
             const seller = { "address": fromBech32(owner), "utxosParam": utxos }
 
+            console.log("try this", price, datum, seller)
             const bfUTxO = await fetchAssetUtxo();
 
             const assetUTxO = createTxUnspentOutput(contractAddress(), bfUTxO)

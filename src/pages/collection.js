@@ -10,14 +10,6 @@ import { Unsig } from "../components/Unsig"
 import { Box, Heading, Text, Flex } from "@chakra-ui/react"
 import useWallet from "../hooks/useWallet"
 
-// User Journey for /collection
-// 1. User can view the Unsigs in their connected wallet
-// 2. User can see Offer status
-
-// User Journey for /collection/create-offer
-// 1. User can list an Unsig
-// - This means that the owner of an Unsig can create an offer for that Unsig
-
 function getWalletAssets(wallet) {
   const nativeAssets = wallet.utxos
     .map((utxo) => serializeTxUnspentOutput(utxo).output())
@@ -29,19 +21,19 @@ function getWalletAssets(wallet) {
         .map((asset) => asset.unit)
     );
 
-  return [...new Set(nativeAssets)];
-};
+    return [...new Set(nativeAssets)];
+  };
 
-function getMyUnsigs(wallet) {
-  let assetList = getWalletAssets(wallet);
-  let myNFTS = [];
+  function getMyUnsigs(wallet) {
+    let assetList = getWalletAssets(wallet);
+    let myNFTS = [];
 
-  assetList.forEach(nft => {
-    if (nft.startsWith(unsigPolicyId)) {
-      let output = fromHex(nft.substring(56))
-      let myWord = toStr(output)
-      let myNumber = myWord.substring(5)
-      myNFTS.push(myNumber)
+    assetList.forEach(nft => {
+      if (nft.startsWith(unsigPolicyId)) {
+        let output = fromHex(nft.substring(56))
+        let myWord = toStr(output)
+        let myNumber = myWord.substring(5)
+        myNFTS.push(myNumber)
     }
   });
 
@@ -91,7 +83,7 @@ const CollectionPage = ({ unsigs }) => {
   const loadMyOffers = async () => {
     // offers endpoint is paginated, so this might not actually work
     // TODO - create new endpoint /api/v1/offersByOwner...
-    const response = await fetch(`${process.env.GATSBY_TESTNET_API_URL}/offers?owner=${connected}`)
+    const response = await fetch(`${process.env.GATSBY_MAINNET_API_URL}/offers?owner=${connected}`)
     const data = await response.json()
     // Above line will be removed after we call new endpoint
     setMyOffers(data);
@@ -160,30 +152,3 @@ const CollectionPage = ({ unsigs }) => {
 }
 
 export default CollectionPage
-
-// Playing with Nami Wallet
-
-
-
-//   const on = await enableWallet();
-//   console.log("the wallet is on! ", on)
-//   if(on) {
-//     let assetList = await getOwnedAssets()
-//     assetList.forEach(element => {
-//       if (element.startsWith(unsigID))
-//       {
-//         let output = fromHex(element.substring(56))
-//         console.log(toStr(output))
-//       }
-
-//     });
-//     let encbal = await getUtxos()
-//     encbal.forEach(element => {
-//       console.log(element);
-//       let bal = serializeTxUnspentOutput(element);
-//       let assets = valueToAssets(bal.output().amount());
-//       console.log(assets);
-//     });
-
-// }
-// }
