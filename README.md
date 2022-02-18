@@ -1,13 +1,12 @@
-#  Jukebox Demo v0
+# Plutus PBL Course 01
+## Gimbalabs | February 2022
 
-Forked from https://gitlab.com/gimbalabs/unsigs-frontend
-
-
+## How to use:
 
 ### 1. Grab this repo
     ```shell
-    git clone https://gitlab.com/gimbalabs/sandboxes/demo-v-0-front-end
-    cd demo-v-0-front-end
+    git clone https://gitlab.com/gimbalabs/ppbl/ppbl-course-01-front-end
+    cd ppbl-course-01-front-end
     npm install
     npm run start
     ```
@@ -21,13 +20,9 @@ if ((await window.cardano.getNetworkId()) === 0) return true;
 - Testnet -> `0` | Mainnet -> `1`
 
 
-## Submit a Pull Request
-
 ## This project is built with
 1. [Gatsby JS](https://www.gatsbyjs.com/docs/?utm_source=starter&utm_medium=readme&utm_campaign=minimal-starter)
 2. Chakra UI
-3. A little bit of Framer Motion UI
-4. Easy Peasy for local state management
-5. Formik for `Offer` form
+3. Easy Peasy for local state management
 
 See `package.json` for full details.
