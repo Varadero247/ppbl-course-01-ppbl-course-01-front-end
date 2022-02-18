@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "gatsby"
 
-import { navigate } from "gatsby-link";
 import Cardano from "../../cardano/serialization-lib"
 import Wallet from "../../cardano/wallet";
 
@@ -28,8 +27,10 @@ const WalletButton = (props) => {
     const toast = useToast();
 
     useEffect(async () => {
-      const utxos = await window.cardano.getUtxos();
-      setWalletUtxos(utxos);
+      if(connected){
+        const utxos = await window.cardano.getUtxos();
+        setWalletUtxos(utxos);
+      }
     }, []);
 
     useEffect(() => {
@@ -63,9 +64,9 @@ const WalletButton = (props) => {
     }, []);
 
     return connected ? (
-        <Link to="/play">
-          <Button colorScheme='teal'>
-              Play Music
+        <Link to="/ppbldapp">
+          <Button colorScheme='green'>
+              View PPBL Dapp
           </Button>
         </Link>
     ) : (
@@ -74,7 +75,7 @@ const WalletButton = (props) => {
             isLoading={loading}
             py="5"
             color='gl-blue'
-            bg='gl-green'
+            bg='gl-yellow'
             onClick={async () => {
                 setLoading(true);
                 if (!(await checkStatus(toast, connected))) {

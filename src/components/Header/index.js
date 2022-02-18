@@ -10,17 +10,12 @@ const Header = () => {
     const connected = useStoreState((state) => state.connection.connected);
 
     return (
-        <Box id="header" w='20%' h='10%' p='5' bg='gl-blue' color='white'>
-            <Flex direction='column' align='center' justify='center'>
+        <Box id="header" w='40%' h='5%' mx='auto' p='5' bg='gl-blue' color='white'>
+            <Flex direction='row' align='center' justify='center'>
                 <Box my='10' fontWeight='bold'>
                     <Link to="/">home</Link>
                 </Box>
-                <Box my='10' fontWeight='bold'>
-                    <Link to="/dashboard/">dashboard</Link>
-                </Box>
-                <Box my='10' fontWeight='bold'>
-                    <Link to="/about/">about</Link>
-                </Box>
+                <Spacer />
                 <WalletButton />
             </Flex>
         </Box>

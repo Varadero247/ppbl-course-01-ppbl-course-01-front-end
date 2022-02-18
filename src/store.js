@@ -7,18 +7,6 @@ const store = createStore({
             state.connected = payload;
         }),
     },
-    ownedUnsigs : {
-        unsigIds: [],
-        add: action((state, payload) => {
-            state.unsigIds = payload;
-        }),
-    },
-    myOffers : {
-        unsigIds: [],
-        add: action((state, payload) => {
-            state.unsigIds = payload;
-        }),
-    },
     ownedUtxos : {
         utxos: [],
         add: action((state, payload) => {

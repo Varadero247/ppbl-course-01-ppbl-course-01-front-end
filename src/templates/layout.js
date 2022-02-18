@@ -16,8 +16,8 @@ const theme = extendTheme({
         "gl-yellow": "#fde0a8"
     },
     fonts: {
-        heading: 'JetBrains Mono',
-        body: 'Poppins',
+        heading: 'Hammersmith One',
+        body: 'Heebo',
     },
 })
 
@@ -25,9 +25,11 @@ const Layout = (props) => {
     return (
         <StoreProvider store={store}>
             <ChakraProvider theme={theme}>
-                <Flex w="100%" minHeight="100vh" bg="gl-blue">
+                <Flex direction="column" w="100%" minHeight="100vh" bg="gl-blue">
                     <Header />
-                    {props.children}
+                    <Flex minH='80vh'>
+                        {props.children}
+                    </Flex>
                     <Footer />
                 </Flex>
             </ChakraProvider>

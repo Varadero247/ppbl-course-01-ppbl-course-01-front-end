@@ -29,14 +29,16 @@ const IndexPage = () => {
 
   return (
     <>
-      <title>demo v0</title>
+      <title>ppbl demo</title>
       <Flex w='100%' mx='auto' direction='column' wrap='wrap' bg='gl-yellow'>
-          <Heading size='4xl' color='gl-blue' fontWeight='medium'>jukebox demo</Heading>
-          <Box w='50%'>
-            <Heading>Balance</Heading>
-            <Text>{walletFunds}</Text>
-            <Heading>Utxos</Heading>
-            <Text>{walletUtxos}</Text>
+          <Box w='50%' mx='auto' my='5'>
+            <Heading size='xl' color='gl-blue' fontWeight='medium'>Welcome to Plutus Project Based Learning!</Heading>
+            <Text fontSize='lg' py='3'>
+              To connect to your Nami wallet on Cardano Testnet, click "Connect Wallet" button.
+            </Text>
+            <Text fontSize='lg'>
+              After your wallet is connected, you can click "View PPBL Dapp" and see what is there.
+            </Text>
           </Box>
       </Flex>
     </>
