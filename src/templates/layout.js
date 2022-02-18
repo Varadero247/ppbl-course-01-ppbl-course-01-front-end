@@ -6,10 +6,15 @@ import Footer from "../components/Footer";
 
 
 // import { flexbox } from "@chakra-ui/styled-system";
-import { ChakraProvider, extendTheme } from '@chakra-ui/react'
+import { Box, ChakraProvider, extendTheme, Flex } from '@chakra-ui/react'
 
 const theme = extendTheme({
-    colors: {},
+    colors: {
+        "gl-blue": "#2a4676",
+        "gl-green": "#a3b79b",
+        "gl-red": "#b53d46",
+        "gl-yellow": "#fde0a8"
+    },
     fonts: {
         heading: 'JetBrains Mono',
         body: 'Poppins',
@@ -20,11 +25,11 @@ const Layout = (props) => {
     return (
         <StoreProvider store={store}>
             <ChakraProvider theme={theme}>
-                <div style={{ width: "100%", minHeight:"100vh", backgroundColor: "#232129" }}>
+                <Flex w="100%" minHeight="100vh" bg="gl-blue">
                     <Header />
                     {props.children}
                     <Footer />
-                </div>
+                </Flex>
             </ChakraProvider>
         </StoreProvider>
     )

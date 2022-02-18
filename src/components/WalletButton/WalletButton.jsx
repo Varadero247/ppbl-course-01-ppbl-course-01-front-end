@@ -63,9 +63,9 @@ const WalletButton = (props) => {
     }, []);
 
     return connected ? (
-        <Link to="/collection">
+        <Link to="/play">
           <Button colorScheme='teal'>
-              my collection
+              Play Music
           </Button>
         </Link>
     ) : (
@@ -73,7 +73,8 @@ const WalletButton = (props) => {
             isDisabled={loading}
             isLoading={loading}
             py="5"
-            colorScheme='yellow'
+            color='gl-blue'
+            bg='gl-green'
             onClick={async () => {
                 setLoading(true);
                 if (!(await checkStatus(toast, connected))) {
@@ -142,7 +143,7 @@ const NoNami = (toast) => {
 
 const WrongNetworkToast = async (toast) => {
     // 0 for Testnet | 1 for Mainnet
-    if ((await Wallet.getNetworkId()) === 1) return true;
+    if ((await Wallet.getNetworkId()) === 0) return true;
     toast({
       position: "bottom-right",
       duration: 5000,

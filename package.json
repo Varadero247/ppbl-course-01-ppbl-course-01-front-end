@@ -1,9 +1,9 @@
 {
-  "name": "unsigs-marketplace",
-  "version": "1.0.0",
+  "name": "jukebox-demo",
+  "version": "0.0.0",
   "private": true,
-  "description": "Unsigs Marketplace",
-  "author": "jamesdunseith",
+  "description": "jukebox demo",
+  "author": "gimbalabs",
   "keywords": [
     "gatsby"
   ],

@@ -1,19 +1,13 @@
 import React, { useEffect, useState } from "react";
-import { StaticImage } from "gatsby-plugin-image"
-import styled from "styled-components";
-import { useStoreState } from "easy-peasy";
-
-import Section from "../components/Section"
+import { useStoreState, useStoreActions } from "easy-peasy";
 import Wallet from "../cardano/wallet";
 import { fromAscii, fromHex } from "../utils/converter";
-import { Flex, Center, Heading, Text } from "@chakra-ui/react";
-import { UnsigRandomScrollList } from "../components/UnsigRandomScrollList";
+import { Flex, Center, Heading, Text, Box } from "@chakra-ui/react";
 
 const IndexPage = () => {
   const connected = useStoreState((state) => state.connection.connected);
-  const ownedUnsigs = useStoreState((state) => state.ownedUnsigs.unsigIds);
-  const ownedUtxos = useStoreState((state) => state.ownedUtxos.utxos)
   const [ walletFunds, setWalletFunds ] = useState(null);
+  const [ walletUtxos, setWalletUtxos ] = useState(null)
 
   useEffect(async () => {
     if (connected) {
@@ -24,14 +18,26 @@ const IndexPage = () => {
     }
   }, [])
 
+  useEffect(async () => {
+    if (connected) {
+      await Wallet.enable();
+      const amt = await Wallet.getUtxos();
+      setWalletUtxos(amt);
+      console.log(amt)
+    }
+  }, [])
+
   return (
     <>
-      <title>unsigned</title>
-      <Flex w='100%' mx='auto' direction='column' wrap='wrap' bg='#232129'>
-        <Center w='100%' h='300px'>
-          <Heading size='4xl' color='white' fontWeight='medium'>unsigned_algorithms</Heading>
-        </Center>
-        <UnsigRandomScrollList />
+      <title>demo v0</title>
+      <Flex w='100%' mx='auto' direction='column' wrap='wrap' bg='gl-yellow'>
+          <Heading size='4xl' color='gl-blue' fontWeight='medium'>jukebox demo</Heading>
+          <Box w='50%'>
+            <Heading>Balance</Heading>
+            <Text>{walletFunds}</Text>
+            <Heading>Utxos</Heading>
+            <Text>{walletUtxos}</Text>
+          </Box>
       </Flex>
     </>
   )
