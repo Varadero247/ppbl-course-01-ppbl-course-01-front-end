@@ -4,13 +4,14 @@
 ## How to use:
 
 ### 1. Grab this repo
-    ```shell
-    git clone https://gitlab.com/gimbalabs/ppbl/ppbl-course-01-front-end
-    cd ppbl-course-01-front-end
-    npm install
-    npm run start
-    ```
-    Your site is now running at http://localhost:8000!
+```
+git clone https://gitlab.com/gimbalabs/ppbl/ppbl-course-01-front-end
+cd ppbl-course-01-front-end
+npm install
+npm run start
+```
+
+Your site is now running at http://localhost:8000!
 
 ### 2. Use with Cardano `testnet` or `mainnet`
 #### in `/src/components/WalletButton/WalletButton.jsx`, look for
