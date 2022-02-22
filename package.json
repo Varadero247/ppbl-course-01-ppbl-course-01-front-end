@@ -1,8 +1,8 @@
 {
-  "name": "jukebox-demo",
-  "version": "0.0.0",
+  "name": "ppbl-course-01",
+  "version": "1.0.0",
   "private": true,
-  "description": "jukebox demo",
+  "description": "ppbl course v1",
   "author": "gimbalabs",
   "keywords": [
     "gatsby"
